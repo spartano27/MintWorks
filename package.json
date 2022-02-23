@@ -11,16 +11,22 @@
     "@types/react": "^17.0.39",
     "@types/react-dom": "^17.0.11",
     "react": "^17.0.2",
+    "react-bootstrap": "^2.1.2",
     "react-dom": "^17.0.2",
+    "react-redux": "^7.2.6",
     "react-scripts": "5.0.0",
+    "redux": "^4.1.2",
     "typescript": "^4.5.5",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "npm-run-all -p watch-css start-js",
+    "start-js": "react-scripts start",
+    "build": "npm run build-css && react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "build-css": "node-sass --include-path ./node_modules src/assets/scss -o ./src/assets/css --recursive",
+    "watch-css": "npm run build-css && node-sass --include-path ./node_modules src/assets/scss -o src/assets/scss --watch --recursive"
   },
   "eslintConfig": {
     "extends": [
@@ -39,5 +45,11 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/react-redux": "^7.1.22",
+    "bootstrap-scss": "^4.6.1",
+    "node-sass": "^7.0.1",
+    "npm-run-all": "^4.1.5"
   }
 }
