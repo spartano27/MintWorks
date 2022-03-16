@@ -18,14 +18,14 @@ class HomeP extends React.Component {
   
     public render() {
       return (
-        <main className="bg-gradient-primary" >
-          <img className="d-block mx-auto" src={require("../images/logo192.png")}></img>
-          <PlayButton />
+        <body className="bg-gradient-primary" >
+          <img className="d-block mx-auto w-50" src={require("../images/mint1.jpg")}></img>
+          <PlayButton user='usuario' />
           <Carrusel jsonValues={lista}/>
           
           
          
-        </main>
+        </body>
       );
     }
   }

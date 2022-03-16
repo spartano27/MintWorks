@@ -1,27 +1,78 @@
 import React from 'react';
-import {Container, Form, Row, Stack} from 'react-bootstrap';
+import {Alert, Container, Form, Row, Stack} from 'react-bootstrap';
 import {Button} from 'react-bootstrap';
-class PlayButton extends React.Component {
+import {Link} from 'react-router-dom';
+
+
+interface IPlayButtonProps {
+    user: string;
+}
+
+interface IPlayButtonState {
+    username: string,
+    link: string,
+    usernameErr: boolean;
+}
+
+class PlayButton extends React.Component<IPlayButtonProps,IPlayButtonState> {
+    constructor(props : IPlayButtonProps){
+        super(props);
+        this.state = {username :'',link : '', usernameErr: false};
+    }
+
+
+   
 public render() {
+    let aviso;
+    
+    const toLink = (e: { target: { value: any; }; }) => {
+        const format = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+        const user = this.state.username;
+       
+        if (user === '' || user.length < 7 || user.length > 21 || format.test(user)){
+    
+                console.log("The username must be 8-20 characters long and must not contain spaces");
+                this.setState({usernameErr : true});
+                this.setState({username: e.target.value});
+                this.setState({link : '/'});
+        }
+        else{
+                this.setState({usernameErr : false});
+                this.setState({username: e.target.value});
+                this.setState({link : 'Lobby'});
+    
+                }
+        }
+    if (this.state.usernameErr){
+
+        console.log("The username must be 8-20 characters long and must not contain spaces");
+        aviso = <Alert className='mx-auto'variant='danger' style={{ width: "35rem" }}> 
+        The username must be 8-20 characters long and must not contain spaces</Alert>;
+    }
+    
     return (
         
         <Container>
-            <Row>
+            
+            <Row className="d-flex justify-content-center">
         
-                <Form> 
-                    <Form.Group className="mb-3" controlId="formUser">
-                        <Form.Label> Username </Form.Label>
-                        <Form.Control type="text" placeholder="Enter Username" /> 
-                        <Form.Text className="text-muted"> The username must be 8-20 characters long and must not contain spaces</Form.Text> 
+                <Form > 
+                    <Form.Group className='mb-2' controlId="formUser">
+                        
+                        <Form.Control  type="text"  name="username" placeholder="Enter Username" onChange={e => toLink(e)} /> 
+                        
                     </Form.Group>
                 </Form>
-                
-                <Button className="w-3" variant="secondary">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-play" viewBox="0 0 16 16">
-                        <path d="M10.804 8 5 4.633v6.734L10.804 8zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692z"/>
-                    </svg> 
+                <Link className="h-25 ml-2" to={this.state.link} >  
+                <Button className="h-25 ml-2"  variant="secondary">
+                    <img src={require("../images/MENTA-BOTÓN.PNG")}/> 
                 </Button>
+                
+                </Link>
+                
+                
             </Row>
+            {aviso}
          </Container>
         
         
