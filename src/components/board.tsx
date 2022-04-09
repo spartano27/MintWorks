@@ -6,7 +6,7 @@ import Lotto from './lotto';
 import Producer from './producer';
 import Supplier from './supplier';
 import Wholesaler from './wholesaler';
-
+import '../assets/css/cards.css';
 interface IBoardProps {
 
 }
@@ -28,19 +28,19 @@ class Board extends React.Component<IBoardProps,IBoardState> {
 
 
         return (
-            <Container>
-            <Row className='justify-content-md-center'>
+            <Container className='p-0' style={{width:'500px'}} >
+            <Row className='justify-content-center'>
                 <Leader players={4}/>
                 <Producer players={4}/>
             </Row>
 
-            <Row className='justify-content-md-center'>
+            <Row className='justify-content-center'>
                 <Builder players={4}/>
                 <Supplier players={4}/>
             
             </Row>
 
-            <Row className='justify-content-md-center'>
+            <Row className='justify-content-center'>
                 <Wholesaler />
                 <Lotto />
             

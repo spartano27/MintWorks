@@ -1,16 +1,23 @@
 import React from 'react';  
 import Board from '../components/board';
 import Clock from '../components/clock';
-import '../assets/css/home.css';
 import Shop from '../components/shop';
+import Neighborhood from '../components/neighborhood';
+
+
 class Game extends React.Component {
 
     public render() {
         return (
             <body className='bg-gradient-primary'>
-            <Shop />
-            <Clock valorInicial={60} /> 
-            <Board />
+                          
+                            <Neighborhood players={4} />
+                        
+                        
+                    
+                
+            
+            
             
             
             

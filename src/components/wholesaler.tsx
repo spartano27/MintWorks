@@ -15,6 +15,10 @@ class Wholesaler extends React.Component<IWholesalerProps,IWholesalerState> {
 
     }
 
+    DragHandler = (e: { preventDefault: () => void; }) => {
+        e.preventDefault();
+    }
+
     public render(){
         let whatWholesaler;
         if (this.state.build){
@@ -27,7 +31,7 @@ class Wholesaler extends React.Component<IWholesalerProps,IWholesalerState> {
 
         return(
             
-            <img className='w-25 p-2' src = {whatWholesaler}/>
+            <img style = {{width:210}} src = {whatWholesaler} onDragStart={this.DragHandler}/>
            
         );
     }

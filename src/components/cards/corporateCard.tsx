@@ -20,7 +20,7 @@ class Corporate extends React.Component<ICorporateProps,ICorporateState> {
        
         return(
             
-            <img className='p-2' style={{width: 200}} src = {require("../../images/cards_images/CORPORATE.PNG")}/>
+            <img src = {require("../../images/cards_images/CORPORATE.PNG")}/>
            
         );
     }

@@ -20,7 +20,7 @@ class Factory extends React.Component<IFactoryProps,IFactoryState> {
        
         return(
             
-            <img className='p-2' style={{width: 200}} src = {require("../../images/cards_images/FACTORY.PNG")}/>
+            <img src = {require("../../images/cards_images/FACTORY.PNG")}/>
            
         );
     }

@@ -20,7 +20,7 @@ class Gardens extends React.Component<IGardensProps,IGardensState> {
        
         return(
             
-            <img className='p-2' style={{width: 200}} src = {require("../../images/cards_images/GARDENS.PNG")}/>
+            <img src = {require("../../images/cards_images/GARDENS.PNG")}/>
            
         );
     }

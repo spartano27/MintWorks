@@ -12,6 +12,10 @@ class Supplier extends React.Component<ISupplierProps,ISupplierState> {
         super(props);
     }
 
+    DragHandler = (e: { preventDefault: () => void; }) => {
+        e.preventDefault();
+    }
+
     public render(){
 
         let whatSupplier;
@@ -23,7 +27,7 @@ class Supplier extends React.Component<ISupplierProps,ISupplierState> {
 
         return(
             
-            <img className='w-25 p-2' src = {whatSupplier}/>
+            <img style = {{width:210}} src = {whatSupplier} onDragStart={this.DragHandler}/>
             
         );
     }

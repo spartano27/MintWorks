@@ -20,7 +20,7 @@ class Statue extends React.Component<IStatueProps,IStatueState> {
        
         return(
             
-            <img className='p-2' style={{width: 200}} src = {require("../../images/cards_images/STATUE.PNG")}/>
+            <img src = {require("../../images/cards_images/STATUE.PNG")}/>
            
         );
     }

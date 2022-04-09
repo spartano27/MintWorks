@@ -20,7 +20,7 @@ class Workshop extends React.Component<IWorkshopProps,IWorkshopState> {
        
         return(
             
-            <img className='p-2' style={{width: 200}} src = {require("../../images/cards_images/WORKSHOP.PNG")}/>
+            <img src = {require("../../images/cards_images/WORKSHOP.PNG")}/>
            
         );
     }

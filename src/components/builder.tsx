@@ -16,6 +16,10 @@ class Builder extends React.Component<IBuilderProps,IBuilderState> {
 
     }
 
+    DragHandler = (e: { preventDefault: () => void; }) => {
+        e.preventDefault();
+    }
+
     
 
     public render() {
@@ -27,8 +31,8 @@ class Builder extends React.Component<IBuilderProps,IBuilderState> {
         }
 
         return(
-            <img className='w-25 p-2' src = {whatBuilder}></img> 
-            
+            <img style = {{width:210}} src = {whatBuilder} onDragStart={this.DragHandler}></img> 
+
         );
 
     }

@@ -20,7 +20,7 @@ class Plant extends React.Component<IPlantProps,IPlantState> {
        
         return(
             
-            <img className='p-2' style={{width: 200}} src = {require("../../images/cards_images/PLANT.PNG")}/>
+            <img src = {require("../../images/cards_images/PLANT.PNG")}/>
            
         );
     }

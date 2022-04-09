@@ -15,6 +15,10 @@ class Lotto extends React.Component<ILottoProps,ILottoState> {
 
     }
 
+    DragHandler = (e: { preventDefault: () => void; }) => {
+        e.preventDefault();
+    }
+
     public render(){
         let whatLotto;
         if (this.state.build){
@@ -27,7 +31,7 @@ class Lotto extends React.Component<ILottoProps,ILottoState> {
 
         return(
             
-            <img className='w-25 p-2' src = {whatLotto}/>
+            <img style = {{width:210}} src = {whatLotto} onDragStart={this.DragHandler}/>
            
         );
     }

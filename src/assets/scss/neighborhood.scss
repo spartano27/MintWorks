@@ -1,0 +1,10 @@
+.square {
+    height: 300px;
+    width: 356px;
+    margin: 5px;
+    background-color: #e83e8c;
+  }
+$secondary: #e83e8c;
+$enable-gradients: true;
+/* finally, import Bootstrap */
+@import "bootstrap-scss/bootstrap";

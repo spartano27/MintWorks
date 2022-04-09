@@ -20,7 +20,7 @@ class Bridge extends React.Component<IBridgeProps,IBridgeState> {
        
         return(
             
-            <img className='p-2' style={{width: 200}} src = {require("../../images/cards_images/BRIDGE.PNG")}/>
+            <img  src = {require("../../images/cards_images/BRIDGE.PNG")}/>
            
         );
     }

@@ -20,7 +20,7 @@ class Coop extends React.Component<ICoopProps,ICoopState> {
        
         return(
             
-            <img className='p-2' style={{width: 200}} src = {require("../../images/cards_images/Coop.PNG")}/>
+            <img src = {require("../../images/cards_images/CO-OP.PNG")}/>
            
         );
     }

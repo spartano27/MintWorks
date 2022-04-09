@@ -12,11 +12,15 @@ class Leader extends React.Component<ILeaderProps,ILeaderState> {
         super(props);
     }
 
+    DragHandler = (e: { preventDefault: () => void; }) => {
+        e.preventDefault();
+    }
+
     public render(){
 
         return(
             
-            <img className='w-25 p-2' src = {require("../images/leader.png")}/>
+            <img style = {{width:210}} src = {require("../images/leader.png")} onDragStart={this.DragHandler}/>
            
         );
     }
