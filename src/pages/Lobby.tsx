@@ -1,6 +1,5 @@
 import React from 'react';
 import GButton from '../components/gButton';
-import '../assets/css/home.css';
 class Lobby extends React.Component{
 
 public render(){

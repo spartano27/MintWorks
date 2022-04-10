@@ -1,17 +1,14 @@
 import React from 'react';  
-import Board from '../components/board';
-import Clock from '../components/clock';
-import Shop from '../components/shop';
-import Neighborhood from '../components/neighborhood';
+import Game from '../components/game';  
 
 
-class Game extends React.Component {
+class GamePage extends React.Component {
 
     public render() {
         return (
             <body className='bg-gradient-primary'>
                           
-                            <Neighborhood players={4} />
+                            <Game players={1} />
                         
                         
                     
@@ -26,4 +23,4 @@ class Game extends React.Component {
     }
 }
 
-export default Game;
+export default GamePage;

@@ -1,7 +1,6 @@
 import React from 'react';
 import Carrusel from '../components/carrusel';
 import PlayButton from '../components/playButton';
-import '../assets/css/home.css';
 
 const lista = [{
   srcValue: "mint1.jpg",
