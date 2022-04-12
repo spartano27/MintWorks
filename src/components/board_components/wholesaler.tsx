@@ -23,10 +23,10 @@ class Wholesaler extends React.Component<IWholesalerProps,IWholesalerState> {
         let whatWholesaler;
         if (this.state.build){
 
-            whatWholesaler = require("../images/wholesaler.png");
+            whatWholesaler = require("../../images/wholesaler.png");
 
         }else{
-            whatWholesaler = require("../images/wholesaler1.png");
+            whatWholesaler = require("../../images/wholesaler1.png");
         }
 
         return(

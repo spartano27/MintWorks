@@ -25,9 +25,9 @@ class Builder extends React.Component<IBuilderProps,IBuilderState> {
     public render() {
         let whatBuilder;
         if(this.props.players < 4){
-            whatBuilder = require("../images/builder1.png")
+            whatBuilder = require("../../images/builder1.png")
         }else {
-            whatBuilder = require("../images/builder.png")
+            whatBuilder = require("../../images/builder.png")
         }
 
         return(

@@ -20,7 +20,7 @@ class Leader extends React.Component<ILeaderProps,ILeaderState> {
 
         return(
             
-            <img style = {{width:210}} src = {require("../images/leader.png")} onDragStart={this.DragHandler}/>
+            <img style = {{width:210}} src = {require("../../images/leader.png")} onDragStart={this.DragHandler}/>
            
         );
     }

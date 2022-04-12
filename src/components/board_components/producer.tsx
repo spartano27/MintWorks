@@ -24,9 +24,9 @@ class Producer extends React.Component<IProducerProps,IProducerState> {
 
         let whatProducer;
         if(this.props.players == 1 || this.props.players == 4){
-            whatProducer = require("../images/producer.png");
+            whatProducer = require("../../images/producer.png");
         }else {
-            whatProducer = require("../images/producer1.png");
+            whatProducer = require("../../images/producer1.png");
         }
 
         return(

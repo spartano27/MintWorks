@@ -20,9 +20,9 @@ class Supplier extends React.Component<ISupplierProps,ISupplierState> {
 
         let whatSupplier;
         if(this.props.players < 4){
-            whatSupplier = require("../images/supplier1.png")
+            whatSupplier = require("../../images/supplier1.png")
         }else {
-            whatSupplier = require("../images/supplier.png")
+            whatSupplier = require("../../images/supplier.png")
         }
 
         return(

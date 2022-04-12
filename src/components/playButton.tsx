@@ -5,11 +5,11 @@ import {Link} from 'react-router-dom';
 
 
 interface IPlayButtonProps {
-    user: string;
+    username: string;
+    usernameChange: (username: string) => any;
 }
 
 interface IPlayButtonState {
-    username: string,
     link: string,
     usernameErr: boolean;
 }
@@ -17,7 +17,7 @@ interface IPlayButtonState {
 class PlayButton extends React.Component<IPlayButtonProps,IPlayButtonState> {
     constructor(props : IPlayButtonProps){
         super(props);
-        this.state = {username :'',link : '', usernameErr: false};
+        this.state = {link : '', usernameErr: false};
     }
 
 
@@ -27,18 +27,19 @@ public render() {
     
     const toLink = (e: { target: { value: any; }; }) => {
         const format = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
-        const user = this.state.username;
+        const user = this.props.username;
+        console.log(user)
        
         if (user === '' || user.length < 7 || user.length > 21 || format.test(user)){
     
                 console.log("The username must be 8-20 characters long and must not contain spaces");
                 this.setState({usernameErr : true});
-                this.setState({username: e.target.value});
+                this.props.usernameChange(e.target.value);
                 this.setState({link : '/'});
         }
         else{
                 this.setState({usernameErr : false});
-                this.setState({username: e.target.value});
+                this.props.usernameChange(e.target.value);
                 this.setState({link : 'Lobby'});
     
                 }
@@ -64,9 +65,9 @@ public render() {
                     </Form.Group>
                 </Form>
                 <Link className="h-25 ml-2" to={this.state.link} >  
-                <Button className="h-25 ml-2"  variant="secondary">
-                    <img src={require("../images/MENTA-BOTÓN.PNG")}/> 
-                </Button>
+                    <Button className="h-25 ml-2"  variant="secondary">
+                        <img src={require("../images/MENTA-BOTÓN.PNG")}/> 
+                    </Button>
                 
                 </Link>
                 

@@ -23,10 +23,10 @@ class Lotto extends React.Component<ILottoProps,ILottoState> {
         let whatLotto;
         if (this.state.build){
 
-            whatLotto = require("../images/lotto.png");
+            whatLotto = require("../../images/lotto.png");
 
         }else{
-            whatLotto = require("../images/lotto1.png");
+            whatLotto = require("../../images/lotto1.png");
         }
 
         return(

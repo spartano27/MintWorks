@@ -1,8 +1,8 @@
 import React from "react";
-import Justin from './ia/justin';
-import Mort from './ia/mort';
-import Rachael from './ia/rachael';
-import Sonic from './ia/sonic';
+import Justin from '../ia/justin';
+import Mort from '../ia/mort';
+import Rachael from '../ia/rachael';
+import Sonic from '../ia/sonic';
 
 interface IIaProps{
 players: number;

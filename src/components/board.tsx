@@ -1,11 +1,11 @@
 import React from 'react';
 import { Row, Container} from 'react-bootstrap';
-import Builder from './builder';
-import Leader from './leader';
-import Lotto from './lotto';
-import Producer from './producer';
-import Supplier from './supplier';
-import Wholesaler from './wholesaler';
+import Builder from './board_components/builder';
+import Leader from './board_components/leader';
+import Lotto from './board_components/lotto';
+import Producer from './board_components/producer';
+import Supplier from './board_components/supplier';
+import Wholesaler from './board_components/wholesaler';
 import '../assets/css/cards.css';
 
 

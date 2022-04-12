@@ -9,9 +9,9 @@ public render(){
             <img className="d-block mx-auto w-50" src={require("../images/mint1.jpg")}></img>
         
             <div className='container'>
-                <GButton title='Juego Individual' link='Game'/> 
-                <GButton title='Buscar partida' link='Buscar'/> 
-                <GButton title='Crear partida' link='Crear'/> 
+                <GButton title='Juego Individual' link='/Game'/> 
+                <GButton title='Buscar partida' link='/Buscar'/> 
+                <GButton title='Crear partida' link='/Crear'/> 
             </div>
         </body>
         

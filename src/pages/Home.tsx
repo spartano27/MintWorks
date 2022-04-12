@@ -1,6 +1,6 @@
 import React from 'react';
 import Carrusel from '../components/carrusel';
-import PlayButton from '../components/playButton';
+import PlayButton from '../containers/playButton';
 
 const lista = [{
   srcValue: "mint1.jpg",
@@ -13,15 +13,19 @@ const lista = [{
   altValue: "Third slide"
 }];
 
+
+
+
 class HomeP extends React.Component {
   
     public render() {
       return (
         <body className="bg-gradient-primary" >
-          <img className="d-block mx-auto w-50" src={require("../images/mint1.jpg")}/>
-          <PlayButton user='usuario' />
+          <img className="d-block mx-auto w-25" src={require("../images/mint1.jpg")}/>
+          <PlayButton />
           <Carrusel jsonValues={lista}/> 
         </body>
+       
       );
     }
   }

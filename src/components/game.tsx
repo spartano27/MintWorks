@@ -1,13 +1,12 @@
 import React from "react";
 import {ListGroup} from "react-bootstrap";
 import Board from "./board";
-import IA from "./ia";
-import Neighborhood from "./neighborhood";
+import IA from "./board_components/ia";
+import Neighborhood from "../containers/neighborhood";
 import Shop from "./shop";
 
 interface IGameProps {
     players: number;
-
 }
 
 interface IGameState {
@@ -23,6 +22,7 @@ class Game extends React.Component<IGameProps,IGameState> {
 
 
     public render(){
+
         switch(this.props.players) {
             case 1:
                 return(
