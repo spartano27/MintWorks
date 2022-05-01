@@ -4,7 +4,7 @@ class Lobby extends React.Component{
 
 public render(){
     return(
-        <body className='bg-gradient-primary'>
+        <body>
             
             <img className="d-block mx-auto w-50" src={require("../images/mint1.jpg")}></img>
         

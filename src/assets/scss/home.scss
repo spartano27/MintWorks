@@ -1,5 +1,14 @@
-
+$primary: #44716c;
 $secondary: #e83e8c;
 $enable-gradients: true;
+
+
+
 /* finally, import Bootstrap */
 @import "bootstrap-scss/bootstrap";
+
+body {
+    background-image: url('/src/images/fondo1.png');
+    background-color: #44716c;
+
+}

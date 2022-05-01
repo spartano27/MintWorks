@@ -64,9 +64,9 @@ public render() {
                         
                     </Form.Group>
                 </Form>
-                <Link className="h-25 ml-2" to={this.state.link} >  
-                    <Button className="h-25 ml-2"  variant="secondary">
-                        <img src={require("../images/MENTA-BOTÓN.PNG")}/> 
+                <Link className="mb-4" to={this.state.link} >  
+                    <Button className=" d-flex align-self-baseline" style={{background:'transparent', border:0}}>
+                        <img style={{width:'100px'}} src={require("../images/MENTA-BOTÓN.PNG")}/> 
                     </Button>
                 
                 </Link>

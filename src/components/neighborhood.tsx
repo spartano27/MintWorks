@@ -1,11 +1,12 @@
 import React from "react";
-import {ListGroup} from "react-bootstrap";
+import {ListGroup, Row} from "react-bootstrap";
 import '../assets/css/neighborhood.css';
-import Clock from "./clock";
+import Clock from "../containers/clock";
 
 
 interface INeighborhoodProps {
 username: string;
+playerId: number;
 }
 
 interface INeighborhoodState {
@@ -19,13 +20,22 @@ class Neighborhood extends React.Component<INeighborhoodProps,INeighborhoodState
 
     }
 
-
+    
     public render(){
 
                 return(
                         <div className="square">
-                            {this.props.username}
-                            <Clock valorInicial={60}/>
+                            <Row className="p-2">
+                                <div className="p-2">
+                                    <Clock playerId={this.props.playerId}/>
+                                       
+                                </div>
+                                <div className="p-2">
+                                    {this.props.username}
+                                </div>
+                                
+                            </Row>
+                            
                             <ListGroup className="" horizontal>
                                 <ListGroup.Item  variant="secondary">
 

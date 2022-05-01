@@ -12,12 +12,20 @@ import { Provider } from 'react-redux';
 import IGlobalState, { initialState } from './state/globalState';
 import { Action, createStore } from 'redux';
 import { IChangeUsername, PlayButtonActions } from './actions/PlayButtonActions';
+import { ClockActions, IChangePlayer } from './actions/ClockActions';
+import { GameActions, IFirstPlayer } from './actions/GameActions';
 
 const reducer = (state: IGlobalState = initialState, action: Action) => {
   switch(action.type){
     case PlayButtonActions.Change_Username:
       const usernameAction = action as IChangeUsername;
       return {...state, username: usernameAction.payload}
+    case ClockActions.Change_Player:
+      const clockAction = action as IChangePlayer;
+      return {...state, currentPlayer: clockAction.payload}
+    case GameActions.FirstPlayer:
+      const gameAction = action as IFirstPlayer;
+      return {...state, currentPlayer: gameAction.payload}
   }
   
   return state;
@@ -41,7 +49,7 @@ ReactDOM.render(
     </BrowserRouter>
   </React.StrictMode>
   </Provider>,
-  
+
   document.getElementById('root')
 );
 

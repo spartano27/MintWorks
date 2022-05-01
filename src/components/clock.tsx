@@ -1,37 +1,41 @@
-import React from "react";
+import React, { useState } from "react";
+import {useCountdown,CountdownCircleTimer} from 'react-countdown-circle-timer';
 
 interface IClockProps {
-    valorInicial : number;
+    players: number;
+    playerId: number;
+    currentPlayer: number;
+    ChangePlayer: (playerId: number) => any;
 }
 
 interface IClockState {
-    esCero: boolean,
-    valorActual: number;
+
 }
+
 
 class Clock extends React.Component<IClockProps,IClockState> {
     constructor (props: IClockProps) {
         super(props)
-        this.state = {esCero: false, valorActual: 60}
     }
-    public cuentaRegresiva  = () => {
-        const valor = this.props.valorInicial;
-        for (var i = 0; i < valor; i++){
-            this.setState({valorActual:valor-0.1});
-
-            if (this.state.valorActual === 0){
-                this.setState({esCero:true})
-
-            }
-
-            
-
-        }
-
-    }
+    
     public render() {
+        console.log(this.props.playerId)
         return (
-            <div >{this.state.valorActual} </div>
+            <CountdownCircleTimer
+                
+                isPlaying={this.props.playerId === this.props.currentPlayer}
+                duration={6}
+                colors={'#43716c'}
+                size={50}
+                onComplete={() => {
+                    
+                    return {shouldRepeat:true, delay:1.5}
+                }}
+                
+
+            >
+                {({ remainingTime }) => remainingTime}
+            </CountdownCircleTimer>
 
         );
     }

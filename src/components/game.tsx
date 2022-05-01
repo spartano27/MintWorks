@@ -1,12 +1,13 @@
 import React from "react";
-import {ListGroup} from "react-bootstrap";
 import Board from "./board";
 import IA from "./board_components/ia";
-import Neighborhood from "../containers/neighborhood";
+import Player from "../containers/player";
 import Shop from "./shop";
 
 interface IGameProps {
     players: number;
+    currentPlayer: number;
+    FirstPlayer: (curentPlayer: number) => any;
 }
 
 interface IGameState {
@@ -20,8 +21,22 @@ class Game extends React.Component<IGameProps,IGameState> {
 
     }
 
+    public WhoFirst = () => {
+        var first = 0;
+        if (this.props.players === 1){
+            first = 0;
+        }else{
+            first = Math.round(Math.random()*(3));
+            
+        }
+        
+        this.props.FirstPlayer(first);
+    }
+
 
     public render(){
+
+        
 
         switch(this.props.players) {
             case 1:
@@ -33,7 +48,7 @@ class Game extends React.Component<IGameProps,IGameState> {
                     
                     </div>
                     <div className="d-flex align-items-around ml-auto">
-                        <Neighborhood/>
+                        <Player playerId={0} />
                         <Board players={this.props.players}/> 
                         <IA players={this.props.players}/>  
                     </div>   
@@ -44,12 +59,12 @@ class Game extends React.Component<IGameProps,IGameState> {
                 return(
                     <div className='bg-gradient-primary'>
                         <div className="d-flex justify-content-between">
-                            <Neighborhood/>
+                            <Player playerId={0}/>
                             <Shop players={this.props.players}/>
                             <div className="w-25">  </div>
                         </div>
                         <div className="d-flex align-items-end">
-                            <Neighborhood/>
+                            <Player playerId={1}/>
                             <Board players={this.props.players}/> 
                             <div className="w-25">  </div>
                         </div>               
@@ -62,14 +77,14 @@ class Game extends React.Component<IGameProps,IGameState> {
                     <div>
                         <div className="d-flex justify-content-between">
 
-                            <Neighborhood/>    
+                            <Player playerId={0}/>    
                             <Shop players={this.props.players}/>      
-                            <Neighborhood/>    
+                            <Player playerId={1}/>    
 
                         </div>
                     
                     <div className="d-flex align-items-end">
-                        <Neighborhood/>
+                        <Player playerId={2}/>
                         <Board players={this.props.players}/>  
                         <div className="w-25">  </div>                    
                     </div>                   
@@ -80,14 +95,14 @@ class Game extends React.Component<IGameProps,IGameState> {
                 return(
                 <div className='bg-gradient-primary'>
                     <div className="d-flex justify-content-between">
-                        <Neighborhood/>
+                        <Player playerId={0}/>
                         <Shop players={this.props.players}/>
-                        <Neighborhood/>                        
+                        <Player playerId={1}/>                        
                     </div>
                     <div className="d-flex align-items-end">
-                        <Neighborhood/>
+                        <Player playerId={2}/>
                         <Board players={this.props.players}/> 
-                        <Neighborhood/>                        
+                        <Player playerId={3}/>                        
                     </div>                   
                 </div>
                 );
@@ -101,7 +116,7 @@ class Game extends React.Component<IGameProps,IGameState> {
                         
                         </div>
                         <div className="d-flex align-items-around ml-auto">
-                            <Neighborhood/>
+                            <Player playerId={0}/>
                             <Board players={this.props.players}/> 
                             <IA players={this.props.players}/>  
                         </div>   

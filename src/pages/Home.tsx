@@ -20,8 +20,9 @@ class HomeP extends React.Component {
   
     public render() {
       return (
-        <body className="bg-gradient-primary" >
-          <img className="d-block mx-auto w-25" src={require("../images/mint1.jpg")}/>
+        <body>
+          
+          <img className="d-block mx-auto w-50" src={require("../images/logoMint.png")}/>
           <PlayButton />
           <Carrusel jsonValues={lista}/> 
         </body>
