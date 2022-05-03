@@ -1,11 +1,12 @@
 import React from 'react';  
+import CreateRoom from '../containers/createRoom';
 
 class Crear extends React.Component {
 
     public render() {
         return (
 
-            <a> aaa </a>
+            <CreateRoom/>
         );
     }
 }

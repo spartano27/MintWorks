@@ -33,6 +33,7 @@ interface IShopState {
 }
 class Shop extends React.Component<IShopProps,IShopState> {
 
+/* An array of objects. */
 cards = [{id:"1", name: "Assembler", component: <Assembler/>},{id:"2", name: "Bridge",component: <Bridge/>}
             ,{id:"3", name: "Coop", component: <Coop/>},{id:"4", name: "Corporate", component: <Corporate/>}
             ,{id:"5", name: "Crane", component: <Crane/>},{id:"6", name: "Factory", component: <Factory/>}
@@ -46,12 +47,15 @@ cards = [{id:"1", name: "Assembler", component: <Assembler/>},{id:"2", name: "Br
             ,{id:"21", name: "Workshop", component: <Workshop/>},
 ];
 
+/* A function that takes an array of objects, a start index and an end index. It then creates a new
+array, removes the element at the start index and inserts it at the end index. */
 reorder = (list: { id: string; name: string; component: JSX.Element; }[],startIndex: number, endIndex: number) => {
     const result = [...list];
     const [removed] = result.splice(startIndex,1);
     result.splice(endIndex,0,removed);
     return result;
 }
+
 
 public Inicio(card: { id: string; name: string; component: JSX.Element; }[]) {
     const mazo_inicial = []
@@ -75,6 +79,7 @@ public Inicio(card: { id: string; name: string; component: JSX.Element; }[]) {
     }
     return mazo_inicial;
 }
+/* A function that returns a list of cards. */
 Zona = () => {
     const [card,setCard] = useState(this.cards); 
      

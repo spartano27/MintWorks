@@ -21,6 +21,7 @@ class Game extends React.Component<IGameProps,IGameState> {
 
     }
 
+    /* A function that is called when the game starts. It is used to determine who goes first. */
     public WhoFirst = () => {
         var first = 0;
         if (this.props.players === 1){
@@ -38,6 +39,7 @@ class Game extends React.Component<IGameProps,IGameState> {
 
         
 
+        
         switch(this.props.players) {
             case 1:
                 return(

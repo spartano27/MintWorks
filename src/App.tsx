@@ -1,16 +1,39 @@
-import React from 'react';
-import './assets/css/home.css';
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { actions } from "@liveblocks/redux";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import HomeP from "./pages/Home";
+import Lobby from "./pages/Lobby";
+import GamePage from "./pages/Game";
+import Buscar from "./pages/Buscar";
+import Crear from "./pages/Crear";
 
-class App extends React.Component {
-  public render() {
-    return (
-      <div className="App">
-        <body>  aaaaaa </body>
-        <article className="card h-100 bg-secondary">  a a </article>
-    
-      </div>
+
+export default function App() {
+  const dispatch = useDispatch();
+/*
+  useEffect(() => {
+    dispatch(
+      actions.enterRoom("redux-demo-room", {
+        todos: [],
+      })
     );
-  }
-}
 
-export default App;
+    return () => {
+      dispatch(actions.leaveRoom("redux-demo-room"));
+    };
+  }, [dispatch]);
+*/
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<HomeP />} /> 
+        <Route path="Lobby" element={<Lobby />} /> 
+        <Route path="Game" element={<GamePage />}/>
+        <Route path="Buscar" element={<Buscar />}/>
+        <Route path="Crear" element={<Crear />}/>
+      </Routes>
+      
+      </BrowserRouter>
+  );
+}

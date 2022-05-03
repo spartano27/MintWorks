@@ -11,6 +11,7 @@ class Carrusel extends React.Component<iCarruselProps> {
         
         console.log(this.props.jsonValues);
         
+        /* Iterating through the jsonValues array and pushing the values into the carruselItem array. */
         for (const value of this.props.jsonValues) {
             console.log(value.srcValue);
             carruselItem.push(

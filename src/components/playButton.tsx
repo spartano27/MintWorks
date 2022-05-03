@@ -30,6 +30,7 @@ public render() {
         const user = this.props.username;
         console.log(user)
        
+        /* Checking if the username is valid. */
         if (user === '' || user.length < 7 || user.length > 21 || format.test(user)){
     
                 console.log("The username must be 8-20 characters long and must not contain spaces");
@@ -52,6 +53,7 @@ public render() {
     }
     
     return (
+        
         
         <Container>
             
