@@ -1,25 +1,17 @@
 import React from "react";
 import { Card } from "react-bootstrap";
+import { useParams } from "react-router-dom";
 
-interface IRoomProps {
-    name: string;
-    author: string;
-}
 
-class Room extends React.Component<IRoomProps> {
-    constructor(props: IRoomProps){
-        super(props);
-    }
 
-    public render(){
+
+function Room(){
+    const {name} = useParams();
         return(
-            <Card> 
-                <Card.Body>
-                    {this.props.name} created by: {this.props.author}
-                </Card.Body>
-            </Card>
+            <a> mi nombre de sala es: {name}</a>
         );
-    }
+          
+    
 }
 
 export default Room;

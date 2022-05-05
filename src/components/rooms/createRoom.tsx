@@ -56,7 +56,7 @@ export function CreateRoom() {
         }else{
             console.log(room);
             dispatch(addRooms(room));
-            navigate("/Buscar");
+            navigate(`/Room/${room.name}`);
             
         }
         console.log(room);

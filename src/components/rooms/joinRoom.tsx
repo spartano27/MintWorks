@@ -1,18 +1,20 @@
 import React from "react";
 import { Button, Card, Col, Container, ListGroup,Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 
 export function JoinRoom() {
     const roomList = useSelector((state:any) => state.roomList);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     console.log(roomList);
-    const handleClick = (room: { publico: any; }) => {
+    const handleClick = (room: { publico: boolean, name: string }) => {
         if(room.publico){
             console.log("a");
         }else{
-            console.log("b");
+            navigate(`/Room/${room.name}`);
         }
 
 
@@ -50,5 +52,9 @@ export function JoinRoom() {
         );
     
 
+}
+
+function usesNavigate() {
+    throw new Error("Function not implemented.");
 }
 
