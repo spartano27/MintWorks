@@ -1,56 +1,58 @@
 import React from 'react';
-import {Alert, Container, Form, Row, Stack} from 'react-bootstrap';
+import {Alert, Container, Form, Row} from 'react-bootstrap';
 import {Button} from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
 import {Link} from 'react-router-dom';
+import { changeUsername } from "../store";
 
 
-interface IPlayButtonProps {
-    username: string;
-    usernameChange: (username: string) => any;
-}
-
-interface IPlayButtonState {
-    link: string,
-    usernameErr: boolean;
-}
-
-class PlayButton extends React.Component<IPlayButtonProps,IPlayButtonState> {
-    constructor(props : IPlayButtonProps){
-        super(props);
-        this.state = {link : '', usernameErr: false};
-    }
-
-
-   
-public render() {
+export function PlayButton() {
+    const dispatch = useDispatch();
+    const username = useSelector((state:any) => state.username);
+    const [link,setLink] = React.useState({
+        error: false,
+        value: "/"
+    })
     let aviso;
     
-    const toLink = (e: { target: { value: any; }; }) => {
+    const PushName = (e: { target: { value: any; }; }) => {
+
         const format = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
-        const user = this.props.username;
-        console.log(user)
+        let data = e.target.value
        
         /* Checking if the username is valid. */
-        if (user === '' || user.length < 7 || user.length > 21 || format.test(user)){
-    
+        if (data === '' || data.length < 8 || data.length > 21 || format.test(data)){
+                
                 console.log("The username must be 8-20 characters long and must not contain spaces");
-                this.setState({usernameErr : true});
-                this.props.usernameChange(e.target.value);
-                this.setState({link : '/'});
+                const value1 = "/";
+                const error1 = true;
+
+                setLink({
+                    error : error1,
+                    value : value1,
+                });
         }
         else{
-                this.setState({usernameErr : false});
-                this.props.usernameChange(e.target.value);
-                this.setState({link : 'Lobby'});
-    
+                
+                dispatch(changeUsername(data));
+                const value1 = "Lobby";
+                const error1 = false;
+
+                setLink({
+                    error : error1,
+                    value : value1,
+                });
                 }
-        }
-    if (this.state.usernameErr){
+                
+                
+                }
+    if (link.error){
 
         console.log("The username must be 8-20 characters long and must not contain spaces");
         aviso = <Alert className='mx-auto'variant='danger' style={{ width: "35rem" }}> 
         The username must be 8-20 characters long and must not contain spaces</Alert>;
     }
+    
     
     return (
         
@@ -60,18 +62,23 @@ public render() {
             <Row className="d-flex justify-content-center">
         
                 <Form > 
-                    <Form.Group className='mb-2' controlId="formUser">
+                    
+                    <Form.Group className='form-inline' controlId="formUser">
                         
-                        <Form.Control  type="text"  name="username" placeholder="Enter Username" onChange={e => toLink(e)} /> 
                         
+                        <Form.Control  type="text"  name="username" placeholder="Enter Username" onChange={e => PushName(e)}/> 
+                        
+                        
+                        <Link to={link.value} >  
+                            <Button type="submit" style={{background:'transparent', border:0}}>
+                                <img style={{width:'80px'}} src={require("../images/MENTA-BOTÓN.PNG")}/> 
+                            </Button>
+                
+                         </Link>
+                         
                     </Form.Group>
                 </Form>
-                <Link className="mb-4" to={this.state.link} >  
-                    <Button className=" d-flex align-self-baseline" style={{background:'transparent', border:0}}>
-                        <img style={{width:'100px'}} src={require("../images/MENTA-BOTÓN.PNG")}/> 
-                    </Button>
-                
-                </Link>
+               
                 
                 
             </Row>
@@ -82,8 +89,6 @@ public render() {
         
         
     );
-}
+
 }
 
-
-export default PlayButton;

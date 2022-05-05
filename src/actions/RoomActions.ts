@@ -2,6 +2,7 @@ import { Action } from "redux";
 
 export enum RoomActions {
     ADD_ROOM = "ADD_ROOM",
+    CREATE_ROOM = "CREATE_ROOM",
     JOIN_ROOM = "JOIN_ROOM",
     ROOMS_LIST = "ROOM_LIST",
     ADD_USER = "ADD_USER",

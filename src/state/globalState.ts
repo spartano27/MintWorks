@@ -3,15 +3,31 @@ interface IGlobalState {
     players: number;
     username: string;
     currentPlayer: number;
-    roomList: string[];
-    newRoom: string;
+    roomList: {}[];
+    newRoom: {
+        author: string,
+        name: string,
+        password?: string,
+        players: number,
+        difficult: boolean,
+        publico: boolean,
+
+    };
 }
 
 export default IGlobalState;
 export const initialState: IGlobalState = {
     players: 4,
-    username: "username",
+    username: "",
     currentPlayer:0,
-    roomList:["a"],
-    newRoom: "room",
+    roomList:[],
+    newRoom: {
+        author: "",
+        name: "",
+        password: "",
+        players: 2,
+        difficult: false,
+        publico: true,
+
+    },
 }

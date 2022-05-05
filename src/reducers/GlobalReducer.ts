@@ -2,7 +2,6 @@ import { Action } from "redux";
 import { ClockActions, IChangePlayer } from "../actions/ClockActions";
 import { GameActions, IFirstPlayer } from "../actions/GameActions";
 import { IChangeUsername, PlayButtonActions } from "../actions/PlayButtonActions";
-import { IRoomActions, RoomActions } from "../actions/RoomActions";
 import IGlobalState, { initialState } from "../state/globalState";
 
 /**
@@ -12,7 +11,7 @@ import IGlobalState, { initialState } from "../state/globalState";
  * @returns The state is being returned with the username property being updated.
  */
 
-const reducer = (state: IGlobalState = initialState, action: Action) => {
+const Reducer = (state: IGlobalState = initialState, action: Action) => {
   switch(action.type){
     case PlayButtonActions.Change_Username:
       const usernameAction = action as IChangeUsername;
@@ -23,13 +22,10 @@ const reducer = (state: IGlobalState = initialState, action: Action) => {
     case GameActions.FirstPlayer:
       const gameAction = action as IFirstPlayer;
       return {...state, currentPlayer: gameAction.payload}
-    case RoomActions.ADD_ROOM:
-      const roomAction = action as IRoomActions;
-      return {...state, roomList: state.roomList.concat(roomAction.payload)};
   }
   
   return state;
 }
 
 
-export default reducer;
+export default Reducer;

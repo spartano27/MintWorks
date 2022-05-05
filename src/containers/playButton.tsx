@@ -1,7 +1,7 @@
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { PlayButtonActions } from "../actions/PlayButtonActions";
-import PlayButton from "../components/playButton";
+import {PlayButton} from "../components/playButton";
 import IGlobalState from "../state/globalState";
 
 

@@ -1,7 +1,7 @@
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { RoomActions } from "../actions/RoomActions";
-import JoinRoom from "../components/rooms/joinRoom";
+import {JoinRoom} from "../components/rooms/joinRoom";
 
 let roomId = 0;
 let nextUserId = 0;

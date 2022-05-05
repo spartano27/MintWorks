@@ -1,31 +1,41 @@
 import {createClient} from "@liveblocks/client";
 import { enhancer } from "@liveblocks/redux";
-import { configureStore, createSlice } from "@reduxjs/toolkit";
-import GlobalReducer from "./reducers/GlobalReducer";
+import {configureStore, createSlice } from "@reduxjs/toolkit";
 import { initialState } from "./state/globalState";
 
-
+//pk_live_qWBJrta6dfM5FdwAlCjK-ejY
 const client = createClient({
-    publicApiKey: "pk_live_qWBJrta6dfM5FdwAlCjK-ejY",
+    publicApiKey: "xd",
 
 });
 
 
 const slice = createSlice({
+  
   name: "state",    
   initialState,
   reducers: {
-      GlobalReducer,
-      addRooms: (state) => {
-        state.roomList = [...state.roomList,state.newRoom];
-        state.newRoom = "";
-        console.log(state.roomList);
+    addRooms: (state,action) => {
+      state.roomList = [...state.roomList,action.payload];
+      console.log(state.roomList);
 
-      },
+    },
+    changeUsername: (state,action) => {
+      state.username = action.payload;
+    },
+    setPlayers: (state,action) => {
+      state.players = action.payload;
+    }
+     
+     
+      
     /* logic will be added here */
   },
+  
+    
+
 });
-export const {addRooms} = slice.actions;
+export const {addRooms,changeUsername,setPlayers} = slice.actions;
 export function makeStore() {
   return configureStore({
     reducer: slice.reducer,

@@ -1,5 +1,5 @@
 import React from 'react';  
-import CreateRoom from '../containers/createRoom';
+import {CreateRoom} from "../components/rooms/createRoom";
 
 class Crear extends React.Component {
 
