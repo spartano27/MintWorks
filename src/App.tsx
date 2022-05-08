@@ -7,8 +7,7 @@ import Lobby from "./pages/Lobby";
 import GamePage from "./pages/Game";
 import Buscar from "./pages/Buscar";
 import Crear from "./pages/Crear";
-import { JoinRoom } from "./components/rooms/joinRoom";
-import Room from "./components/rooms/room";
+import RoomPage from "./pages/Room";
 
 
 
@@ -29,6 +28,7 @@ export default function App() {
 */
 
   return (
+    
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<HomeP />} /> 
@@ -36,7 +36,11 @@ export default function App() {
         <Route path="Game" element={<GamePage />}/>
         <Route path="Buscar" element={<Buscar />}/>
         <Route path="Crear" element={<Crear />}/>
-        <Route path="Room/:name" element={<Room /> }/>
+        <Route path="Room/:name" element={
+       
+            <RoomPage /> 
+        
+        }/>
       </Routes>
       
       </BrowserRouter>

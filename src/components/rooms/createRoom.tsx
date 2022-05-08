@@ -19,8 +19,11 @@ export function CreateRoom() {
         players: 2,
         difficult: false,
         publico: true,
+        users: [username],
     });
 
+    
+    
     const onSwitchAction = () => {
         setIsSwitchOn(!isSwitchOn);
         setRoom({...room,
@@ -63,18 +66,18 @@ export function CreateRoom() {
         setValidated(true);
         
       };
-        /*useEffect(() => {
+        useEffect(() => {
             dispatch(
-              actions.enterRoom("Createroom", {
-                todos: [],
+              actions.enterRoom("rooms", {
+                roomList: [],
               })
             );
         
             return () => {
-              dispatch(actions.leaveRoom("Createroom"));
+              dispatch(actions.leaveRoom("rooms"));
             };
           }, [dispatch]);
-    */
+    
             return(
                 <Container className="p-4">
                         <h1 className="text-center p-4 "> Configuration </h1>
