@@ -1,20 +1,21 @@
+import { useSelf } from '@liveblocks/react';
+import { current } from '@reduxjs/toolkit';
 import React from 'react';
 import {Alert, Container, Form, Row} from 'react-bootstrap';
 import {Button} from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import {Link} from 'react-router-dom';
-import { changeUsername } from "../store";
+import { changeUsername,addPlayer} from "../store";
 
 
 export function PlayButton() {
     const dispatch = useDispatch();
-    const username = useSelector((state:any) => state.username);
+    const currentUser = useSelf();
     const [link,setLink] = React.useState({
         error: false,
         value: "/"
     })
     let aviso;
-    
     const PushName = (e: { target: { value: any; }; }) => {
 
         const format = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
@@ -35,6 +36,8 @@ export function PlayButton() {
         else{
                 
                 dispatch(changeUsername(data));
+                console.log(currentUser);
+                
                 const value1 = "Lobby";
                 const error1 = false;
 

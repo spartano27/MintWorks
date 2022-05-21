@@ -59,7 +59,7 @@ export function CreateRoom() {
         }else{
             console.log(room);
             dispatch(addRooms(room));
-            navigate(`/Room/${room.name}`);
+            navigate(`/Room/${room.name}-${room.players}`);
             
         }
         console.log(room);

@@ -4,7 +4,7 @@ import {configureStore, createSlice } from "@reduxjs/toolkit";
 import { initialState } from "./state/globalState";
 
 //pk_live_qWBJrta6dfM5FdwAlCjK-ejY
-const client = createClient({
+export const client = createClient({
     publicApiKey: "pk_live_qWBJrta6dfM5FdwAlCjK-ejY",
 
 });
@@ -25,7 +25,18 @@ const slice = createSlice({
     },
     setPlayers: (state,action) => {
       state.players = action.payload;
+    },
+    addPlayer: (state,action) => {
+      state.playerList = [...state.playerList,action.payload];
+      console.log(state.playerList);
+    },
+    deleteCard: (state,action) => {
+      state.cards = []
+    },
+    initialStateCard: (state,action) => {
+      state.mazo_inicial = [...state.mazo_inicial,action.payload];
     }
+    
      
      
       
@@ -35,14 +46,15 @@ const slice = createSlice({
     
 
 });
-export const {addRooms,changeUsername,setPlayers} = slice.actions;
+export const {addRooms,changeUsername,setPlayers,addPlayer,initialStateCard} = slice.actions;
 export function makeStore() {
   return configureStore({
     reducer: slice.reducer,
     enhancers: [
       enhancer({
         client,
-        storageMapping: {roomList: true},
+        storageMapping: {roomList: true,rand: true}, 
+        
       }),
     ],
   });
