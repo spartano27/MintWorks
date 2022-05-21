@@ -8,7 +8,7 @@ import { LiveblocksProvider } from "@liveblocks/react";
 import {createClient} from "@liveblocks/client";
 
 const client = createClient({
-  publicApiKey: "pk_live_qWBJrta6dfM5FdwAlCjK-ejY",
+  publicApiKey: "pk_test_rGCwfxKjuMTNJOLSxeiLTtV3",
 
 });
 ReactDOM.render(

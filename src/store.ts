@@ -5,7 +5,7 @@ import { initialState } from "./state/globalState";
 
 //pk_live_qWBJrta6dfM5FdwAlCjK-ejY
 export const client = createClient({
-    publicApiKey: "pk_live_qWBJrta6dfM5FdwAlCjK-ejY",
+    publicApiKey: "pk_test_rGCwfxKjuMTNJOLSxeiLTtV3",
 
 });
 
