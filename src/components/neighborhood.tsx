@@ -4,34 +4,30 @@ import '../assets/css/neighborhood.css';
 import Clock from "../containers/clock";
 
 
-interface INeighborhoodProps {
-username: string;
-playerId: number;
-}
-
-interface INeighborhoodState {
-
-}
 
 
-class Neighborhood extends React.Component<INeighborhoodProps,INeighborhoodState> {
-    constructor(props: INeighborhoodProps){
-        super(props);
 
-    }
-
+function Neighborhood(id:any, username:any){
     
-    public render(){
-
+    const user = () => {
+        if(id.username == undefined){
+            return ""
+        }else{
+            return String(id.username);
+        }
+    }
+    
+    
+    
                 return(
                         <div className="square">
                             <Row className="p-2">
                                 <div className="p-2">
-                                    <Clock playerId={this.props.playerId}/>
+                                    <Clock playerId={id.id}/>
                                        
                                 </div>
                                 <div className="p-2">
-                                    {this.props.username}
+                                    {user()}
                                 </div>
                                 
                             </Row>
@@ -44,7 +40,7 @@ class Neighborhood extends React.Component<INeighborhoodProps,INeighborhoodState
                         </div>  
                 );
                
-    }
+    
 }
 
 export default Neighborhood;

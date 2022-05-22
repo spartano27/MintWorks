@@ -1,27 +1,43 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Board from "./board";
 import IA from "./board_components/ia";
-import Player from "../containers/player";
+import Player from "./player";
 import Shop from "./shop";
-import { useList, useOthers } from "@liveblocks/react";
+import { useList, useMyPresence, useOthers, useSelf } from "@liveblocks/react";
 import { useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { actions } from "@liveblocks/redux";
 
-interface IGameProps {
-    players: number;
-    currentPlayer: number;
-    FirstPlayer: (curentPlayer: number) => any;
-}
 
-interface IGameState {
-
-}
+type Presence = {
+    focusedId: string | null;
+    username: string;
+  };
 
 
 function Game(){
-   
+    const [mypresence,update] = useMyPresence<Presence>();
+    const current = useSelf();
+    const username = useSelector((state:any)=>state.username);
+    useEffect(()=>{
+        update({username:username});
+        
+      }, []);
 
+    const {name} = useParams();
+    const players = Number(String(name).split("-")[1]);
+    const dispatch = useDispatch();
+    const others = useOthers();
+    const [listOthers,setListOthers] = useState(
+        others.map(({presence}) => {
+            if(presence == null){
+                return null;
+            }
+            return(presence.username);
+            
+        }));
+        
+    
     /* A function that is called when the game starts. It is used to determine who goes first. */
    /* WhoFirst = () => {
         var first = 0;
@@ -35,11 +51,7 @@ function Game(){
         this.props.FirstPlayer(first);
     }
 */
-    const {name} = useParams();
-    const others = useOthers();
-    const players = Number(String(name).split("-")[1]);
-    const dispatch = useDispatch();
-
+    
  
 
    
@@ -65,7 +77,7 @@ function Game(){
                     
                     </div>
                     <div className="d-flex align-items-around ml-auto">
-                        <Player playerId={0} />
+                        <Player id={0} username={mypresence.username}/>
                         <Board players={players}/> 
                         <IA players={players}/>  
                     </div>   
@@ -77,12 +89,12 @@ function Game(){
                     
                     <div className='bg-gradient-primary'>
                         <div className="d-flex justify-content-between">
-                            <Player playerId={0}/>
+                            <Player id={0} username={mypresence.username}/>
                             <Shop players={players}/>
                             <div className="w-25">  </div>
                         </div>
                         <div className="d-flex align-items-end">
-                            <Player playerId={1}/>
+                            <Player id={1} username={listOthers[0]}/>
                             <Board players={players}/> 
                             <div className="w-25">  </div>
                         </div>               
@@ -95,14 +107,14 @@ function Game(){
                     <div>
                         <div className="d-flex justify-content-between">
 
-                            <Player playerId={0}/>    
+                            <Player id={0} username={mypresence.username}/>    
                             <Shop players={players}/>      
-                            <Player playerId={1}/>    
+                            <Player id={1} username={listOthers[0]}/>  
 
                         </div>
                     
                     <div className="d-flex align-items-end">
-                        <Player playerId={2}/>
+                        <Player id={2} username={listOthers[1]}/>
                         <Board players={players}/>  
                         <div className="w-25">  </div>                    
                     </div>                   
@@ -113,14 +125,14 @@ function Game(){
                 return(
                 <div className='bg-gradient-primary'>
                     <div className="d-flex justify-content-between">
-                        <Player playerId={0}/>
+                        <Player id={0} username={mypresence.username}/>
                         <Shop players={players}/>
-                        <Player playerId={1}/>                        
+                        <Player id={1} username={listOthers[0]}/>                        
                     </div>
                     <div className="d-flex align-items-end">
-                        <Player playerId={2}/>
+                        <Player id={2} username={listOthers[1]}/>
                         <Board players={players}/> 
-                        <Player playerId={3}/>                        
+                        <Player id={3} username={listOthers[2]}/>                        
                     </div>                   
                 </div>
                 );
@@ -134,7 +146,7 @@ function Game(){
                         
                         </div>
                         <div className="d-flex align-items-around ml-auto">
-                            <Player playerId={0}/>
+                            <Player id={0} username={mypresence.username}/>
                             <Board players={players}/> 
                             <IA players={players}/>  
                         </div>   

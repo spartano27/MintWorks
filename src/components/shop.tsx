@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {DragDropContext, Droppable, Draggable} from "react-beautiful-dnd";
-import { ListGroup, ListGroupItem, Row } from "react-bootstrap";
+import { Button, ListGroup, ListGroupItem, Row } from "react-bootstrap";
 import Assembler from "./cards/assemblerCard";
 import Bridge from "./cards/bridgeCard";
 import '../assets/css/cards.css';
@@ -29,9 +29,39 @@ import { useList, useMyPresence,useOthers, useUpdateMyPresence  } from "@liveblo
 import { useParams } from "react-router-dom";
 import Selection from "./selection";
 
+type Presence = {
+  focusedId: string | null;
+  username: string;
+};
+
+function Selections({ id }: { id: string }) {
+  const users = useOthers<Presence>();
+  const COLORS_PRESENCE = ["255, 69, 225", "255, 64, 64", "255, 166, 3"];
+  return (
+    <>
+      {users.map(({ connectionId, presence }:any) => {
+          if (presence == null){
+              return null;
+          }
+          console.log(presence.focusedId);
+        if (presence.focusedId === id) {
+          return (
+            <Selection
+              key={connectionId}
+              name={presence.username}
+              color={"255, 166, 3"}
+            />
+          );
+        }
+      })}
+    </>
+  );
+}
+
 function Shop(players: any) {
 
-    
+    const [visible,setVisible] = useState(true);  
+    const [valorId,setValorId] = useState("0");
     const username = useSelector((state:any)=>state.username);
     const [mypresence,update] = useMyPresence<Presence>();
     useEffect(()=>{
@@ -102,29 +132,23 @@ function Shop(players: any) {
 
 /* A function that returns a list of cards. */
  
-    
-
+  
+  
     return (    
-        <div>
-            <div>
-                <input
-                    id="input-name"
-                    type="text"
-                    
-                    onFocus={(e) => update({ focusedId: e.target.id })}
-                    onBlur={() => update({ focusedId: null })}
-                   
-                    maxLength={20}
-                />
-                <Selections id="input-name" />
-                </div>
+        <div className="p-4">
+            
         
             <ListGroup horizontal className="h-25 justify-content-center" style={{paddingTop:'24px'}} >
             {mazo_inicial.map((card)=> (
                 <div>
+                  <div >
+                <Button id={card.id} hidden={valorId == card.id ? false : true}> Comprar </Button>
+                <Button id={card.id} hidden={valorId == card.id ? false : true}
+                  onClick = {() => setValorId("cerrar")}>  Cerrar </Button>
+                </div>
                 <ListGroup.Item id={card.id} variant="primary"
                 onFocus={(e) => update({ focusedId: e.target.id })}
-                onClick={(e) => update({ focusedId: card.id})}
+                onClick={(e) => setValorId(card.id)}
                 onBlur={() => update({ focusedId: null })}>
                     {card.component}
                 </ListGroup.Item>
@@ -140,32 +164,5 @@ function Shop(players: any) {
 
 
 }
-type Presence = {
-    focusedId: string | null;
-    username: string;
-  };
 
-function Selections({ id }: { id: string }) {
-    const users = useOthers();
-    const COLORS_PRESENCE = ["255, 69, 225", "255, 64, 64", "255, 166, 3"];
-    return (
-      <>
-        {users.map(({ connectionId, presence }:any) => {
-            if (presence == null){
-                return null;
-            }
-            
-          if (presence.focusedId === id) {
-            return (
-              <Selection
-                key={connectionId}
-                name={presence.username}
-                color={COLORS_PRESENCE[connectionId % COLORS_PRESENCE.length]}
-              />
-            );
-          }
-        })}
-      </>
-    );
-  }
 export default Shop;

@@ -1,26 +1,18 @@
 import React from "react";
-import Neighborhood from "../containers/neighborhood";
+import Neighborhood from "./neighborhood";
 
-interface IPlayerProps {
-    playerId: number;
-}
 
-interface IPlayerState {
 
-}
-
-class Player extends React.Component<IPlayerProps,IPlayerState> {
-    constructor(props: IPlayerProps){
-        super(props);
-
-    }
-
-    public render(){
-
+function Player(id: any){
+    
         return (
-            <Neighborhood playerId={this.props.playerId} />
+            <div>
+            <Neighborhood id={id.id} username={id.username} />
+           
+            </div>
+        
         );
-    }
+    
 }
 
 export default Player;
