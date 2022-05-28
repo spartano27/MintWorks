@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
-import {DragDropContext, Droppable, Draggable} from "react-beautiful-dnd";
-import { Button, ListGroup, ListGroupItem, Row } from "react-bootstrap";
+import React, { useEffect, useState } from "react";;
+import { Button, ListGroup} from "react-bootstrap";
 import Assembler from "./cards/assemblerCard";
 import Bridge from "./cards/bridgeCard";
 import '../assets/css/cards.css';
@@ -23,44 +22,18 @@ import Vault from "./cards/vaultCard";
 import WholesalerCard from "./cards/wholesalerCard";
 import Windmill from "./cards/windmillCard";
 import Workshop from "./cards/workshopCard";
-import { useDispatch, useSelector } from "react-redux";
-import { initialStateCard } from "../store";
-import { useList, useMyPresence,useOthers, useUpdateMyPresence  } from "@liveblocks/react";
+import { useList, useMyPresence} from "@liveblocks/react";
 import { useParams } from "react-router-dom";
-import Selection from "./selection";
+import { useSelector } from "react-redux";
+
 
 type Presence = {
   focusedId: string | null;
   username: string;
 };
 
-function Selections({ id }: { id: string }) {
-  const users = useOthers<Presence>();
-  const COLORS_PRESENCE = ["255, 69, 225", "255, 64, 64", "255, 166, 3"];
-  return (
-    <>
-      {users.map(({ connectionId, presence }:any) => {
-          if (presence == null){
-              return null;
-          }
-          console.log(presence.focusedId);
-        if (presence.focusedId === id) {
-          return (
-            <Selection
-              key={connectionId}
-              name={presence.username}
-              color={"255, 166, 3"}
-            />
-          );
-        }
-      })}
-    </>
-  );
-}
-
 function Shop(players: any) {
 
-    const [visible,setVisible] = useState(true);  
     const [valorId,setValorId] = useState("0");
     const username = useSelector((state:any)=>state.username);
     const [mypresence,update] = useMyPresence<Presence>();
@@ -82,23 +55,11 @@ function Shop(players: any) {
         ,{id:"21", name: "Workshop", component: <Workshop/>},
     ];
     const {name} = useParams();
-    //String(name)
-    const rand = useList("ewwww",[(1 + Math.random() * (21-1)),(1 + Math.random() * (21-1)),(1 + Math.random() * (21-1))]);
+    const rand = useList(`InitialShop-${name}`,[(1 + Math.random() * (21-1)),(1 + Math.random() * (21-1)),(1 + Math.random() * (21-1))]);
                 if (rand == null){
                     return null;
                 }
-                
-            
-    /* A function that takes an array of objects, a start index and an end index. It then creates a new
-    array, removes the element at the start index and inserts it at the end index. */
-    const reorder = (list: { id: string; name: string; component: JSX.Element; }[],startIndex: number, endIndex: number) => {
-        const result = [...list];
-        const [removed] = result.splice(startIndex,1);
-        result.splice(endIndex,0,removed);
-        return result;
-    }
-
-
+  
     const mazo_inicial = [];
 
 /* Initialice the shop*/
@@ -122,13 +83,12 @@ function Shop(players: any) {
     } 
 
     }
+    if(mazo_inicial.length < 3){
+      mazo_inicial.push(cards[Math.round(Number(rand.get(0)))+1]);
+    }
         
             
     
-    
-
-    console.log(mazo_inicial);
-    console.log(cards);
 
 /* A function that returns a list of cards. */
  
@@ -152,8 +112,6 @@ function Shop(players: any) {
                 onBlur={() => update({ focusedId: null })}>
                     {card.component}
                 </ListGroup.Item>
-                
-                <Selections id={card.id} />
 
                 </div>
                 ))}

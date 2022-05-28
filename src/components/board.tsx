@@ -28,20 +28,20 @@ class Board extends React.Component<IBoardProps,IBoardState> {
 
         return (
             
-            <Container className='p-0' style={{width:'500px'}} >
+            <Container >
                 
-            <Row className='justify-content-center'>
+            <Row className='justify-content-start'>
                     <Leader players={this.props.players}/>
                     <Producer players={this.props.players}/>               
                 
             </Row>
-            <Row className='justify-content-center'>
+            <Row className='justify-content-start'>
                 <Builder players={this.props.players}/>
                 <Supplier players={this.props.players}/>
             
             </Row>
 
-            <Row className='justify-content-center'>
+            <Row className='justify-content-start'>
                 <Wholesaler />
                 <Lotto />
             

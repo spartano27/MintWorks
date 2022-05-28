@@ -12,6 +12,7 @@ type Presence = {
     focusedId: string | null;
     username: string;
     check: boolean;
+    mint: number;
     cursor: {
       x: number,
       y: number
@@ -38,6 +39,7 @@ function Room(){
     useEffect(()=>{
       update({username:username});
       update({check:false});
+      update({mint:3});
     }, []);
 
     const data = useObject<Logo>("logo", {
@@ -164,7 +166,6 @@ function Room(){
                         if (presence == null || presence.cursor == null) {
                             return null;
                         }
-
                         return (
                             <Cursor
                             key={`cursor-${connectionId}`}
@@ -185,7 +186,7 @@ function Room(){
                       <Alert className="mx-auto" variant="primary">Go to the Game! </Alert>
                       </ModalBody>
                       <ModalFooter>
-                      <Button variant="primary" onClick={() => navigate(`/Game/${name}`)} >
+                      <Button variant="primary" onClick={() => navigate(`/Game/Gl${name}`)} >
                           Play! 
                       </Button>
                       </ModalFooter>

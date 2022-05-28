@@ -1,159 +1,166 @@
 import React, { useEffect, useState } from "react";
 import Board from "./board";
-import IA from "./board_components/ia";
 import Player from "./player";
 import Shop from "./shop";
 import { useList, useMyPresence, useOthers, useSelf } from "@liveblocks/react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { actions } from "@liveblocks/redux";
+import { CountdownCircleTimer } from "react-countdown-circle-timer";
+import { Button, Col, Container, Modal, ModalBody, ModalFooter, Row } from "react-bootstrap";
+import { changeTurn } from "../store";
+
 
 
 type Presence = {
     focusedId: string | null;
     username: string;
+    mint: number;
   };
 
 
 function Game(){
+    const others = useOthers();
+    const self = useSelf();
+    const turnoId = useSelector((state:any)=>state.turnoId);
+    const [visible,setVisible] = useState(false);
+    const dispatch = useDispatch();
     const [mypresence,update] = useMyPresence<Presence>();
-    const current = useSelf();
     const username = useSelector((state:any)=>state.username);
+    const mints = useSelector((state:any)=>state.mints);
     useEffect(()=>{
-        update({username:username});
+        
+        update({username:username,mint:mints});
+        
         
       }, []);
 
     const {name} = useParams();
     const players = Number(String(name).split("-")[1]);
-    const dispatch = useDispatch();
-    const others = useOthers();
-    const [listOthers,setListOthers] = useState(
-        others.map(({presence}) => {
+    const [countdown,setCountdown] = useState(true);
+    const shuffleList = useList(`list-${name}`);
+    
+        let Mentas: number[] = []
+        let Users: string[] = []
+        let IDs: number[] = []
+    const [map,setMap] = useState(
+        others.map(({connectionId,presence}) => {
             if(presence == null){
                 return null;
             }
-            return(presence.username);
+            
+             Mentas.push(Number(presence.mint));
+             Users.push(String(presence.username));
+             IDs.push(Number(connectionId))
             
         }));
         
     
     /* A function that is called when the game starts. It is used to determine who goes first. */
-   /* WhoFirst = () => {
-        var first = 0;
-        if (players === 1){
-            first = 0;
-        }else{
-            first = Math.round(Math.random()*(3));
-            
-        }
-        
-        this.props.FirstPlayer(first);
-    }
-*/
-    
- 
-
    
 
+    
+    if(self == null){
+        return null;
+    }
+
+    const WhoFirst = () => {
+        const TotalIDs = [self.connectionId,...IDs];
+        
+        if(shuffleList == null){
+            return null;
+        }
+        const listShuffle = TotalIDs.sort(()=> Math.random() -0.5);
+        listShuffle.map((e)=>{
+            shuffleList.push(e);
+        });
+        dispatch(changeTurn(shuffleList.get(0)));
+        console.log(shuffleList.get(0));
+        setVisible(true);
+    }
+    let usernameTurn = turnoId == self.connectionId ? mypresence.username : "";
    if(others.count +1 < players){
        return (
            <h1> waiting </h1>
        )
    }
-   else{
 
-        
+   if(countdown){
+       return(
+           <div>
+               <h1>The game will start:</h1>
+                <CountdownCircleTimer
+                    isPlaying={true}  
+                    duration={1}
+                    colors={'#43716c'}
+                    size={50}
+                    onComplete={() => {
+                        WhoFirst()
+                        setCountdown(false);
 
-        
-        switch(players) {
-            case 1:
-                return(
-                
-                <div>
+                    }}
                     
-                    <div className="d-flex justify-content-center">                      
+
+                >
+                    {({ remainingTime }) => remainingTime}
+                </CountdownCircleTimer>
+           </div>
+      
+       )
+   }
+   
+    return (
+        <div>
+
+       
+        <Container style={{width: '100%'}}>
+            <Row className="mb-8">
+                <Col className="p-2 d-flex justify-content-start">
+                    
                     <Shop players={players}/>
                     
-                    </div>
-                    <div className="d-flex align-items-around ml-auto">
-                        <Player id={0} username={mypresence.username}/>
-                        <Board players={players}/> 
-                        <IA players={players}/>  
-                    </div>   
-                </div>
-                );
-                break;               
-            case 2:
-                return(
                     
-                    <div className='bg-gradient-primary'>
-                        <div className="d-flex justify-content-between">
-                            <Player id={0} username={mypresence.username}/>
-                            <Shop players={players}/>
-                            <div className="w-25">  </div>
-                        </div>
-                        <div className="d-flex align-items-end">
-                            <Player id={1} username={listOthers[0]}/>
-                            <Board players={players}/> 
-                            <div className="w-25">  </div>
-                        </div>               
-                    </div>
-                );
-                break;    
-            case 3:
-                return(
+                    <Board players={players}/>
 
-                    <div>
-                        <div className="d-flex justify-content-between">
-
-                            <Player id={0} username={mypresence.username}/>    
-                            <Shop players={players}/>      
-                            <Player id={1} username={listOthers[0]}/>  
-
-                        </div>
-                    
-                    <div className="d-flex align-items-end">
-                        <Player id={2} username={listOthers[1]}/>
-                        <Board players={players}/>  
-                        <div className="w-25">  </div>                    
-                    </div>                   
-                </div>
-                );
-                break;   
-            case 4:
-                return(
-                <div className='bg-gradient-primary'>
-                    <div className="d-flex justify-content-between">
-                        <Player id={0} username={mypresence.username}/>
-                        <Shop players={players}/>
-                        <Player id={1} username={listOthers[0]}/>                        
-                    </div>
-                    <div className="d-flex align-items-end">
-                        <Player id={2} username={listOthers[1]}/>
-                        <Board players={players}/> 
-                        <Player id={3} username={listOthers[2]}/>                        
-                    </div>                   
-                </div>
-                );
-                break;    
-            default:
-                return(
                 
-                    <div>
-                        <div className="d-flex justify-content-center">                      
-                        <Shop players={players}/>
-                        
+                </Col>
+            </Row>
+            <Row style={{marginTop:'100px'}} className="p-2 d-flex align-content-end" >
+                <Player id={self.connectionId} username={mypresence.username} mints={mypresence.mint} />
+                {others.map(({connectionId,presence}: any) => {
+                    if(presence == null){
+                        return null;
+                    }
+                    if(usernameTurn == ""){
+                        usernameTurn = turnoId == connectionId ? presence.username : "";
+                    }
+                    return(
+                        <div>
+                            <Player id={connectionId} username={presence.username} mints={presence.mint} />
+                            
                         </div>
-                        <div className="d-flex align-items-around ml-auto">
-                            <Player id={0} username={mypresence.username}/>
-                            <Board players={players}/> 
-                            <IA players={players}/>  
-                        </div>   
-                    </div>
-                    );  
-       }
-    }    
+                      
+                    )
+                })
+                }
+                
+            </Row>
+           
+            
+        </Container>
+          <Modal show={visible} onHide={() => setVisible(false)} centered >
+                <ModalBody>
+                 its {usernameTurn} turn
+                </ModalBody>
+                <ModalFooter>
+                <Button variant="primary" onClick={() => setVisible(false)} >
+                    Ok! 
+                </Button>
+                </ModalFooter>
+            </Modal>
+        </div>
+        
+    )
 }
 
 export default Game;
+

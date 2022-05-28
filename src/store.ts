@@ -35,6 +35,9 @@ const slice = createSlice({
     },
     initialStateCard: (state,action) => {
       state.mazo_inicial = [...state.mazo_inicial,action.payload];
+    },
+    changeTurn: (state,action) => {
+      state.turnoId = action.payload;
     }
     
      
@@ -46,7 +49,7 @@ const slice = createSlice({
     
 
 });
-export const {addRooms,changeUsername,setPlayers,addPlayer,initialStateCard} = slice.actions;
+export const {addRooms,changeUsername,setPlayers,addPlayer,initialStateCard,changeTurn} = slice.actions;
 export function makeStore() {
   return configureStore({
     reducer: slice.reducer,

@@ -1,30 +1,34 @@
-import React from "react";
+import React, { useState } from "react";
 import {ListGroup, Row} from "react-bootstrap";
+import { useSelector } from "react-redux";
 import '../assets/css/neighborhood.css';
 import Clock from "../containers/clock";
+import Mint from "./mint";
 
 
 
 
 
-function Neighborhood(id:any, username:any){
+function Neighborhood(valor:any){
+    const turnoId = useSelector((state:any)=> state.turnoId);
+    const [myTurn,useMyTurn] = useState(turnoId == valor.id);
     
     const user = () => {
-        if(id.username == undefined){
+        if(valor.username == undefined){
             return ""
         }else{
-            return String(id.username);
+            return String(valor.username);
         }
     }
     
     
     
                 return(
-                        <div className="square">
+                        <div className={myTurn ? "squareSelected": "square"}>
                             <Row className="p-2">
                                 <div className="p-2">
-                                    <Clock playerId={id.id}/>
-                                       
+                                    <Clock playerId={valor.id}/>
+                                    <Mint  mints = {valor.mints}/>
                                 </div>
                                 <div className="p-2">
                                     {user()}

@@ -1,7 +1,7 @@
 import { RoomProvider } from '@liveblocks/react';
 import React from 'react';  
 import { useParams } from 'react-router-dom';
-import Game from '../containers/game';  
+import Game from '../components/game';  
 import {LiveList, LiveObject} from "@liveblocks/client";
 import Shop from '../components/shop';
 function GamePage() {
@@ -16,11 +16,11 @@ function GamePage() {
             }}>
 
             
-            <body style={{backgroundImage: 'url(' + require('../images/fondo1.png') + ')'}}>
+            
                           
                             <Game/>
 
-            </body>
+           
             </RoomProvider>
            
         );

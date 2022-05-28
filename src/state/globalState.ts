@@ -25,18 +25,21 @@ import Shop from "../components/shop";
 interface IGlobalState {
     players: number;
     username: string;
+    mints: number;
     currentPlayer: number;
     roomList: {}[];
     playerList: {}[];
     cards: {}[];
     mazo_inicial: {}[];
     rand: number;
+    turnoId: number;
 }
 
 export default IGlobalState;
 export const initialState: IGlobalState = {
     players: 4,
     username: "",
+    mints: 3,
     playerList: [],
     currentPlayer:0,
     roomList:[],
@@ -54,7 +57,8 @@ export const initialState: IGlobalState = {
    
 ],
     mazo_inicial: [],
-    rand: (1 + Math.random() * (21-1))
+    rand: (1 + Math.random() * (21-1)),
+    turnoId: 0
     
     
    

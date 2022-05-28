@@ -3,11 +3,11 @@ import Neighborhood from "./neighborhood";
 
 
 
-function Player(id: any){
-    
+function Player(valor: any){
+        console.log(valor);
         return (
             <div>
-            <Neighborhood id={id.id} username={id.username} />
+            <Neighborhood id={valor.id} username={valor.username} mints={valor.mints} />
            
             </div>
         
