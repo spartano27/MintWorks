@@ -49,7 +49,7 @@ export const initialState: IGlobalState = {
     ,{id:"3", name: Coop, value:1, owner: 0}
     ,{id:"4", name: Corporate, value:3, owner: 0}
     ,{id:"5", name: Crane, value:2, owner: 0}
-    ,{id:"6", name: Factory, value:4, owner: 0}
+    ,{id:"6", name: Factory(ShopCardsTypes.shop), value:4, owner: 0}
     ,{id:"7", name: Gallery, value:4, owner: 0}
     ,{id:"8", name: Gardens, value:3, owner: 0}
     ,{id:"9", name: Landfill, value:3, owner: 0}

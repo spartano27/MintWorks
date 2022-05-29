@@ -38,6 +38,14 @@ const slice = createSlice({
     },
     changeTurn: (state,action) => {
       state.turnoId = action.payload;
+    },
+    removeCard: (state,action) => {  
+      let newa = state.cards.slice();
+      newa.splice(action.payload,1);
+      state.cards = newa;
+    },
+    usedCards: (state,action) => {
+      state.mazo_inicial = [...state.mazo_inicial,action.payload];
     }
     
      
@@ -49,7 +57,7 @@ const slice = createSlice({
     
 
 });
-export const {addRooms,changeUsername,setPlayers,addPlayer,initialStateCard,changeTurn} = slice.actions;
+export const {addRooms,changeUsername,setPlayers,addPlayer,initialStateCard,changeTurn,removeCard,usedCards} = slice.actions;
 export function makeStore() {
   return configureStore({
     reducer: slice.reducer,
