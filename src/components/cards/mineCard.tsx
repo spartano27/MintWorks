@@ -20,7 +20,7 @@ class Mine extends React.Component<IMineProps,IMineState> {
        
         return(
             
-            <img src = {require("../../images/cards_images/MINE.PNG")}/>
+            <img src = {require("../../images/cards_images/MINE.PNG")} style={{padding:'0px'}}/>
            
         );
     }

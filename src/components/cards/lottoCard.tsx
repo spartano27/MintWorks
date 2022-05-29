@@ -20,7 +20,7 @@ class LottoCard extends React.Component<ILottoCardProps,ILottoCardState> {
        
         return(
             
-            <img src = {require("../../images/cards_images/LOTTO.PNG")}/>
+            <img src = {require("../../images/cards_images/LOTTO.PNG")} style={{padding:'0px'}}/>
            
         );
     }

@@ -2,13 +2,14 @@
   height: 150px;
   width: 270px;
   margin: 5px;
-  background-color: #e83e8c; }
+  background-color: #e83e8c;
+  border-color: blueviolet; }
 
-  .squareSelected {
-    height: 150px;
-    width: 270px;
-    margin: 5px;
-    border-color: blueviolet;
-    border-width: 5px;
-    border-style: solid;
-    background-color: #e83e8c; }
+.squareSelected {
+  height: 150px;
+  width: 270px;
+  margin: 5px;
+  border-color: blueviolet;
+  border-width: 5px;
+  border-style: solid;
+  background-color: #e83e8c; }

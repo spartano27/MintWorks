@@ -20,7 +20,7 @@ class Truck extends React.Component<ITruckProps,ITruckState> {
        
         return(
             
-            <img src = {require("../../images/cards_images/TRUCK.PNG")}/>
+            <img src = {require("../../images/cards_images/TRUCK.PNG")} style={{padding:'0px'}}/>
            
         );
     }

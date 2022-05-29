@@ -20,7 +20,7 @@ class Obelisk extends React.Component<IObeliskProps,IObeliskState> {
        
         return(
             
-            <img src = {require("../../images/cards_images/OBELISK.PNG")}/>
+            <img src = {require("../../images/cards_images/OBELISK.PNG")} style={{padding:'0px'}}/>
            
         );
     }

@@ -20,7 +20,7 @@ class Museum extends React.Component<IMuseumProps,IMuseumState> {
        
         return(
             
-            <img src = {require("../../images/cards_images/MUSEUM.PNG")}/>
+            <img src = {require("../../images/cards_images/MUSEUM.PNG")} style={{padding:'0px'}}/>
            
         );
     }

@@ -20,7 +20,7 @@ class Gardens extends React.Component<IGardensProps,IGardensState> {
        
         return(
             
-            <img src = {require("../../images/cards_images/GARDENS.PNG")}/>
+            <img src = {require("../../images/cards_images/GARDENS.PNG")} style={{padding:'0px'}}/>
            
         );
     }

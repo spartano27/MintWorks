@@ -20,7 +20,7 @@ class Landfill extends React.Component<ILandfillProps,ILandfillState> {
        
         return(
             
-            <img src = {require("../../images/cards_images/LANDFILL.PNG")}/>
+            <img src = {require("../../images/cards_images/LANDFILL.PNG")} style={{padding:'0px'}}/>
            
         );
     }

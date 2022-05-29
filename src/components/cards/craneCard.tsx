@@ -20,7 +20,7 @@ class Crane extends React.Component<ICraneProps,ICraneState> {
        
         return(
             
-            <img src = {require("../../images/cards_images/CRANE.PNG")}/>
+            <img src = {require("../../images/cards_images/CRANE.PNG")} style={{padding:'0px'}}/>
            
         );
     }

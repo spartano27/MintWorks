@@ -9,7 +9,7 @@ function Mint( valor: any) {
     return(
         <div>
             
-            <img  src = {require("../images/MENTA-BOTÓN.PNG")} style={{width:'50px'}}
+            <img  src = {require("../images/MENTA-BOTÓN.PNG")} style={{width:'50px',padding:'0px'}}
             onDragStart={(e) => DragHandler(e)} />
             x{valor.mints}
         </div>

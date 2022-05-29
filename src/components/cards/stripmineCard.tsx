@@ -20,7 +20,7 @@ class Stripmine extends React.Component<IStripmineProps,IStripmineState> {
        
         return(
             
-            <img src = {require("../../images/cards_images/STRIPMINE.PNG")}/>
+            <img src = {require("../../images/cards_images/STRIPMINE.PNG")} style={{padding:'0px'}}/>
            
         );
     }

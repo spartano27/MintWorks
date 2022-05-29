@@ -20,7 +20,7 @@ class Workshop extends React.Component<IWorkshopProps,IWorkshopState> {
        
         return(
             
-            <img src = {require("../../images/cards_images/WORKSHOP.PNG")}/>
+            <img src = {require("../../images/cards_images/WORKSHOP.PNG")} style={{padding:'0px'}}/>
            
         );
     }

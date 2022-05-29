@@ -20,7 +20,7 @@ class WholesalerCard extends React.Component<IWholesalerCardProps,IWholesalerCar
        
         return(
             
-            <img src = {require("../../images/cards_images/WHOLESALER.PNG")}/>
+            <img src = {require("../../images/cards_images/WHOLESALER.PNG")} style={{padding:'0px'}}/>
            
         );
     }

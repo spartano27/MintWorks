@@ -20,7 +20,7 @@ class Windmill extends React.Component<IWindmillProps,IWindmillState> {
        
         return(
             
-            <img src = {require("../../images/cards_images/WINDMILL.PNG")}/>
+            <img src = {require("../../images/cards_images/WINDMILL.PNG")} style={{padding:'0px'}}/>
            
         );
     }

@@ -20,7 +20,7 @@ class Gallery extends React.Component<IGalleryProps,IGalleryState> {
        
         return(
             
-            <img src = {require("../../images/cards_images/GALLERY.PNG")}/>
+            <img src = {require("../../images/cards_images/GALLERY.PNG")} style={{padding:'0px'}}/>
            
         );
     }

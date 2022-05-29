@@ -26,7 +26,7 @@ class Assembler extends React.Component<IAssemblerProps,IAssemblerState> {
         return(
 
             <div>
-            <img  src = {require("../../images/cards_images/ASSEMBLER.PNG")} />
+            <img  src = {require("../../images/cards_images/ASSEMBLER.PNG")} style={{padding:'0px'}} />
            
             </div>
 

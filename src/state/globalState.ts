@@ -20,6 +20,7 @@ import Vault from "../components/cards/vaultCard";
 import Windmill from "../components/cards/windmillCard";
 import Workshop from "../components/cards/workshopCard";
 import Shop from "../components/shop";
+import { ShopCardsTypes } from "../types";
 
 /* Defining the initial state of the game. */
 interface IGlobalState {
@@ -43,18 +44,27 @@ export const initialState: IGlobalState = {
     playerList: [],
     currentPlayer:0,
     roomList:[],
-    cards : [{id:"1", name: Assembler,},{id:"2", name: Bridge}
-            ,{id:"3", name: Coop},{id:"4", name: Corporate}
-            ,{id:"5", name: Crane},{id:"6", name: Factory}
-            ,{id:"7", name: Gallery},{id:"8", name: Gardens}
-            ,{id:"9", name: Landfill},{id:"10", name: Lotto}
-            ,{id:"11", name: Mine},{id:"12", name: Museum}
-            ,{id:"13", name: Obelisk},{id:"14", name: Plant}
-            ,{id:"15", name: Statue},{id:"16", name: Stripmine}
-            ,{id:"17", name: Truck},{id:"18", name: Vault}
-            ,{id:"19", name: Wholesaler},{id:"20", name: Windmill}
-            ,{id:"21", name: Workshop},
-   
+    cards: [{id:"1", name: Assembler, value:5, owner: 0}
+    ,{id:"2", name: Bridge, value:1, owner: 0}
+    ,{id:"3", name: Coop, value:1, owner: 0}
+    ,{id:"4", name: Corporate, value:3, owner: 0}
+    ,{id:"5", name: Crane, value:2, owner: 0}
+    ,{id:"6", name: Factory, value:4, owner: 0}
+    ,{id:"7", name: Gallery, value:4, owner: 0}
+    ,{id:"8", name: Gardens, value:3, owner: 0}
+    ,{id:"9", name: Landfill, value:3, owner: 0}
+    ,{id:"10", name: Lotto, value:4, owner: 0}
+    ,{id:"11", name: Mine, value:2, owner: 0}
+    ,{id:"12", name: Museum, value:2, owner: 0}
+    ,{id:"13", name: Obelisk, value:4, owner: 0}
+    ,{id:"14", name: Plant, value:5, owner: 0}
+    ,{id:"15", name: Statue, value:2, owner: 0}
+    ,{id:"16", name: Stripmine, value:4, owner: 0}
+    ,{id:"17", name: Truck, value:2, owner: 0}
+    ,{id:"18", name: Vault, value:5, owner: 0}
+    ,{id:"19", name: Wholesaler, value:1, owner: 0}
+    ,{id:"20", name: Windmill, value:1, owner: 0}
+    ,{id:"21", name: Workshop, value:3, owner: 0}
 ],
     mazo_inicial: [],
     rand: (1 + Math.random() * (21-1)),

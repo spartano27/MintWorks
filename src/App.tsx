@@ -8,6 +8,7 @@ import GamePage from "./pages/Game";
 import Buscar from "./pages/Buscar";
 import Crear from "./pages/Crear";
 import RoomPage from "./pages/Room";
+import IndividualGame from "./pages/IndividiualGame";
 
 
 
@@ -34,6 +35,7 @@ export default function App() {
         <Route path="/" element={<HomeP />} /> 
         <Route path="Lobby" element={<Lobby />} /> 
         <Route path="Game/:name" element={<GamePage />}/>
+        <Route path="IndividualGame" element={<IndividualGame />}/>
         <Route path="Buscar" element={<Buscar />}/>
         <Route path="Crear" element={<Crear />}/>
         <Route path="Room/:name" element={

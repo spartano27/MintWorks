@@ -20,7 +20,7 @@ class Vault extends React.Component<IVaultProps,IVaultState> {
        
         return(
             
-            <img src = {require("../../images/cards_images/VAULT.PNG")}/>
+            <img src = {require("../../images/cards_images/VAULT.PNG")} style={{padding:'0px'}}/>
            
         );
     }

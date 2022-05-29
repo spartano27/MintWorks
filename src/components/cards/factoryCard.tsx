@@ -1,28 +1,28 @@
 import React from "react";
+import { ShopCardsTypes } from "../../types";
 
-interface IFactoryProps {
 
-}
-interface IFactoryState {
-    build : boolean;
-    owned : boolean;
 
-}
-
-class Factory extends React.Component<IFactoryProps,IFactoryState> {
-    constructor(props : IFactoryProps){
-        super(props);
-        this.state = {build: false, owned: false};
-
-    }
-
-    public render(){
-       
-        return(
+function Factory(valor: any){
+    switch(valor.estado){
+        case ShopCardsTypes.shop:
             
-            <img src = {require("../../images/cards_images/FACTORY.PNG")}/>
-           
-        );
+            return(<img src = {require("../../images/cards_images/FACTORY.PNG")} style={{padding:'0px'}}/>)
+
+        case ShopCardsTypes.neighborhood:
+
+            return(<img src = {require("../../images/REVERSO.PNG")} style={{padding:'0px'}}/>)
+
+        case ShopCardsTypes.active:
+
+           return(<img src = {require("../../images/cards_images/FACTORY.PNG")} style={{padding:'0px'}}/>)
+
+        default:
+            return(<img src = {require("../../images/cards_images/FACTORY.PNG")} style={{padding:'0px'}}/>)
     }
+    
+       
+      
+    
 }
 export default Factory;

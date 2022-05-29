@@ -15,6 +15,7 @@ type Presence = {
     focusedId: string | null;
     username: string;
     mint: number;
+    cards: any[];
   };
 
 
@@ -29,7 +30,7 @@ function Game(){
     const mints = useSelector((state:any)=>state.mints);
     useEffect(()=>{
         
-        update({username:username,mint:mints});
+        update({username:username,mint:mints, cards:[]});
         
         
       }, []);
