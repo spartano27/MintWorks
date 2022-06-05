@@ -3,4 +3,3 @@ export enum ShopCardsTypes {
     neighborhood = "neighborhood",
     active = "active"
 }
-

@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { ShopCardsTypes } from "../types";
 import { removeCard, usedCards } from "../store";
-
+import Landfill from "../components/cards/landfillCard";
 type Presence = {
     focusedId: string | null;
     username: string;
@@ -42,7 +42,6 @@ function Shop(players: any) {
                 dispatch(removeCard(parseInt(c)-1));
             }   
             else if(parseInt(cards[c].id) === Math.round(Number(rand.get(2))) && !mazo.includes(cards[c])){
-               
                 dispatch(usedCards(cards[c]));
                 dispatch(removeCard(parseInt(c)-2));
             } 
@@ -53,17 +52,20 @@ function Shop(players: any) {
     
     
         
-    const handleCompra = (card: { id: string; name: string; component: JSX.Element; }) => {
+    const handleCompra = (card: { id: string; value: number; name: Function;}) => {
         if(mypresence == null){
             return null;
         }
-        const totalCards = [...mypresence.cards,card];
+        
+        const cardOwner = {id: card.id, name: card.name, value: card.value, owner: mypresence.username}
+        const totalCards = [...mypresence.cards,cardOwner];
         update({cards:totalCards});
+        update({mint: mypresence.mint-cardOwner.value});
         
     
         
     }
-    
+
 
 /* A function that returns a list of cards. */
  
@@ -75,22 +77,28 @@ function Shop(players: any) {
             
         
             <ListGroup horizontal className="h-25 justify-content-center" style={{paddingTop:'24px'}} >
-            {mazo.map((card:any)=> (
-                <div>
-                  <div >
-                <Button id={card.id} hidden={valorId == card.id ? false : true} onClick={() => handleCompra(card)}> Comprar </Button>
-                <Button id={card.id} hidden={valorId == card.id ? false : true}
-                  onClick = {() => setValorId("cerrar")}>  Cerrar </Button>
-                </div>
-                <ListGroup.Item id={card.id} variant="primary"
-                onFocus={(e) => update({ focusedId: e.target.id })}
-                onClick={(e) => setValorId(card.id)}
-                onBlur={() => update({ focusedId: null })}>
-                    {card.name}
-                </ListGroup.Item>
-
-                </div>
-                ))}
+            {mazo.map((card:any)=> {
+                
+               
+                return(
+                    <div>
+                    
+                    <div >
+                  <Button id={card.id} hidden={valorId == card.id ? false : true} onClick={() => handleCompra(card)}> Comprar </Button>
+                  <Button id={card.id} hidden={valorId == card.id ? false : true}
+                    onClick = {() => setValorId("cerrar")}>  Cerrar </Button>
+                  </div>
+                  <ListGroup.Item id={card.id} variant="primary"
+                  onFocus={(e) => update({ focusedId: e.target.id })}
+                  onClick={(e) => setValorId(card.id)}
+                  onBlur={() => update({ focusedId: null })}>
+                      {card.name(ShopCardsTypes.shop)}
+                  </ListGroup.Item>
+  
+                  </div>
+                )
+               
+                })}
             </ListGroup>
         </div>
 

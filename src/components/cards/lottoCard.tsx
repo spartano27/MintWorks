@@ -1,28 +1,28 @@
 import React from "react";
+import { ShopCardsTypes } from "../../types";
 
-interface ILottoCardProps {
 
-}
-interface ILottoCardState {
-    build : boolean;
-    owned : boolean;
 
-}
-
-class LottoCard extends React.Component<ILottoCardProps,ILottoCardState> {
-    constructor(props : ILottoCardProps){
-        super(props);
-        this.state = {build: false, owned: false};
-
-    }
-
-    public render(){
-       
-        return(
+function LottoCard(valor: any){
+    switch(valor){
+        case ShopCardsTypes.shop:
             
-            <img src = {require("../../images/cards_images/LOTTO.PNG")} style={{padding:'0px'}}/>
-           
-        );
+            return(<img src = {require("../../images/cards_images/LOTTO.PNG")} style={{padding:'0px'}}/>)
+
+        case ShopCardsTypes.neighborhood:
+
+            return(<img src = {require("../../images/REVERSO.PNG")} style={{width:'50px',height:'100px', padding: '0px'}}/>)
+
+        case ShopCardsTypes.active:
+
+           return(<img src = {require("../../images/cards_images/LOTTO.PNG")} style={{width:'50px',height:'100px', padding: '0px'}}/>)
+
+        default:
+            return(<img src = {require("../../images/cards_images/LOTTO.PNG")} style={{padding:'0px'}}/>)
     }
+    
+       
+      
+    
 }
 export default LottoCard;

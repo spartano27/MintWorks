@@ -1,36 +1,28 @@
 import React from "react";
+import { ShopCardsTypes } from "../../types";
 
 
-interface IAssemblerProps {
 
-}
-interface IAssemblerState {
-    build : boolean;
-    owned : boolean;
-    zoomed: boolean;
+function Assembler(valor: any){
+    switch(valor){
+        case ShopCardsTypes.shop:
+            
+            return(<img src = {require("../../images/cards_images/ASSEMBLER.PNG")} style={{padding:'0px'}}/>)
 
-}
+        case ShopCardsTypes.neighborhood:
 
+            return(<img src = {require("../../images/REVERSO.PNG")} style={{width:'50px',height:'100px', padding: '0px'}}/>)
 
-class Assembler extends React.Component<IAssemblerProps,IAssemblerState> {
-    constructor(props : IAssemblerProps){
-        super(props);
-        this.state = {build: false, owned: false, zoomed: false};
+        case ShopCardsTypes.active:
 
+           return(<img src = {require("../../images/cards_images/ASSEMBLER.PNG")} style={{width:'50px',height:'100px', padding: '0px'}}/>)
+
+        default:
+            return(<img src = {require("../../images/cards_images/ASSEMBLER.PNG")} style={{padding:'0px'}}/>)
     }
-
     
-    public render(){
+       
       
-      
-        return(
-
-            <div>
-            <img  src = {require("../../images/cards_images/ASSEMBLER.PNG")} style={{padding:'0px'}} />
-           
-            </div>
-
-        );
-    }
+    
 }
 export default Assembler;

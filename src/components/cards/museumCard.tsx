@@ -1,28 +1,28 @@
 import React from "react";
+import { ShopCardsTypes } from "../../types";
 
-interface IMuseumProps {
 
-}
-interface IMuseumState {
-    build : boolean;
-    owned : boolean;
 
-}
-
-class Museum extends React.Component<IMuseumProps,IMuseumState> {
-    constructor(props : IMuseumProps){
-        super(props);
-        this.state = {build: false, owned: false};
-
-    }
-
-    public render(){
-       
-        return(
+function Museum(valor: any){
+    switch(valor){
+        case ShopCardsTypes.shop:
             
-            <img src = {require("../../images/cards_images/MUSEUM.PNG")} style={{padding:'0px'}}/>
-           
-        );
+            return(<img src = {require("../../images/cards_images/MUSEUM.PNG")} style={{padding:'0px'}}/>)
+
+        case ShopCardsTypes.neighborhood:
+
+            return(<img src = {require("../../images/REVERSO.PNG")} style={{width:'50px',height:'100px', padding: '0px'}}/>)
+
+        case ShopCardsTypes.active:
+
+           return(<img src = {require("../../images/cards_images/MUSEUM.PNG")} style={{width:'50px',height:'100px', padding: '0px'}}/>)
+
+        default:
+            return(<img src = {require("../../images/cards_images/MUSEUM.PNG")} style={{padding:'0px'}}/>)
     }
+    
+       
+      
+    
 }
 export default Museum;

@@ -1,28 +1,28 @@
 import React from "react";
+import { ShopCardsTypes } from "../../types";
 
-interface IPlantProps {
 
-}
-interface IPlantState {
-    build : boolean;
-    owned : boolean;
 
-}
-
-class Plant extends React.Component<IPlantProps,IPlantState> {
-    constructor(props : IPlantProps){
-        super(props);
-        this.state = {build: false, owned: false};
-
-    }
-
-    public render(){
-       
-        return(
+function Plant(valor: any){
+    switch(valor){
+        case ShopCardsTypes.shop:
             
-            <img src = {require("../../images/cards_images/PLANT.PNG")} style={{padding:'0px'}}/>
-           
-        );
+            return(<img src = {require("../../images/cards_images/PLANT.PNG")} style={{padding:'0px'}}/>)
+
+        case ShopCardsTypes.neighborhood:
+
+            return(<img src = {require("../../images/REVERSO.PNG")} style={{width:'50px',height:'100px', padding: '0px'}}/>)
+
+        case ShopCardsTypes.active:
+
+           return(<img src = {require("../../images/cards_images/PLANT.PNG")} style={{width:'50px',height:'100px', padding: '0px'}}/>)
+
+        default:
+            return(<img src = {require("../../images/cards_images/PLANT.PNG")} style={{padding:'0px'}}/>)
     }
+    
+       
+      
+    
 }
 export default Plant;

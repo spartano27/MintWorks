@@ -1,28 +1,28 @@
 import React from "react";
+import { ShopCardsTypes } from "../../types";
 
-interface ICorporateProps {
 
-}
-interface ICorporateState {
-    build : boolean;
-    owned : boolean;
 
-}
-
-class Corporate extends React.Component<ICorporateProps,ICorporateState> {
-    constructor(props : ICorporateProps){
-        super(props);
-        this.state = {build: false, owned: false};
-
-    }
-
-    public render(){
-       
-        return(
+function Corporate(valor: any){
+    switch(valor){
+        case ShopCardsTypes.shop:
             
-            <img src = {require("../../images/cards_images/CORPORATE.PNG")} style={{padding:'0px'}}/>
-           
-        );
+            return(<img src = {require("../../images/cards_images/CORPORATE.PNG")} style={{padding:'0px'}}/>)
+
+        case ShopCardsTypes.neighborhood:
+
+            return(<img src = {require("../../images/REVERSO.PNG")} style={{width:'50px',height:'100px', padding: '0px'}}/>)
+
+        case ShopCardsTypes.active:
+
+           return(<img src = {require("../../images/cards_images/CORPORATE.PNG")} style={{width:'50px',height:'100px', padding: '0px'}}/>)
+
+        default:
+            return(<img src = {require("../../images/cards_images/CORPORATE.PNG")} style={{padding:'0px'}}/>)
     }
+    
+       
+      
+    
 }
 export default Corporate;

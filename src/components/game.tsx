@@ -126,17 +126,19 @@ function Game(){
                 </Col>
             </Row>
             <Row style={{marginTop:'100px'}} className="p-2 d-flex align-content-end" >
-                <Player id={self.connectionId} username={mypresence.username} mints={mypresence.mint} />
+                <Player id={self.connectionId} username={mypresence.username} mints={mypresence.mint} cards={mypresence.cards} />
                 {others.map(({connectionId,presence}: any) => {
+
                     if(presence == null){
                         return null;
                     }
+                    console.log(presence);
                     if(usernameTurn == ""){
                         usernameTurn = turnoId == connectionId ? presence.username : "";
                     }
                     return(
                         <div>
-                            <Player id={connectionId} username={presence.username} mints={presence.mint} />
+                            <Player id={connectionId} username={presence.username} mints={presence.mint} cards={presence.cards} />
                             
                         </div>
                       

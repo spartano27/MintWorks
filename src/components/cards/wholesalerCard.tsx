@@ -1,28 +1,28 @@
 import React from "react";
+import { ShopCardsTypes } from "../../types";
 
-interface IWholesalerCardProps {
 
-}
-interface IWholesalerCardState {
-    build : boolean;
-    owned : boolean;
 
-}
-
-class WholesalerCard extends React.Component<IWholesalerCardProps,IWholesalerCardState> {
-    constructor(props : IWholesalerCardProps){
-        super(props);
-        this.state = {build: false, owned: false};
-
-    }
-
-    public render(){
-       
-        return(
+function WholesalerCard(valor: any){
+    switch(valor){
+        case ShopCardsTypes.shop:
             
-            <img src = {require("../../images/cards_images/WHOLESALER.PNG")} style={{padding:'0px'}}/>
-           
-        );
+            return(<img src = {require("../../images/cards_images/WHOLESALER.PNG")} style={{padding:'0px'}}/>)
+
+        case ShopCardsTypes.neighborhood:
+
+            return(<img src = {require("../../images/REVERSO.PNG")} style={{width:'50px',height:'100px', padding: '0px'}}/>)
+
+        case ShopCardsTypes.active:
+
+           return(<img src = {require("../../images/cards_images/WHOLESALER.PNG")} style={{width:'50px',height:'100px', padding: '0px'}}/>)
+
+        default:
+            return(<img src = {require("../../images/cards_images/WHOLESALER.PNG")} style={{padding:'0px'}}/>)
     }
+    
+       
+      
+    
 }
 export default WholesalerCard;

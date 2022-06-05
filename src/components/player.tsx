@@ -4,10 +4,9 @@ import Neighborhood from "./neighborhood";
 
 
 function Player(valor: any){
-        console.log(valor);
         return (
             <div>
-            <Neighborhood id={valor.id} username={valor.username} mints={valor.mints} />
+            <Neighborhood id={valor.id} username={valor.username} mints={valor.mints} cards={valor.cards} />
            
             </div>
         
