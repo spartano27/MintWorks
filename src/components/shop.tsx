@@ -52,12 +52,12 @@ function Shop(players: any) {
     
     
         
-    const handleCompra = (card: { id: string; value: number; name: Function;}) => {
+    const handleCompra = (card: { id: string; effect:any; value: number; name: Function;}) => {
         if(mypresence == null){
             return null;
         }
         
-        const cardOwner = {id: card.id, name: card.name, value: card.value, owner: mypresence.username}
+        const cardOwner = {id: card.id,name: card.name, effect: card.effect, value: card.value, owner: mypresence.username}
         const totalCards = [...mypresence.cards,cardOwner];
         update({cards:totalCards});
         update({mint: mypresence.mint-cardOwner.value});
@@ -92,7 +92,7 @@ function Shop(players: any) {
                   onFocus={(e) => update({ focusedId: e.target.id })}
                   onClick={(e) => setValorId(card.id)}
                   onBlur={() => update({ focusedId: null })}>
-                      {card.name(ShopCardsTypes.shop)}
+                      <img src = {require(`../images/cards_images/${card.name.toUpperCase()}.PNG`)} style={{padding:'0px'}}/>
                   </ListGroup.Item>
   
                   </div>

@@ -53,13 +53,12 @@ function Neighborhood(valor:any){
                             <ListGroup horizontal>
                                 
                                 {valor.cards.map((card: any)=>{
-                                        console.log(card)
-                                        //<Landfill estado = {ShopCardsTypes.active}/>  esto esta mal, quitar estado y ponerlo como {card.name}, 
-                                        //pero asi se superponen las cartas y esta chido hay que ver como poder hacer eso de normal
+                                        
+                                    //<img src = {require(`../images/cards_images/${card.name.toUpperCase()}.PNG`)} style={{width:'50px',height:'100px', padding: '0px'}}/>
                                         return(
                                             <ListGroup.Item style={{width:'50px',height:'100px', padding: '0px'}}  variant="secondary">
                                                 
-                                                {card.name()}  
+                                                <img src = {require(`../images/cards_images/REVERSO.PNG`)} style={{width:'50px',height:'100px', padding: '0px'}}/>
                                             </ListGroup.Item>
                                         )
                                      
