@@ -4,8 +4,6 @@ import {ListGroup, Row} from "react-bootstrap";
 import { useSelector } from "react-redux";
 import '../assets/css/neighborhood.css';
 import Clock from "../containers/clock";
-import { ShopCardsTypes } from "../types";
-import Landfill from "./cards/landfillCard";
 import Mint from "./mint";
 
 type Presence = {

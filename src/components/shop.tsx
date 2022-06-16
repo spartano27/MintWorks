@@ -1,5 +1,5 @@
-import React, {useState } from "react";;
-import { Button, ListGroup} from "react-bootstrap";
+import React, {useEffect, useState } from "react";;
+import { Alert, Button, ListGroup} from "react-bootstrap";
 import '../assets/css/cards.css';
 import { useList, useMyPresence} from "@liveblocks/react";
 import { useParams } from "react-router-dom";
@@ -13,54 +13,71 @@ type Presence = {
     mint: number;
     cards: any[];
   };
-
+  
+function Shuffle(array: any[]){
+    const arrayForSort = [...array];
+    for (var i = arrayForSort.length -1; i > 0; i--){
+        var j = Math.floor(Math.random()* (i-1));
+        var temp = arrayForSort[i];
+        arrayForSort[i] = arrayForSort[j];
+        arrayForSort[j] = temp;
+    }
+    return arrayForSort;
+} 
 function Shop(players: any) {
     const mazo = useSelector((state:any)=>state.mazo_inicial);
     const [valorId,setValorId] = useState("0");
+    const dispatch = useDispatch();
     const [mypresence,update] = useMyPresence<Presence>();
     const cards = useSelector((state:any)=>state.cards);
-    const dispatch = useDispatch();
     const {name} = useParams();
-    const rand = useList(`InitialShop-${name}`,[(1 + Math.random() * (21-1)),(1 + Math.random() * (21-1)),(1 + Math.random() * (21-1))].sort((n1,n2) => n1-n2));
-                if (rand == null){
-                    return null;
-                }
-
+    const rand = useList(`InitialShop-${name}`,Shuffle(cards));
+      if(rand == null){
+        return null;
+      }
+    const initialice: any[] = []
 /* Initialice the shop*/
+    if (true){
 
-    const initialice = () => {
-        
-        for (var c in cards) {
-            if(parseInt(cards[c].id) === Math.round(Number(rand.get(0))) && !mazo.includes(cards[c])){
-                
-                dispatch(usedCards(cards[c]));
-                dispatch(removeCard(parseInt(c)));
-            }   
-            else if(parseInt(cards[c].id) === Math.round(Number(rand.get(1))) && !mazo.includes(cards[c])){
-                
-                dispatch(usedCards(cards[c]));
-                dispatch(removeCard(parseInt(c)-1));
-            }   
-            else if(parseInt(cards[c].id) === Math.round(Number(rand.get(2))) && !mazo.includes(cards[c])){
-                dispatch(usedCards(cards[c]));
-                dispatch(removeCard(parseInt(c)-2));
-            } 
-  
-            }
+        if (rand.get(0) != undefined && rand.get(1) != undefined && rand.get(2) != undefined){
+            console.log(rand.get(2));
+            initialice.push(rand.get(0),rand.get(1),rand.get(2));
+        }else if(rand.get(0) != undefined && rand.get(1) != undefined){
+            initialice.push(rand.get(0),rand.get(1));
+        }else if(rand.get(0) != undefined){
+            initialice.push(rand.get(0));
+        }else{
+
+            
+            
+            
+        }
+
     }
-   
     
+   
+   
     
         
     const handleCompra = (card: { id: string; effect:any; value: number; name: Function;}) => {
         if(mypresence == null){
             return null;
         }
+        if(mypresence.mint >= card.value){
+            
+            const cardOwner = {id: card.id,name: card.name, effect: card.effect, value: card.value, owner: mypresence.username}
+            const totalCards = [...mypresence.cards,cardOwner];
+            update({cards:totalCards});
+            update({mint: mypresence.mint-cardOwner.value});
+            for (var i = 0; i< rand.length; i++){
+                if (rand.get(i).id == card.id){
+                    rand.delete(i);
+                }
+            }
+        }
+       
         
-        const cardOwner = {id: card.id,name: card.name, effect: card.effect, value: card.value, owner: mypresence.username}
-        const totalCards = [...mypresence.cards,cardOwner];
-        update({cards:totalCards});
-        update({mint: mypresence.mint-cardOwner.value});
+        
         
     
         
@@ -70,20 +87,20 @@ function Shop(players: any) {
 /* A function that returns a list of cards. */
  
   
-    initialice()
 
+   
     return (    
         <div className="p-4">
             
-        
+            
             <ListGroup horizontal className="h-25 justify-content-center" style={{paddingTop:'24px'}} >
-            {mazo.map((card:any)=> {
+            {initialice.map((card:any)=> {
                 
                
                 return(
                     <div>
                     
-                    <div >
+                    <div>
                   <Button id={card.id} hidden={valorId == card.id ? false : true} onClick={() => handleCompra(card)}> Comprar </Button>
                   <Button id={card.id} hidden={valorId == card.id ? false : true}
                     onClick = {() => setValorId("cerrar")}>  Cerrar </Button>
