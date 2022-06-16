@@ -40,7 +40,6 @@ function Shop(players: any) {
     if (true){
 
         if (rand.get(0) != undefined && rand.get(1) != undefined && rand.get(2) != undefined){
-            console.log(rand.get(2));
             initialice.push(rand.get(0),rand.get(1),rand.get(2));
         }else if(rand.get(0) != undefined && rand.get(1) != undefined){
             initialice.push(rand.get(0),rand.get(1));

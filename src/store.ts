@@ -64,7 +64,7 @@ export function makeStore() {
     enhancers: [
       enhancer({
         client,
-        storageMapping: {roomList: true,rand: true}, 
+        storageMapping: {roomList: true,turnoId: true}, 
         
       }),
     ],

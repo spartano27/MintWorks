@@ -5,7 +5,7 @@ function Mint( valor: any) {
    const DragHandler = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
     }
-    console.log(valor);
+    
     return(
         <div>
             

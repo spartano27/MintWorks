@@ -12,7 +12,7 @@ function GamePage() {
             <RoomProvider 
             id={String(name)}
             defaultStorageRoot={() => {
-                random: new LiveList([(1 + Math.random() * (21-1))])
+                
             }}>
 
             

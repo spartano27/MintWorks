@@ -1,7 +1,8 @@
-import { useMyPresence } from "@liveblocks/react";
+import { useMyPresence, useObject, useOthers, useSelf } from "@liveblocks/react";
 import React, { useState } from "react";
-import {ListGroup, Row} from "react-bootstrap";
+import {Button, ListGroup, Row} from "react-bootstrap";
 import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 import '../assets/css/neighborhood.css';
 import Clock from "../containers/clock";
 import Mint from "./mint";
@@ -15,13 +16,15 @@ type Presence = {
   }
 
 function Neighborhood(valor:any){
-    const turnoId = useSelector((state:any)=> state.turnoId);
-    const [myTurn,useMyTurn] = useState(turnoId == valor.id);
+    const {name} = useParams();
+    const turno = useObject(`turno-${name}`);
+    const self = useSelf();
     const [mypresence,SetMyPresence] = useMyPresence<Presence>();
-    if(mypresence == null){
+    
+    if(mypresence == null || self == null || turno == null){
         return null
     }
-    
+
     const user = () => {
         if(valor.username == undefined){
             return ""
@@ -31,7 +34,7 @@ function Neighborhood(valor:any){
     }
     
                 return(
-                        <div className={myTurn ? "squareSelected": "square"}>
+                        <div className={turno.get("turn") == valor.id ? "squareSelected": "square"}>
                             <Row className="">
                                 <div className="pl-4 pt-2">
                                     <Clock playerId={valor.id}/>
@@ -48,6 +51,7 @@ function Neighborhood(valor:any){
                                 
                             </Row>
                             
+       
                             <ListGroup horizontal>
                                 
                                 {valor.cards.map((card: any)=>{
