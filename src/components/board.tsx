@@ -31,7 +31,7 @@ class Board extends React.Component<IBoardProps,IBoardState> {
             <Container >
                 
             <Row className='justify-content-start'>
-                    <Leader players={this.props.players}/>
+                    <Leader/>
                     <Producer players={this.props.players}/>               
                 
             </Row>

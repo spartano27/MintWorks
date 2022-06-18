@@ -12,7 +12,6 @@ function GamePage() {
             <RoomProvider 
             id={String(name)}
             defaultStorageRoot={() => {
-                
             }}>
 
             

@@ -54,9 +54,6 @@ function Shop(players: any) {
 
     }
     
-   
-   
-    
         
     const handleCompra = (card: { id: string; effect:any; value: number; name: Function;}) => {
         if(mypresence == null){

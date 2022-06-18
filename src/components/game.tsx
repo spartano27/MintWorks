@@ -9,6 +9,7 @@ import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import { Button, Col, Container, Modal, ModalBody, ModalFooter, Row } from "react-bootstrap";
 import { changeTurn } from "../store";
 import { Cursor } from "./cursor";
+import handleChangeTurn from "../turn";
 
 
 
@@ -33,14 +34,15 @@ function Game(){
     const others = useOthers();
     const self = useSelf();
     const turnoId = useSelector((state:any)=>state.turnoId);
-    const [visible,setVisible] = useState(false);
     const [mypresence,update] = useMyPresence<Presence>();
     const username = useSelector((state:any)=>state.username);
     const mints = useSelector((state:any)=>state.mints);
+
+    
     
     useEffect(()=>{
         
-        update({username:username,mint:mints, cards:[],actions:1,first:false});
+        update({username:username,mint:mints, cards:[],actions:1,first: false});
         
         
       }, []);
@@ -50,7 +52,8 @@ function Game(){
     const [countdown,setCountdown] = useState(true);
     const playersList = useList(`listPLayer-${name}`);
     const shuffleList = useList(`list-${name}`);
-    const turno = useObject(`turno-${name}`,{turn:turnoId});
+    const turno = useObject(`turno-${name}`,{turn:turnoId, visible:turnoId, nuevaRonda: turnoId});
+    const leader = useObject(`leader-${name}`,{img: "leader.png",occupied: turnoId});
     let Mentas: number[] = []
     let Users: string[] = []
     let IDs: number[] = []
@@ -66,7 +69,8 @@ function Game(){
             
         }));
         
-    if(shuffleList == null || playersList == null || turno == null || self == null || self.presence == null){
+    if(shuffleList == null || playersList == null || turno == null || self == null || self.presence == null
+        || leader ==null){
         return null;
     }
     let usernameTurn = turno.get("turn") == self.connectionId ? mypresence.username : "";
@@ -80,16 +84,27 @@ function Game(){
         })
     }
     
-    const handleChangeTurn = () => {
+   
 
-        update({actions:0});
-        shuffleList.delete(0);
-        if(shuffleList.length == 0){
-            console.log("ole");
-            return null;
+
+    const MintsForAll = () => {
+        if(turno.get("nuevaRonda")){
+            if (mypresence.first){
+                update({first:false});
+                console.log(self.connectionId);
+                const firstItem = self.connectionId;
+                const lista = shuffleList.toArray().sort((x,y)=>{ return x === firstItem ? -1 : y === firstItem ? 1 : 0; });
+                shuffleList.clear();
+                lista.map((e)=>{
+                    shuffleList.push(e);
+                });
+                turno.set("turn",shuffleList.get(0));
+                
+            }
+            leader.set("img","leader.png");
+            leader.set("occupied",false);
+            update({mint: mypresence.mint+1});
         }
-        turno.set("turn",shuffleList.get(0));
-        setTimeout(()=>{setVisible(true);},2000);
 
     }
 
@@ -103,10 +118,10 @@ function Game(){
             
             
         });
+        turno.set("nuevaRonda",false);
         turno.set("turn",shuffleList.get(0));
-        
-       
-        setVisible(true);
+        turno.set("visible",true);
+        setTimeout(()=>{ turno.set("visible",false);},2000);
     }
     
    if(others.count +1 < players){
@@ -127,7 +142,7 @@ function Game(){
                     onComplete={() => {
                         WhoFirst();
                         setCountdown(false);
-
+                        
                     }}>
 
                     {({ remainingTime }) => remainingTime}
@@ -136,7 +151,7 @@ function Game(){
       
        )
    }
-  
+   
     return (
         <div onPointerMove={(event) => {
             handleOn(event);
@@ -158,8 +173,8 @@ function Game(){
 
                 
                 </Col>
-                <Button className="justify-content-end" variant="secondary" hidden={turnoId == self.connectionId ? false : false} style={{width:'50%', height:'50px'}}
-                onClick={()=> handleChangeTurn()}
+                <Button className="justify-content-end" variant="secondary" hidden={turno.get("turn") == self.connectionId ? false : false} style={{width:'50%', height:'50px'}}
+                onClick={()=> handleChangeTurn(playersList,shuffleList,turno)}
                 > Pass </Button> 
             </Row>
             <Row style={{marginTop:'50px'}} className="p-2 d-flex align-content-end" >
@@ -186,15 +201,10 @@ function Game(){
         
             
         </Container>
-          <Modal show={visible} onHide={() => setVisible(false)} centered >
+          <Modal  show={turno.get("visible")} onHide={() => turno.set("visible",false)} centered onExiting={() => MintsForAll()} >
                 <ModalBody>
                  its {usernameTurn} turn
                 </ModalBody>
-                <ModalFooter>
-                <Button variant="primary" onClick={() => setVisible(false)} >
-                    Ok! 
-                </Button>
-                </ModalFooter>
             </Modal>
             {
                         /*Iterate over other users and display a cursor on their presence */
