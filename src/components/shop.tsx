@@ -1,7 +1,7 @@
 import React, {useEffect, useState } from "react";;
 import { Alert, Button, ListGroup} from "react-bootstrap";
 import '../assets/css/cards.css';
-import { useList, useMyPresence} from "@liveblocks/react";
+import { useList, useMyPresence, useObject} from "@liveblocks/react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { ShopCardsTypes } from "../types";
@@ -14,37 +14,33 @@ type Presence = {
     cards: any[];
   };
   
-function Shuffle(array: any[]){
-    const arrayForSort = [...array];
-    for (var i = arrayForSort.length -1; i > 0; i--){
-        var j = Math.floor(Math.random()* (i-1));
-        var temp = arrayForSort[i];
-        arrayForSort[i] = arrayForSort[j];
-        arrayForSort[j] = temp;
-    }
-    return arrayForSort;
-} 
+
 function Shop(players: any) {
     const mazo = useSelector((state:any)=>state.mazo_inicial);
     const [valorId,setValorId] = useState("0");
     const dispatch = useDispatch();
     const [mypresence,update] = useMyPresence<Presence>();
-    const cards = useSelector((state:any)=>state.cards);
+    
     const {name} = useParams();
-    const rand = useList(`InitialShop-${name}`,Shuffle(cards));
-      if(rand == null){
+    const shopCards = useList(`InitialShop-${name}`);
+    const turno = useObject(`turno-${name}`);
+    
+    const initialice = [];
+      if(shopCards == null || turno == null){
         return null;
       }
-    const initialice: any[] = []
+    
 /* Initialice the shop*/
-    if (true){
-
-        if (rand.get(0) != undefined && rand.get(1) != undefined && rand.get(2) != undefined){
-            initialice.push(rand.get(0),rand.get(1),rand.get(2));
-        }else if(rand.get(0) != undefined && rand.get(1) != undefined){
-            initialice.push(rand.get(0),rand.get(1));
-        }else if(rand.get(0) != undefined){
-            initialice.push(rand.get(0));
+    
+    if (!turno.get("nuevaRonda")){
+            
+        if (shopCards.get(0) != undefined && shopCards.get(1) != undefined && shopCards.get(2) != undefined){
+            
+            initialice.push(shopCards.get(0),shopCards.get(1),shopCards.get(2));
+        }else if(shopCards.get(0) != undefined && shopCards.get(1) != undefined){
+            initialice.push(shopCards.get(0),shopCards.get(1));
+        }else if(shopCards.get(0) != undefined){
+            initialice.push(shopCards.get(0));
         }else{
 
             
@@ -53,23 +49,29 @@ function Shop(players: any) {
         }
 
     }
-    
         
     const handleCompra = (card: { id: string; effect:any; value: number; name: Function;}) => {
+        
         if(mypresence == null){
             return null;
         }
         if(mypresence.mint >= card.value){
-            
+           
             const cardOwner = {id: card.id,name: card.name, effect: card.effect, value: card.value, owner: mypresence.username}
             const totalCards = [...mypresence.cards,cardOwner];
+            
+            for (var i = 0; i< shopCards.length; i++){
+                const carta: any = shopCards.get(i);
+                for (const property in carta){
+                     if (property == "id"){
+                        if(carta[property] == card.id){
+                            shopCards.delete(i);
+                        }
+                     }
+                }
+            
             update({cards:totalCards});
             update({mint: mypresence.mint-cardOwner.value});
-            for (var i = 0; i< rand.length; i++){
-                if (rand.get(i).id == card.id){
-                    rand.delete(i);
-                }
-            }
         }
        
         
@@ -78,7 +80,16 @@ function Shop(players: any) {
     
         
     }
-
+}
+   
+       
+       
+        
+       
+    
+        
+    
+   
 
 /* A function that returns a list of cards. */
  
@@ -88,24 +99,24 @@ function Shop(players: any) {
     return (    
         <div className="p-4">
             
-            
-            <ListGroup horizontal className="h-25 justify-content-center" style={{paddingTop:'24px'}} >
+          
+            <ListGroup key={"shop"} horizontal className="h-25 justify-content-center" style={{paddingTop:'24px'}} >
             {initialice.map((card:any)=> {
                 
                
                 return(
                     <div>
-                    
+                     
                     <div>
                   <Button id={card.id} hidden={valorId == card.id ? false : true} onClick={() => handleCompra(card)}> Comprar </Button>
                   <Button id={card.id} hidden={valorId == card.id ? false : true}
                     onClick = {() => setValorId("cerrar")}>  Cerrar </Button>
                   </div>
-                  <ListGroup.Item id={card.id} variant="primary"
+                  <ListGroup.Item variant="primary"
                   onFocus={(e) => update({ focusedId: e.target.id })}
                   onClick={(e) => setValorId(card.id)}
                   onBlur={() => update({ focusedId: null })}>
-                      <img src = {require(`../images/cards_images/${card.name.toUpperCase()}.PNG`)} style={{padding:'0px'}}/>
+                      <img key={`shop-${card.id}`} src = {require(`../images/cards_images/${card.name.toUpperCase()}.PNG`)} style={{padding:'0px'}}/>
                   </ListGroup.Item>
   
                   </div>

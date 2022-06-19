@@ -52,7 +52,7 @@ function Neighborhood(valor:any){
                             </Row>
                             
        
-                            <ListGroup horizontal>
+                            <ListGroup key={"neighborhood"} horizontal>
                                 
                                 {valor.cards.map((card: any)=>{
                                         
@@ -60,7 +60,7 @@ function Neighborhood(valor:any){
                                         return(
                                             <ListGroup.Item style={{width:'50px',height:'100px', padding: '0px'}}  variant="secondary">
                                                 
-                                                <img src = {require(`../images/cards_images/REVERSO.PNG`)} style={{width:'50px',height:'100px', padding: '0px'}}/>
+                                                <img key={`neigh-${card.id}`} src = {require(`../images/cards_images/REVERSO.PNG`)} style={{width:'50px',height:'100px', padding: '0px'}}/>
                                             </ListGroup.Item>
                                         )
                                      

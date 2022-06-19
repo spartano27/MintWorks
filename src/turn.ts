@@ -15,7 +15,7 @@ type Presence = {
       } | null
   };
   
-const handleChangeTurn = (playersList: LiveList<Lson>,shuffleList: LiveList<Lson> | null,turno: LiveObject<{ turn: any; visible: any; nuevaRonda: any; }> | null) => {
+const handleChangeTurn = (playersList: LiveList<Lson>,shuffleList: LiveList<Lson> | null,turno: LiveObject<{ firstTurn: any; turn: any; visible: any; nuevaRonda: any; }> | null) => {
  
 
     if(shuffleList == null || playersList == null || turno == null
@@ -26,7 +26,6 @@ const handleChangeTurn = (playersList: LiveList<Lson>,shuffleList: LiveList<Lson
     shuffleList.delete(0);
     if(shuffleList.length == 0){
         turno.set("nuevaRonda",true);   
-   
         playersList.toArray().map((e) => {
             shuffleList.push(e);
         });

@@ -27,6 +27,16 @@ type Presence = {
       } | null
   };
 
+  function Shuffle(array: any[]){
+    const arrayForSort = [...array];
+    for (var i = arrayForSort.length -1; i > 0; i--){
+        var j = Math.floor(Math.random()* (i-1));
+        var temp = arrayForSort[i];
+        arrayForSort[i] = arrayForSort[j];
+        arrayForSort[j] = temp;
+    }
+    return arrayForSort;
+} 
 
 function Game(){
     
@@ -35,24 +45,26 @@ function Game(){
     const self = useSelf();
     const turnoId = useSelector((state:any)=>state.turnoId);
     const [mypresence,update] = useMyPresence<Presence>();
+    const [carga,setCarga] = useState(true);
     const username = useSelector((state:any)=>state.username);
     const mints = useSelector((state:any)=>state.mints);
-
+    const cards = useSelector((state:any)=>state.cards);
+    const {name} = useParams();
     
     
     useEffect(()=>{
         
         update({username:username,mint:mints, cards:[],actions:1,first: false});
         
-        
       }, []);
 
-    const {name} = useParams();
+    
     const players = Number(String(name).split("-")[1]);
     const [countdown,setCountdown] = useState(true);
     const playersList = useList(`listPLayer-${name}`);
     const shuffleList = useList(`list-${name}`);
-    const turno = useObject(`turno-${name}`,{turn:turnoId, visible:turnoId, nuevaRonda: turnoId});
+    const shopCards = useList(`InitialShop-${name}`);
+    const turno = useObject(`turno-${name}`,{firstTurn:turnoId, turn:turnoId, visible:turnoId, nuevaRonda: turnoId});
     const leader = useObject(`leader-${name}`,{img: "leader.png",occupied: turnoId});
     let Mentas: number[] = []
     let Users: string[] = []
@@ -68,9 +80,26 @@ function Game(){
              IDs.push(Number(connectionId))
             
         }));
-        
-    if(shuffleList == null || playersList == null || turno == null || self == null || self.presence == null
+
+    const initialiceShop = () => {
+        if(shopCards == null){
+            return null;
+        }
+        Shuffle(cards).map((e)=>{
+            if(shopCards.length < 21){
+                shopCards.push(e);
+            }
+            
+        });
+    
+    
+    
+    
+    }
+
+    if(shopCards == null || shuffleList == null || playersList == null || turno == null || self == null || self.presence == null
         || leader ==null){
+        initialiceShop();
         return null;
     }
     let usernameTurn = turno.get("turn") == self.connectionId ? mypresence.username : "";
@@ -84,10 +113,9 @@ function Game(){
         })
     }
     
-   
-
-
+  
     const MintsForAll = () => {
+        turno.set("firstTurn",false);
         if(turno.get("nuevaRonda")){
             if (mypresence.first){
                 update({first:false});
@@ -98,6 +126,7 @@ function Game(){
                 lista.map((e)=>{
                     shuffleList.push(e);
                 });
+                
                 turno.set("turn",shuffleList.get(0));
                 
             }
@@ -118,10 +147,12 @@ function Game(){
             
             
         });
+        turno.set("firstTurn",true);
         turno.set("nuevaRonda",false);
         turno.set("turn",shuffleList.get(0));
         turno.set("visible",true);
         setTimeout(()=>{ turno.set("visible",false);},2000);
+        
     }
     
    if(others.count +1 < players){
@@ -152,6 +183,7 @@ function Game(){
        )
    }
    
+   
     return (
         <div onPointerMove={(event) => {
             handleOn(event);
@@ -163,7 +195,7 @@ function Game(){
        
         <Container style={{width: '100%'}}>
             <Row className="mb-8">
-                  
+            
                 <Col className="p-2 d-flex justify-content-start">
                     
                     <Shop players={players}/>

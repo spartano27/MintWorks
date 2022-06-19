@@ -26,7 +26,7 @@ function Leader() {
     const [visible,setVisible] = useState(false);
     const playersList = useList(`listPLayer-${name}`);
     const shuffleList = useList(`list-${name}`);
-    const turno = useObject(`turno-${name}`,{turn:0, visible: false, nuevaRonda: false});
+    const turno = useObject(`turno-${name}`,{firstTurn: true,turn:0, visible: false, nuevaRonda: false});
     const DragHandler = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
     }
@@ -48,6 +48,7 @@ function Leader() {
         leader.set("img", "leaderUsed.png");
         leader.set("occupied", true);
         update({first:true});
+        update({mint:mypresence.mint+1});
         setVisible(false);
         handleChangeTurn(playersList,shuffleList,turno);
     }
