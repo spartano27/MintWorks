@@ -66,6 +66,9 @@ function Game(){
     const shopCards = useList(`InitialShop-${name}`);
     const turno = useObject(`turno-${name}`,{firstTurn:turnoId, turn:turnoId, visible:turnoId, nuevaRonda: turnoId});
     const leader = useObject(`leader-${name}`,{img: "leader.png",occupied: turnoId});
+    const producer = useObject(`producer-${name}`,{img: players == 4 || players == 1 ? "producer.png" : "producer1.png",occupied: 1});
+    const builder = useObject(`builder-${name}`,{img: players < 4 ? "builder1.png" : "builder.png",occupied: 1});
+    const supplier = useObject(`supplier-${name}`,{img: players < 4 ? "supplier1.png" : "supplier.png",occupied: 1});
     let Mentas: number[] = []
     let Users: string[] = []
     let IDs: number[] = []
@@ -98,7 +101,7 @@ function Game(){
     }
 
     if(shopCards == null || shuffleList == null || playersList == null || turno == null || self == null || self.presence == null
-        || leader ==null){
+        || leader ==null || builder == null || supplier == null || producer == null){
         initialiceShop();
         return null;
     }
@@ -132,6 +135,12 @@ function Game(){
             }
             leader.set("img","leader.png");
             leader.set("occupied",false);
+            producer.set("img",players == 4 || players == 1 ? "producer.png" : "producer1.png");
+            producer.set("occupied",1);
+            builder.set("img", players < 4 ? "builder1.png" : "builder.png");
+            builder.set("occupied",1);
+            supplier.set("img",players < 4 ? "supplier1.png" : "supplier.png");
+            supplier.set("occupied",1);
             update({mint: mypresence.mint+1});
         }
 
@@ -205,7 +214,7 @@ function Game(){
 
                 
                 </Col>
-                <Button className="justify-content-end" variant="secondary" hidden={turno.get("turn") == self.connectionId ? false : false} style={{width:'50%', height:'50px'}}
+                <Button className="justify-content-end" variant="secondary" hidden={turno.get("turn") == self.connectionId ? false : true} style={{width:'50%', height:'50px'}}
                 onClick={()=> handleChangeTurn(playersList,shuffleList,turno)}
                 > Pass </Button> 
             </Row>

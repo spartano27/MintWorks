@@ -32,7 +32,7 @@ function Shop(players: any) {
     
 /* Initialice the shop*/
     
-    if (!turno.get("nuevaRonda")){
+    if (true){
             
         if (shopCards.get(0) != undefined && shopCards.get(1) != undefined && shopCards.get(2) != undefined){
             

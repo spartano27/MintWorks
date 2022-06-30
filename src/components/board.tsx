@@ -32,12 +32,12 @@ class Board extends React.Component<IBoardProps,IBoardState> {
                 
             <Row className='justify-content-start'>
                     <Leader/>
-                    <Producer players={this.props.players}/>               
+                    <Producer/>               
                 
             </Row>
             <Row className='justify-content-start'>
-                <Builder players={this.props.players}/>
-                <Supplier players={this.props.players}/>
+                <Builder />
+                <Supplier/>
             
             </Row>
 
