@@ -16,11 +16,9 @@ type Presence = {
   
 
 function Shop(players: any) {
-    const mazo = useSelector((state:any)=>state.mazo_inicial);
-    const [valorId,setValorId] = useState("0");
-    const dispatch = useDispatch();
-    const [mypresence,update] = useMyPresence<Presence>();
     
+    const [valorId,setValorId] = useState("0");
+    const [mypresence,update] = useMyPresence<Presence>();
     const {name} = useParams();
     const shopCards = useList(`InitialShop-${name}`);
     const turno = useObject(`turno-${name}`);
@@ -72,13 +70,7 @@ function Shop(players: any) {
             
             update({cards:totalCards});
             update({mint: mypresence.mint-cardOwner.value});
-        }
-       
-        
-        
-        
-    
-        
+        }     
     }
 }
    

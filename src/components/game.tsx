@@ -7,7 +7,6 @@ import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import { Button, Col, Container, Modal, ModalBody, ModalFooter, Row } from "react-bootstrap";
-import { changeTurn } from "../store";
 import { Cursor } from "./cursor";
 import handleChangeTurn from "../turn";
 

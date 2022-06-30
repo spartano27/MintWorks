@@ -1,4 +1,3 @@
-import { Presence } from "@liveblocks/client";
 import { useList, useMyPresence, useObject, useSelf } from "@liveblocks/react";
 import React, { useState } from "react";
 import { Modal, ModalBody, ModalFooter, Button } from "react-bootstrap";
@@ -7,6 +6,18 @@ import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import handleChangeTurn from "../../turn";
 
+type Presence = {
+    focusedId: string | null;
+    username: string;
+    mint: number;
+    cards: any[];
+    actions: number;
+    first: boolean;
+    cursor: {
+        x: number,
+        y: number
+      } | null
+  };
 
 function Builder() {
     const {name} = useParams();

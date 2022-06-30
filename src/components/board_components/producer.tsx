@@ -1,13 +1,23 @@
-import { Presence } from "@liveblocks/client";
 import { useList, useMyPresence, useObject, useSelf } from "@liveblocks/react";
 import React, { useState } from "react";
 import { Button, Modal, ModalBody, ModalFooter } from "react-bootstrap";
 import ModalHeader from "react-bootstrap/esm/ModalHeader";
 import { useParams } from "react-router-dom";
 import handleChangeTurn from "../../turn";
-import builder from "./builder";
 
 
+type Presence = {
+    focusedId: string | null;
+    username: string;
+    mint: number;
+    cards: any[];
+    actions: number;
+    first: boolean;
+    cursor: {
+        x: number,
+        y: number
+      } | null
+  };
 
 
 function Producer() {

@@ -1,4 +1,3 @@
-import { Presence } from "@liveblocks/client";
 import { useObject, useSelf, useMyPresence, useList } from "@liveblocks/react";
 import React, { useState } from "react";
 import { Modal, ModalBody, ModalFooter, Button } from "react-bootstrap";
@@ -6,7 +5,18 @@ import ModalHeader from "react-bootstrap/esm/ModalHeader";
 import { useParams } from "react-router-dom";
 import handleChangeTurn from "../../turn";
 
-
+type Presence = {
+    focusedId: string | null;
+    username: string;
+    mint: number;
+    cards: any[];
+    actions: number;
+    first: boolean;
+    cursor: {
+        x: number,
+        y: number
+      } | null
+  };
 
 function Supplier(){
     
@@ -19,11 +29,12 @@ function Supplier(){
     const playersList = useList(`listPLayer-${name}`);
     const shuffleList = useList(`list-${name}`);
     const turno = useObject(`turno-${name}`,{firstTurn: true,turn:0, visible: false, nuevaRonda: false});
+    const shopCards = useList(`InitialShop-${name}`);
 
     const DragHandler = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
     }
-    if (playersList == null || shuffleList == null || supplier == null || turno == null || self == null) {
+    if (shopCards == null || playersList == null || shuffleList == null || supplier == null || turno == null || self == null) {
         return null;
     }
 
@@ -55,6 +66,31 @@ function Supplier(){
         handleChangeTurn(playersList,shuffleList,turno);
     }
 
+    const handleCompra = (card: { id: string; effect:any; value: number; name: Function;}) => {
+        
+        if(mypresence == null){
+            return null;
+        }
+        if(mypresence.mint >= card.value){
+           
+            const cardOwner = {id: card.id,name: card.name, effect: card.effect, value: card.value, owner: mypresence.username}
+            const totalCards = [...mypresence.cards,cardOwner];
+            
+            for (var i = 0; i< shopCards.length; i++){
+                const carta: any = shopCards.get(i);
+                for (const property in carta){
+                     if (property == "id"){
+                        if(carta[property] == card.id){
+                            shopCards.delete(i);
+                        }
+                     }
+                }
+            
+            update({cards:totalCards});
+            update({mint: mypresence.mint-cardOwner.value});
+        }     
+    }
+}
 
 
         return(
