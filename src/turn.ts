@@ -15,17 +15,21 @@ type Presence = {
       } | null
   };
   
-const handleChangeTurn = (playersList: LiveList<Lson>,shuffleList: LiveList<Lson> | null,turno: LiveObject<{ firstTurn: any; turn: any; visible: any; nuevaRonda: any; }> | null) => {
- 
+const handleChangeTurn = (actualCards: LiveList<Lson> ,shopCards: LiveList<Lson>,playersList: LiveList<Lson>,shuffleList: LiveList<Lson> | null,turno: LiveObject<{ firstTurn: any; turn: any; visible: any; nuevaRonda: any; }> | null) => {
 
-    if(shuffleList == null || playersList == null || turno == null
+    if(shopCards == null || actualCards == null || shuffleList == null || playersList == null || turno == null
         ){
         return null;
     }
 
     shuffleList.delete(0);
     if(shuffleList.length == 0){
-        turno.set("nuevaRonda",true);   
+        turno.set("nuevaRonda",true); 
+        shopCards.map((e)=>{
+            if(actualCards.length < 3){
+                actualCards.push(e);
+            }
+        });  
         playersList.toArray().map((e) => {
             shuffleList.push(e);
         });

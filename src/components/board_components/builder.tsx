@@ -23,6 +23,8 @@ function Builder() {
     const {name} = useParams();
     const builder = useObject(`builder-${name}`);
     const self = useSelf();
+    const shopCards = useList(`InitialShop-${name}`);
+    const actualCards = useList(`ActualCards-${name}`);
     const players = Number(String(name).split("-")[1]);
     const [mypresence,update] = useMyPresence<Presence>();
     const [visible,setVisible] = useState(false);
@@ -33,7 +35,7 @@ function Builder() {
     const DragHandler = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
     }
-    if (playersList == null || shuffleList == null || builder == null || turno == null || self == null) {
+    if (actualCards == null || shopCards == null || playersList == null || shuffleList == null || builder == null || turno == null || self == null) {
         return null;
     }
 
@@ -62,7 +64,7 @@ function Builder() {
         builder.set("img", players < 4 ? `builder1Used${builder.get("occupied")}.png` : `builderUsed${builder.get("occupied")}.png`);
         builder.set("occupied", Number(builder.get("occupied"))+1);
         setVisible(false);
-        handleChangeTurn(playersList,shuffleList,turno);
+        handleChangeTurn(actualCards,shopCards,playersList,shuffleList,turno);
     }
 
         return(

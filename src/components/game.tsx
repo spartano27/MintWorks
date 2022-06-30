@@ -63,6 +63,7 @@ function Game(){
     const playersList = useList(`listPLayer-${name}`);
     const shuffleList = useList(`list-${name}`);
     const shopCards = useList(`InitialShop-${name}`);
+    const actualCards = useList(`ActualCards-${name}`);
     const turno = useObject(`turno-${name}`,{firstTurn:turnoId, turn:turnoId, visible:turnoId, nuevaRonda: turnoId});
     const leader = useObject(`leader-${name}`,{img: "leader.png",occupied: turnoId});
     const producer = useObject(`producer-${name}`,{img: players == 4 || players == 1 ? "producer.png" : "producer1.png",occupied: 1});
@@ -84,13 +85,18 @@ function Game(){
         }));
 
     const initialiceShop = () => {
-        if(shopCards == null){
+        if(shopCards == null || actualCards == null){
             return null;
         }
         Shuffle(cards).map((e)=>{
             if(shopCards.length < 21){
                 shopCards.push(e);
+                if(actualCards.length < 3){
+                    actualCards.push(e);
+                }
             }
+            
+            
             
         });
     
@@ -99,7 +105,7 @@ function Game(){
     
     }
 
-    if(shopCards == null || shuffleList == null || playersList == null || turno == null || self == null || self.presence == null
+    if(actualCards == null || shopCards == null || shuffleList == null || playersList == null || turno == null || self == null || self.presence == null
         || leader ==null || builder == null || supplier == null || producer == null){
         initialiceShop();
         return null;
@@ -121,17 +127,18 @@ function Game(){
         if(turno.get("nuevaRonda")){
             if (mypresence.first){
                 update({first:false});
-                console.log(self.connectionId);
                 const firstItem = self.connectionId;
                 const lista = shuffleList.toArray().sort((x,y)=>{ return x === firstItem ? -1 : y === firstItem ? 1 : 0; });
                 shuffleList.clear();
                 lista.map((e)=>{
                     shuffleList.push(e);
                 });
-                
+
                 turno.set("turn",shuffleList.get(0));
-                
             }
+
+            
+
             leader.set("img","leader.png");
             leader.set("occupied",false);
             producer.set("img",players == 4 || players == 1 ? "producer.png" : "producer1.png");
@@ -214,7 +221,7 @@ function Game(){
                 
                 </Col>
                 <Button className="justify-content-end" variant="secondary" hidden={turno.get("turn") == self.connectionId ? false : true} style={{width:'50%', height:'50px'}}
-                onClick={()=> handleChangeTurn(playersList,shuffleList,turno)}
+                onClick={()=> handleChangeTurn(actualCards,shopCards,playersList,shuffleList,turno)}
                 > Pass </Button> 
             </Row>
             <Row style={{marginTop:'50px'}} className="p-2 d-flex align-content-end" >

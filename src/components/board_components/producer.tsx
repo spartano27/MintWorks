@@ -30,13 +30,15 @@ function Producer() {
     const [visible,setVisible] = useState(false);
     const playersList = useList(`listPLayer-${name}`);
     const shuffleList = useList(`list-${name}`);
+    const shopCards = useList(`InitialShop-${name}`);
+    const actualCards = useList(`ActualCards-${name}`);
     const turno = useObject(`turno-${name}`,{firstTurn: true,turn:0, visible: false, nuevaRonda: false});
 
     const DragHandler = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
     }
 
-    if (playersList == null || shuffleList == null || producer == null || turno == null || self == null) {
+    if (actualCards == null || shopCards == null || playersList == null || shuffleList == null || producer == null || turno == null || self == null) {
         return null;
     }
 
@@ -66,7 +68,7 @@ function Producer() {
         producer.set("occupied", Number(producer.get("occupied"))+1);
         update({mint:Number(mypresence.mint)+2});
         setVisible(false);
-        handleChangeTurn(playersList,shuffleList,turno);
+        handleChangeTurn(actualCards,shopCards,playersList,shuffleList,turno);
     }
 
         return(

@@ -21,67 +21,14 @@ function Shop(players: any) {
     const [mypresence,update] = useMyPresence<Presence>();
     const {name} = useParams();
     const shopCards = useList(`InitialShop-${name}`);
+    const actualCards = useList(`ActualCards-${name}`);
     const turno = useObject(`turno-${name}`);
-    
-    const initialice = [];
-      if(shopCards == null || turno == null){
+
+      if(actualCards == null || shopCards == null || turno == null){
         return null;
       }
     
-/* Initialice the shop*/
-    
-    if (true){
-            
-        if (shopCards.get(0) != undefined && shopCards.get(1) != undefined && shopCards.get(2) != undefined){
-            
-            initialice.push(shopCards.get(0),shopCards.get(1),shopCards.get(2));
-        }else if(shopCards.get(0) != undefined && shopCards.get(1) != undefined){
-            initialice.push(shopCards.get(0),shopCards.get(1));
-        }else if(shopCards.get(0) != undefined){
-            initialice.push(shopCards.get(0));
-        }else{
 
-            
-            
-            
-        }
-
-    }
-        
-    const handleCompra = (card: { id: string; effect:any; value: number; name: Function;}) => {
-        
-        if(mypresence == null){
-            return null;
-        }
-        if(mypresence.mint >= card.value){
-           
-            const cardOwner = {id: card.id,name: card.name, effect: card.effect, value: card.value, owner: mypresence.username}
-            const totalCards = [...mypresence.cards,cardOwner];
-            
-            for (var i = 0; i< shopCards.length; i++){
-                const carta: any = shopCards.get(i);
-                for (const property in carta){
-                     if (property == "id"){
-                        if(carta[property] == card.id){
-                            shopCards.delete(i);
-                        }
-                     }
-                }
-            
-            update({cards:totalCards});
-            update({mint: mypresence.mint-cardOwner.value});
-        }     
-    }
-}
-   
-       
-       
-        
-       
-    
-        
-    
-   
 
 /* A function that returns a list of cards. */
  
@@ -93,17 +40,12 @@ function Shop(players: any) {
             
           
             <ListGroup key={"shop"} horizontal className="h-25 justify-content-center" style={{paddingTop:'24px'}} >
-            {initialice.map((card:any)=> {
+            {actualCards.map((card:any)=> {
                 
                
                 return(
                     <div>
-                     
-                    <div>
-                  <Button id={card.id} hidden={valorId == card.id ? false : true} onClick={() => handleCompra(card)}> Comprar </Button>
-                  <Button id={card.id} hidden={valorId == card.id ? false : true}
-                    onClick = {() => setValorId("cerrar")}>  Cerrar </Button>
-                  </div>
+
                   <ListGroup.Item variant="primary"
                   onFocus={(e) => update({ focusedId: e.target.id })}
                   onClick={(e) => setValorId(card.id)}

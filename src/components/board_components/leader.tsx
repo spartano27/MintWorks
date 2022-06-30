@@ -26,11 +26,13 @@ function Leader() {
     const [visible,setVisible] = useState(false);
     const playersList = useList(`listPLayer-${name}`);
     const shuffleList = useList(`list-${name}`);
+    const shopCards = useList(`InitialShop-${name}`);
+    const actualCards = useList(`ActualCards-${name}`);
     const turno = useObject(`turno-${name}`,{firstTurn: true,turn:0, visible: false, nuevaRonda: false});
     const DragHandler = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
     }
-    if (playersList == null || shuffleList == null || leader == null || turno == null || self == null) {
+    if (actualCards == null || shopCards == null || playersList == null || shuffleList == null || leader == null || turno == null || self == null) {
         return null;
     }
     const handleClickLeader = () => {
@@ -50,7 +52,7 @@ function Leader() {
         update({first:true});
         update({mint:mypresence.mint+1});
         setVisible(false);
-        handleChangeTurn(playersList,shuffleList,turno);
+        handleChangeTurn(actualCards,shopCards,playersList,shuffleList,turno);
     }
         return(
             <div>
