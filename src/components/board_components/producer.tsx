@@ -66,7 +66,7 @@ function Producer() {
         
         producer.set("img", players == 4 || players == 1 ? `producerUsed${producer.get("occupied")}.png` : `producer1Used${producer.get("occupied")}.png`);
         producer.set("occupied", Number(producer.get("occupied"))+1);
-        update({mint:Number(mypresence.mint)+2});
+        update({mint:Number(mypresence.mint)+1});
         setVisible(false);
         handleChangeTurn(actualCards,shopCards,playersList,shuffleList,turno);
     }
@@ -74,7 +74,7 @@ function Producer() {
         return(
             <div>
             <img style = {{width:210}} src = {require(`../../images/${producer.get("img")}`)} onDragStart={(e) => DragHandler(e)} onClick={()=> handleClickBuilder() } />
-                <Modal  show={visible} onHide={() => setVisible(false)} centered >
+                <Modal show={visible} onHide={() => setVisible(false)} centered >
                     <ModalHeader> 
                         Use Producer card?
                     </ModalHeader>

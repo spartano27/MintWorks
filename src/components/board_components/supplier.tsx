@@ -89,7 +89,7 @@ function Supplier(){
                        }
                     }
                }
-            
+              
             
             update({cards:totalCards});
             update({mint: mypresence.mint-cardOwner.value});
@@ -109,9 +109,10 @@ function Supplier(){
             
             <div>
                 <img style = {{width:210}} src = {require(`../../images/${supplier.get("img")}`)} onDragStart={(e) => DragHandler(e)} onClick={()=> handleClickBuilder() } />
-                <Modal  show={visible} onHide={() => setVisible(false)} centered >
+                <Modal size="lg" show={visible} onHide={() => setVisible(false)} centered >
                     <ModalHeader> 
                         Use Supplier card?
+                        <Button onClick={() => setVisible(false)}> Close </Button>
                     </ModalHeader>
                     <ModalBody>
                     Choose one card to buy it.
@@ -125,16 +126,16 @@ function Supplier(){
                 return(
                     <div>
                      
-                    <div>
-                  <Button id={card.id} onClick={() => handleCompra(card)}> Comprar </Button>
-                  </div>
+                    
                   <ListGroup.Item variant="primary"
                   onFocus={(e) => update({ focusedId: e.target.id })}
                   onClick={(e) => setValorId(card.id)}
                   onBlur={() => update({ focusedId: null })}>
                       <img key={`shop-${card.id}`} src = {require(`../../images/cards_images/${card.name.toUpperCase()}.PNG`)} style={{padding:'0px'}}/>
                   </ListGroup.Item>
-  
+                  <div style={{paddingLeft:'44px'}}>
+                  <Button   id={card.id} onClick={() => handleCompra(card)}> Comprar </Button>
+                  </div>
                   </div>
                 )
                
@@ -142,9 +143,6 @@ function Supplier(){
             </ListGroup>
         </div>
                     </ModalBody>
-                    <ModalFooter>
-                        <Button onClick={() => setVisible(false)}> No </Button>
-                    </ModalFooter>
                 </Modal>
             </div>
             

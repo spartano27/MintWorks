@@ -50,7 +50,6 @@ function Leader() {
         leader.set("img", "leaderUsed.png");
         leader.set("occupied", true);
         update({first:true});
-        update({mint:mypresence.mint+1});
         setVisible(false);
         handleChangeTurn(actualCards,shopCards,playersList,shuffleList,turno);
     }
