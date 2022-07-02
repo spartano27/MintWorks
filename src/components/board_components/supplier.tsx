@@ -10,7 +10,7 @@ type Presence = {
     username: string;
     mint: number;
     cards: any[];
-    actions: number;
+    stars: number;
     first: boolean;
     cursor: {
         x: number,

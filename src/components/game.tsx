@@ -10,15 +10,12 @@ import { Button, Col, Container, Modal, ModalBody, ModalFooter, Row } from "reac
 import { Cursor } from "./cursor";
 import handleChangeTurn from "../turn";
 
-
-
-
 type Presence = {
     focusedId: string | null;
     username: string;
     mint: number;
     cards: any[];
-    actions: number;
+    stars: number;
     first: boolean;
     cursor: {
         x: number,
@@ -53,7 +50,7 @@ function Game(){
     
     useEffect(()=>{
         
-        update({username:username,mint:mints, cards:[],actions:1,first: false});
+        update({username:username,mint:mints, cards:[],stars:0,first: false});
         
       }, []);
 
@@ -83,6 +80,83 @@ function Game(){
              IDs.push(Number(connectionId))
             
         }));
+    
+    const Assembler = () => {
+
+    }
+
+    const Bridge = () => {
+        
+    }
+
+    const Coop = () => {
+       
+    }
+
+    const Corporate = () => {
+        
+    }
+
+    const Crane = () => {
+        
+    }
+
+    const Factory = () => {
+        return 1;
+    }
+
+    const Gallery = () => {
+   
+    }
+
+    const Landfill = () => {
+     
+    
+    }
+
+    const LottoCard = () => {
+        
+    }
+
+    const Mine = () => {
+        return 1;
+    }
+
+    const Museum = () => {
+        
+    }
+
+    const Obelisk = () => {
+        
+    }
+
+    const Plant = () => {
+        return 2;
+    }
+
+    const Stripmine = () => {
+        return 3;
+    }
+
+    const Truck = () => {
+        
+    }
+
+    const Vault = () => {
+        
+    }
+
+    const Wholesaler = () => {
+      
+      
+    }
+
+    const Workshop = () => {
+        return 1;
+    }
+
+
+
 
     const initialiceShop = () => {
         if(shopCards == null || actualCards == null){
@@ -99,10 +173,7 @@ function Game(){
             
             
         });
-    
-    
-    
-    
+
     }
 
     if(actualCards == null || shopCards == null || shuffleList == null || playersList == null || turno == null || self == null || self.presence == null
@@ -147,7 +218,17 @@ function Game(){
             builder.set("occupied",1);
             supplier.set("img",players < 4 ? "supplier1.png" : "supplier.png");
             supplier.set("occupied",1);
-            update({mint: mypresence.mint+1});
+            let contador = 0;
+            mypresence.cards.map((card:any) => {
+                
+                if(card.active){
+                    var f = eval(card.name);
+                    contador = contador+f();
+                }
+                
+            });
+            
+            update({mint: mypresence.mint+1+contador});
         }
 
     }
@@ -220,7 +301,7 @@ function Game(){
 
                 
                 </Col>
-                <Button className="justify-content-end" variant="secondary" hidden={turno.get("turn") == self.connectionId ? false : true} style={{width:'50%', height:'50px'}}
+                <Button className="justify-content-end" variant="secondary" hidden={turno.get("turn") == self.connectionId ? false : false} style={{width:'50%', height:'50px'}}
                 onClick={()=> handleChangeTurn(actualCards,shopCards,playersList,shuffleList,turno)}
                 > Pass </Button> 
             </Row>

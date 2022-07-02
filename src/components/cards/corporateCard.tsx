@@ -5,7 +5,7 @@ import { ShopCardsTypes } from "../../types";
 
 function Corporate(){
    
-    
+    console.log("xD");
        
       
     

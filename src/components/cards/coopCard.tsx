@@ -5,7 +5,7 @@ import { ShopCardsTypes } from "../../types";
 
 function Coop(){
     
-    
+    console.log("xD");
        
       
     

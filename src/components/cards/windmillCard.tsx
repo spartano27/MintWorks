@@ -6,7 +6,7 @@ import { ShopCardsTypes } from "../../types";
 function Windmill(){
     
     
-       
+    console.log("xD");
       
     
 }

@@ -60,7 +60,7 @@ function Neighborhood(valor:any){
                                         return(
                                             <ListGroup.Item style={{width:'50px',height:'100px', padding: '0px'}}  variant="secondary">
                                                 
-                                                <img key={`neigh-${card.id}`} src = {require(`../images/cards_images/REVERSO.PNG`)} style={{width:'50px',height:'100px', padding: '0px'}}/>
+                                                <img key={`neigh-${card.id}`} src = {require(`../images/cards_images/${card.active ? card.name.toUpperCase() : "REVERSO"}.PNG`)} style={{width:'50px',height:'100px', padding: '0px'}}/>
                                             </ListGroup.Item>
                                         )
                                      

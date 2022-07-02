@@ -6,7 +6,7 @@ import { ShopCardsTypes } from "../../types";
 function Stripmine(){
     
   
-    
+    console.log("xD");
        
       
     

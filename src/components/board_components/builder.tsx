@@ -1,6 +1,6 @@
 import { useList, useMyPresence, useObject, useSelf } from "@liveblocks/react";
 import React, { useState } from "react";
-import { Modal, ModalBody, ModalFooter, Button } from "react-bootstrap";
+import { Modal, ModalBody, ModalFooter, Button, ListGroup } from "react-bootstrap";
 import ModalHeader from "react-bootstrap/esm/ModalHeader";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -11,7 +11,7 @@ type Presence = {
     username: string;
     mint: number;
     cards: any[];
-    actions: number;
+    stars: number;
     first: boolean;
     cursor: {
         x: number,
@@ -59,28 +59,73 @@ function Builder() {
         
         
     }
-    const handleClick = () => {
+    const handleBuild = (card: { id: string; effect:any; value: number; name: Function; active:boolean; stars: number}) => {
         
-        builder.set("img", players < 4 ? `builder1Used${builder.get("occupied")}.png` : `builderUsed${builder.get("occupied")}.png`);
-        builder.set("occupied", Number(builder.get("occupied"))+1);
-        setVisible(false);
-        handleChangeTurn(actualCards,shopCards,playersList,shuffleList,turno);
+        if(mypresence == null){
+            return null;
+        }
+        if(mypresence.mint >= 2){
+            const cardOwner = {id: card.id,name: card.name, effect: card.effect, value: card.value, owner: mypresence.username, active: true}
+            for (var i = 0; i< mypresence.cards.length; i++){
+                const carta: any = mypresence.cards[i];
+                for (const property in carta){
+                     if (property == "id"){
+                        if(carta[property] == card.id){
+                            mypresence.cards.splice(i,1);
+                        }
+                     }
+                }
+
+        }  
+            const totalCards = [...mypresence.cards,cardOwner];
+            update({cards:totalCards});
+            update({stars:mypresence.stars+card.stars});
+            update({mint: mypresence.mint-2});
+            builder.set("img", players < 4 ? `supplier1Used${builder.get("occupied")}.png` : `supplierUsed${builder.get("occupied")}.png`);
+            builder.set("occupied", Number(builder.get("occupied"))+1);
+            setVisible(false);
+            handleChangeTurn(actualCards,shopCards,playersList,shuffleList,turno);   
     }
+
+    
+}
 
         return(
             <div>
                 <img style = {{width:210}} src = {require(`../../images/${builder.get("img")}`)} onDragStart={(e) => DragHandler(e)} onClick={()=> handleClickBuilder() } />
-                <Modal  show={visible} onHide={() => setVisible(false)} centered >
+                <Modal size="lg" show={visible} onHide={() => setVisible(false)} centered >
                     <ModalHeader> 
-                        Use Builder card?
+                        Use Buldier card?
+                        <Button onClick={() => setVisible(false)}> Close </Button>
                     </ModalHeader>
                     <ModalBody>
-                    choose one of your cards to build it.
+                    Choose one of yours cards to build it.
+                    <div className="p-4">
+            
+          
+            <ListGroup key={"shop"} horizontal className="h-25 justify-content-center" style={{paddingTop:'24px'}} >
+            {mypresence.cards.map((card:any)=> {
+                
+               
+                return(
+                    <div>
+                     
+                    
+                  <ListGroup.Item variant="primary"
+                  onFocus={(e) => update({ focusedId: e.target.id })}
+                  onBlur={() => update({ focusedId: null })}>
+                      <img key={`shop-${card.id}`} src = {require(`../../images/cards_images/${card.name.toUpperCase()}.PNG`)} style={{padding:'0px'}}/>
+                  </ListGroup.Item>
+                  <div style={{paddingLeft:'44px'}}>
+                  <Button   id={card.id} onClick={() => handleBuild(card)}> Build </Button>
+                  </div>
+                  </div>
+                )
+               
+                })}
+            </ListGroup>
+        </div>
                     </ModalBody>
-                    <ModalFooter>
-                        <Button onClick={()=>handleClick()}> Yes</Button>
-                        <Button onClick={() => setVisible(false)}> No </Button>
-                    </ModalFooter>
                 </Modal>
             </div>
 

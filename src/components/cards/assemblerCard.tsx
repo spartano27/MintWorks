@@ -5,7 +5,7 @@ import { ShopCardsTypes } from "../../types";
 
 function Assembler(){
     
-    
+    console.log("xD");
        
       
     
