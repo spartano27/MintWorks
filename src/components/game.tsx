@@ -66,6 +66,8 @@ function Game(){
     const producer = useObject(`producer-${name}`,{img: players == 4 || players == 1 ? "producer.png" : "producer1.png",occupied: 1});
     const builder = useObject(`builder-${name}`,{img: players < 4 ? "builder1.png" : "builder.png",occupied: 1});
     const supplier = useObject(`supplier-${name}`,{img: players < 4 ? "supplier1.png" : "supplier.png",occupied: 1});
+    const wholesaler = useObject(`wholesaler-${name}`,{img: "wholesaler1.png",occupied: "true"});
+    const lotto = useObject(`lotto-${name}`,{img: "lotto1.png",occupied: "false"});
     let Mentas: number[] = []
     let Users: string[] = []
     let IDs: number[] = []
@@ -114,8 +116,15 @@ function Game(){
     
     }
 
-    const LottoCard = () => {
-        
+    const Lotto = () => {
+        if (lotto == null){
+            return 0;
+        }
+        if(lotto.get("occupied") == "true"){
+            return 2;
+        }else{
+            return 0;
+        }
     }
 
     const Mine = () => {
@@ -147,7 +156,14 @@ function Game(){
     }
 
     const Wholesaler = () => {
-      
+        if (wholesaler == null){
+            return 0;
+        }
+        if(wholesaler.get("occupied") == "true"){
+            return 1;
+        }else{
+            return 0;
+        }
       
     }
 
@@ -176,7 +192,7 @@ function Game(){
 
     }
 
-    if(actualCards == null || shopCards == null || shuffleList == null || playersList == null || turno == null || self == null || self.presence == null
+    if(lotto == null || wholesaler == null || actualCards == null || shopCards == null || shuffleList == null || playersList == null || turno == null || self == null || self.presence == null
         || leader ==null || builder == null || supplier == null || producer == null){
         initialiceShop();
         return null;
@@ -222,13 +238,27 @@ function Game(){
             mypresence.cards.map((card:any) => {
                 
                 if(card.active){
+                    if(card.name == "Wholesaler"){
+                        if(wholesaler.get("occupied") == "true"){
+                            contador = contador + 1;
+                        }
+                        wholesaler.set("img", "wholesaler.png");
+                        wholesaler.set("occupied", "false");
+                    }
+                    if(card.name == "Lotto"){
+                        if(lotto.get("occupied") == "true"){
+                            contador = contador + 2;
+                        }
+                        lotto.set("img", "lotto.png");
+                        lotto.set("occupied", "false");
+                    }
                     var f = eval(card.name);
                     contador = contador+f();
                 }
                 
             });
-            
-            update({mint: mypresence.mint+1+contador});
+
+            update({mint: mypresence.mint+30+contador});
         }
 
     }

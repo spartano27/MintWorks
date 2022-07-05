@@ -11,8 +11,12 @@ function GamePage() {
         return (
             <RoomProvider 
             id={String(name)}
-            defaultStorageRoot={() => {
-            }}>
+            
+            defaultStorageRoot={() => ({
+              
+             
+            })}
+            >
 
             
             

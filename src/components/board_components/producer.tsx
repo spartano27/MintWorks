@@ -42,7 +42,7 @@ function Producer() {
         return null;
     }
 
-    const handleClickBuilder = () => {
+    const handleClickProducer = () => {
         if(turno.get("turn") == self.connectionId ){
             if (players == 2 || players == 3){
                 if(Number(producer.get("occupied")) > 2){
@@ -73,7 +73,7 @@ function Producer() {
 
         return(
             <div>
-            <img style = {{width:210}} src = {require(`../../images/${producer.get("img")}`)} onDragStart={(e) => DragHandler(e)} onClick={()=> handleClickBuilder() } />
+            <img style = {{width:210}} src = {require(`../../images/${producer.get("img")}`)} onDragStart={(e) => DragHandler(e)} onClick={()=> handleClickProducer() } />
                 <Modal show={visible} onHide={() => setVisible(false)} centered >
                     <ModalHeader> 
                         Use Producer card?

@@ -62,14 +62,14 @@ function Supplier(){
     }
  
 
-    const handleCompra = (card: { id: string; effect:any; value: number; name: Function;}) => {
+    const handleCompra = (card: { id: string; effect:any; value: number; name: string; active: boolean; stars: number}) => {
         
         if(mypresence == null){
             return null;
         }
         if(mypresence.mint >= card.value){
            
-            const cardOwner = {id: card.id,name: card.name, effect: card.effect, value: card.value, owner: mypresence.username}
+            const cardOwner = {id: card.id,name: card.name, value: card.value, owner: mypresence.username, active: card.active, stars: card.stars}
             const totalCards = [...mypresence.cards,cardOwner];
             
             for (var i = 0; i< shopCards.length; i++){

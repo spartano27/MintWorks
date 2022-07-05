@@ -31,7 +31,7 @@ export const initialState: IGlobalState = {
     ,{id:"7", name:"Gallery", value:4, owner: 0, active:false, stars: 0}
     ,{id:"8", name:"Gardens", value:3, owner: 0, active:false, stars: 3}
     ,{id:"9", name: "Landfill", value:3, owner: 0, active:false, stars: 3}
-    ,{id:"10", name:"LottoCard", value:4, owner: 0, active:false, stars: 2}
+    ,{id:"10", name:"Lotto", value:4, owner: 0, active:false, stars: 2}
     ,{id:"11", name:"Mine", value:2, owner: 0, active:false, stars: 1}
     ,{id:"12", name:"Museum", value:2, owner: 0, active:false, stars: 0}
     ,{id:"13", name:"Obelisk", value:4, owner: 0, active:false, stars: 0}
