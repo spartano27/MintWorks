@@ -67,7 +67,7 @@ function Game(){
     const builder = useObject(`builder-${name}`,{img: players < 4 ? "builder1.png" : "builder.png",occupied: 1});
     const supplier = useObject(`supplier-${name}`,{img: players < 4 ? "supplier1.png" : "supplier.png",occupied: 1});
     const wholesaler = useObject(`wholesaler-${name}`,{img: "wholesaler1.png",occupied: "true"});
-    const lotto = useObject(`lotto-${name}`,{img: "lotto1.png",occupied: "false"});
+    const lotto = useObject(`lotto-${name}`,{img: "lotto1.png",occupied: "true"});
     let Mentas: number[] = []
     let Users: string[] = []
     let IDs: number[] = []

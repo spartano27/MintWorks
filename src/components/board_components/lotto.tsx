@@ -105,6 +105,7 @@ function Lotto() {
                         lotto.set("img", "lottoUsed.png");
                         lotto.set("occupied", "true");
                         const cartaLista = shopCards.get(1);
+                        
                         const totalCards = [...mypresence.cards,cartaLista];
                         shopCards.delete(1);
                         update({cards:totalCards});
@@ -178,9 +179,22 @@ function Lotto() {
                     </ModalHeader>
                     <ModalBody>
                         <ListGroup key={"shop"} horizontal className="h-25 justify-content-center" style={{paddingTop:'24px'}} >
-                            <ListGroupItem variant="primary">
+                        
+                        {mypresence.cards.reverse().map((card:any,index)=> {
+                            if(index == mypresence.cards.length-1){
+                                return(
+                                    <div>
+                                    
+                                        <ListGroup.Item variant="primary">
+                                            <img key={`shop-${card.id}`} src = {require(`../../images/cards_images/${card.name.toUpperCase()}.PNG`)} style={{padding:'0px'}}/>
+                                        </ListGroup.Item>
                                 
-                            </ListGroupItem>
+                                    </div>
+                                
+                                )
+                            }
+                            
+                        })}
                         </ListGroup>
                     </ModalBody>
                 </Modal>
