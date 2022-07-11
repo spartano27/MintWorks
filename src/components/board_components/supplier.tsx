@@ -4,6 +4,7 @@ import { Modal, ModalBody, ModalFooter, Button, ListGroup } from "react-bootstra
 import ModalHeader from "react-bootstrap/esm/ModalHeader";
 import { useParams } from "react-router-dom";
 import handleChangeTurn from "../../turn";
+import { CardTypes } from "../../types";
 
 type Presence = {
     focusedId: string | null;
@@ -32,11 +33,12 @@ function Supplier(){
     const shuffleList = useList(`list-${name}`);
     const turno = useObject(`turno-${name}`,{firstTurn: true,turn:0, visible: false, nuevaRonda: false});
     const shopCards = useList(`InitialShop-${name}`);
-
+    const wholesaler = useObject(`wholesaler-${name}`);
+    const lotto = useObject(`lotto-${name}`);
     const DragHandler = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
     }
-    if (actualCards == null || shopCards == null || playersList == null || shuffleList == null || supplier == null || turno == null || self == null) {
+    if (wholesaler == null || lotto == null || actualCards == null || shopCards == null || playersList == null || shuffleList == null || supplier == null || turno == null || self == null) {
         return null;
     }
 
@@ -62,14 +64,37 @@ function Supplier(){
     }
  
 
-    const handleCompra = (card: { id: string; effect:any; value: number; name: string; active: boolean; stars: number}) => {
-        
+    const handleCompra = (card: { id: string; effect:any; value: number; name: string; active: boolean; stars: number; type: CardTypes}) => {
+        let discount = 0;
+        let builderEffect = false;
+
         if(mypresence == null){
             return null;
         }
+        mypresence.cards.map((carta)=>{
+            if(carta.name == "Truck"){
+                if(card.value == 1 && carta.active){
+                    discount = 0;
+                }else{
+                    discount = 1;
+                }
+            }
+            if(carta.name == "Assembler" && carta.active){
+                builderEffect = true;
+                if(card.name === "Wholesaler"){
+                    wholesaler.set("img", "wholesaler.png");
+                    wholesaler.set("occupied", "false");
+                }
+                if(card.name === "Lotto"){
+                    lotto.set("img", "lotto.png");
+                    lotto.set("occupied", "false");
+                }
+            }
+        })
+
         if(mypresence.mint >= card.value){
-           
-            const cardOwner = {id: card.id,name: card.name, value: card.value, owner: mypresence.username, active: card.active, stars: card.stars}
+            
+            const cardOwner = {id: card.id,name: card.name, value: card.value, owner: mypresence.username, active: builderEffect ? true : false, stars: card.stars, type: card.type}
             const totalCards = [...mypresence.cards,cardOwner];
             
             for (var i = 0; i< shopCards.length; i++){
@@ -92,7 +117,7 @@ function Supplier(){
               
             
             update({cards:totalCards});
-            update({mint: mypresence.mint-cardOwner.value});
+            update({mint: mypresence.mint-cardOwner.value+discount});
         }  
 
         supplier.set("img", players < 4 ? `supplier1Used${supplier.get("occupied")}.png` : `supplierUsed${supplier.get("occupied")}.png`);

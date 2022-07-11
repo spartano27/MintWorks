@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import '../assets/css/neighborhood.css';
 import Clock from "../containers/clock";
 import Mint from "./mint";
+import Stars from "./stars";
 
 type Presence = {
     focusedId: string | null;
@@ -42,6 +43,10 @@ function Neighborhood(valor:any){
                                 </div>
                                 <div className="pt-2 pl-2">
                                     <Mint  mints = {valor.mints}/>
+                                </div>
+
+                                <div className="pt-2 pl-2">
+                                    <Stars stars = {valor.stars}/>
                                 </div>
                                 
                                 <div className="pl-4 pt-4">

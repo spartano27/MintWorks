@@ -5,6 +5,7 @@ import ModalHeader from "react-bootstrap/esm/ModalHeader";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import handleChangeTurn from "../../turn";
+import { CardTypes } from "../../types";
 
 type Presence = {
     focusedId: string | null;
@@ -61,13 +62,20 @@ function Builder() {
         
         
     }
-    const handleBuild = (card: { id: string; effect:any; value: number; name: string; active:boolean; stars: number}) => {
-        
+    const handleBuild = (card: { id: string; effect:any; value: number; name: string; active:boolean; stars: number; type:CardTypes}) => {
+        let discount = 0;
         if(mypresence == null){
             return null;
         }
+        mypresence.cards.map((carta)=>{
+            if(carta.name == "Crane" && carta.active){
+                    discount = 1;
+            }
+        })
+
         if(mypresence.mint >= 2){
-            const cardOwner = {id: card.id,name: card.name, effect: card.effect, value: card.value, owner: mypresence.username, active: true, stars: card.stars}
+            const cardOwner = {id: card.id,name: card.name, effect: card.effect, value: card.value, owner: mypresence.username, active: true, stars: card.stars, type: card.type}
+            
             if(card.name === "Wholesaler"){
                 wholesaler.set("img", "wholesaler.png");
                 wholesaler.set("occupied", "false");
@@ -90,7 +98,7 @@ function Builder() {
             const totalCards = [...mypresence.cards,cardOwner];
             update({cards:totalCards});
             update({stars:mypresence.stars+card.stars});
-            update({mint: mypresence.mint-2});
+            update({mint: mypresence.mint-2+discount});
             builder.set("img", players < 4 ? `builder1Used${builder.get("occupied")}.png` : `builderUsed${builder.get("occupied")}.png`);
             builder.set("occupied", Number(builder.get("occupied"))+1);
             setVisible(false);

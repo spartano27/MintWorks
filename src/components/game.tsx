@@ -6,9 +6,11 @@ import { useList, useMyPresence, useObject, useOthers, useSelf } from "@livebloc
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
-import { Button, Col, Container, Modal, ModalBody, ModalFooter, Row } from "react-bootstrap";
+import { Button, Col, Container, ListGroup, Modal, ModalBody, ModalFooter, Row } from "react-bootstrap";
 import { Cursor } from "./cursor";
 import handleChangeTurn from "../turn";
+import ModalHeader from "react-bootstrap/esm/ModalHeader";
+import { CardTypes } from "../types";
 
 type Presence = {
     focusedId: string | null;
@@ -41,7 +43,7 @@ function Game(){
     const self = useSelf();
     const turnoId = useSelector((state:any)=>state.turnoId);
     const [mypresence,update] = useMyPresence<Presence>();
-    const [carga,setCarga] = useState(true);
+    const [eleccion,setElegir] = useState(false);
     const username = useSelector((state:any)=>state.username);
     const mints = useSelector((state:any)=>state.mints);
     const cards = useSelector((state:any)=>state.cards);
@@ -54,7 +56,7 @@ function Game(){
         
       }, []);
 
-    
+    const [mintOnGalley,setMint] = useState(0);
     const players = Number(String(name).split("-")[1]);
     const [countdown,setCountdown] = useState(true);
     const playersList = useList(`listPLayer-${name}`);
@@ -84,91 +86,158 @@ function Game(){
         }));
     
     const Assembler = () => {
-
+        return [0,1];
     }
 
     const Bridge = () => {
-        
+        return [0,0];
     }
 
     const Coop = () => {
-       
+       setElegir(true);
+       return [1,1];
+    }
+    const CoopElegido = (EleccionconnectionId: any) => {
+        others.map(({connectionId,presence})=>{
+            if(presence == null){
+                return null;
+            }
+            if(connectionId == EleccionconnectionId){
+                presence.mint = Number(presence.mint) +1;
+                console.log(presence.mint);
+            }
+        })
+        setElegir(false);
+        
     }
 
     const Corporate = () => {
+        let retorno = 0;
+        mypresence.cards.map((card)=>{
+            if(card.active){
+                retorno = retorno + 1;
+            }
+            
+        });
+        return [retorno,0];
         
     }
 
     const Crane = () => {
-        
+        return [0,1];
     }
 
     const Factory = () => {
-        return 1;
+        return [1,3];
     }
 
     const Gallery = () => {
-   
+        
+        setMint(mintOnGalley+1);
+        return [0,mintOnGalley];
+    }
+    const Gardens = () => {
+        return [0,3];
     }
 
     const Landfill = () => {
-     
+        let stars = 3;
+        mypresence.cards.map((card)=>{
+            if(card.active && card.type == CardTypes.culture){
+                if(card.stars > 0){
+                    stars = stars -1;
+                }
+            } 
+        });
+        return [0,stars];
     
     }
 
     const Lotto = () => {
         if (lotto == null){
-            return 0;
+            return [0,2];
         }
         if(lotto.get("occupied") == "true"){
-            return 2;
+            return [2,2];
         }else{
-            return 0;
+            return [0,2];
         }
     }
 
     const Mine = () => {
-        return 1;
+        return [1,1];
     }
 
     const Museum = () => {
+        let stars = 0;
+        mypresence.cards.map((card)=>{
+            if(card.active && card.type == CardTypes.culture){
+
+                if(card.name == "Bridge"){
+                    stars = stars + 2; 
+                } else{
+                    stars = stars + 1;
+                }
+            } 
+        });
         
+        return [0,stars];
     }
 
     const Obelisk = () => {
-        
+        let stars = 0;
+        mypresence.cards.map((card)=>{
+            if(card.active){
+                stars = stars + 1 ;
+            } 
+        });
+        return [0,stars];
     }
 
     const Plant = () => {
-        return 2;
+        return [2,2];
+    }
+
+    const Statue = () => {
+        return [0,2];
     }
 
     const Stripmine = () => {
-        return 3;
+        return [3,0];
     }
 
     const Truck = () => {
-        
+        return [0,1];
     }
 
     const Vault = () => {
-        
+        let stars = 1;
+        mypresence.cards.map((card)=>{
+            if(!card.active){
+                stars = stars + 2 ;
+            } 
+        });
+        return [0,stars];
     }
 
     const Wholesaler = () => {
         if (wholesaler == null){
-            return 0;
+            return [0,1];
         }
         if(wholesaler.get("occupied") == "true"){
-            return 1;
+            return [1,1];
         }else{
-            return 0;
+            return [0,1];
         }
       
     }
 
+    const Windmill = () => {
+        return [0,1];
+    }
+
     const Workshop = () => {
-        return 1;
+        return [1,2];
     }
 
 
@@ -211,6 +280,7 @@ function Game(){
   
     const MintsForAll = () => {
         turno.set("firstTurn",false);
+        
         if(turno.get("nuevaRonda")){
             if (mypresence.first){
                 update({first:false});
@@ -235,8 +305,8 @@ function Game(){
             supplier.set("img",players < 4 ? "supplier1.png" : "supplier.png");
             supplier.set("occupied",1);
             let contador = 0;
+            let countStars = 0;
             mypresence.cards.map((card:any) => {
-                
                 if(card.active){
                     if(card.name == "Wholesaler"){
                         if(wholesaler.get("occupied") == "true"){
@@ -253,11 +323,12 @@ function Game(){
                         lotto.set("occupied", "false");
                     }
                     var f = eval(card.name);
-                    contador = contador+f();
+                    contador = contador+f()[0];
+                    countStars = countStars+f()[1];
                 }
                 
             });
-
+            update({stars:countStars});
             update({mint: mypresence.mint+30+contador});
         }
 
@@ -336,7 +407,7 @@ function Game(){
                 > Pass </Button> 
             </Row>
             <Row style={{marginTop:'50px'}} className="p-2 d-flex align-content-end" >
-                <Player id={self.connectionId} username={mypresence.username} mints={mypresence.mint} cards={mypresence.cards} />
+                <Player id={self.connectionId} username={mypresence.username} mints={mypresence.mint} cards={mypresence.cards} stars={mypresence.stars} />
                 {others.map(({connectionId,presence}: any) => {
 
                     
@@ -347,7 +418,7 @@ function Game(){
                     return(
                         <div>
                             
-                            <Player id={connectionId} username={presence.username} mints={presence.mint} cards={presence.cards} />
+                            <Player id={connectionId} username={presence.username} mints={presence.mint} cards={presence.cards} stars={presence.stars} />
                             
                         </div>
                       
@@ -383,6 +454,41 @@ function Game(){
                         )
                         })
                       }
+        <Modal size="lg" show={eleccion} onHide={() => setElegir(false)} centered >
+                    <ModalHeader> 
+                        Co-Op Card
+                    </ModalHeader>
+                    <ModalBody>
+                    Choose a player for Co-op Card effect
+                    <div className="p-4">
+            
+          
+            <ListGroup key={"shop"} horizontal className="h-25 justify-content-center" style={{paddingTop:'24px'}} >
+            {others.map(({connectionId,presence}:any)=> {
+                if (presence == null) {
+                    return null;
+                }
+               
+                return(
+                    <div>
+                     
+                    
+                  <ListGroup.Item variant="primary"
+                  onFocus={(e) => update({ focusedId: e.target.id })}
+                  onBlur={() => update({ focusedId: null })}>
+                      {presence.username}
+                  </ListGroup.Item>
+                  <div style={{paddingLeft:'44px'}}>
+                  <Button onClick={() => CoopElegido(connectionId)}> Elegir </Button>
+                  </div>
+                  </div>
+                )
+               
+                })}
+            </ListGroup>
+        </div>
+                    </ModalBody>
+                </Modal>
         </div>
         
     )
