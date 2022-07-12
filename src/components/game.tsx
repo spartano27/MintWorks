@@ -64,6 +64,7 @@ function Game(){
     const shopCards = useList(`InitialShop-${name}`);
     const actualCards = useList(`ActualCards-${name}`);
     const turno = useObject(`turno-${name}`,{firstTurn:turnoId, turn:turnoId, visible:turnoId, nuevaRonda: turnoId});
+    const winner = useObject(`winner-${name}`,{username:"", visible:"false"});
     const leader = useObject(`leader-${name}`,{img: "leader.png",occupied: turnoId});
     const producer = useObject(`producer-${name}`,{img: players == 4 || players == 1 ? "producer.png" : "producer1.png",occupied: 1});
     const builder = useObject(`builder-${name}`,{img: players < 4 ? "builder1.png" : "builder.png",occupied: 1});
@@ -178,6 +179,12 @@ function Game(){
                 } else{
                     stars = stars + 1;
                 }
+            }
+            if(card.active && card.name == "Landfill"){
+                if(stars > 0){
+                    stars = stars -1;
+                }
+                
             } 
         });
         
@@ -261,7 +268,7 @@ function Game(){
 
     }
 
-    if(lotto == null || wholesaler == null || actualCards == null || shopCards == null || shuffleList == null || playersList == null || turno == null || self == null || self.presence == null
+    if(winner == null || lotto == null || wholesaler == null || actualCards == null || shopCards == null || shuffleList == null || playersList == null || turno == null || self == null || self.presence == null
         || leader ==null || builder == null || supplier == null || producer == null){
         initialiceShop();
         return null;
@@ -282,58 +289,95 @@ function Game(){
         turno.set("firstTurn",false);
         
         if(turno.get("nuevaRonda")){
-            if (mypresence.first){
-                update({first:false});
-                const firstItem = self.connectionId;
-                const lista = shuffleList.toArray().sort((x,y)=>{ return x === firstItem ? -1 : y === firstItem ? 1 : 0; });
-                shuffleList.clear();
-                lista.map((e)=>{
-                    shuffleList.push(e);
-                });
-
-                turno.set("turn",shuffleList.get(0));
-            }
-
+            if(mypresence.stars >= 7 || shopCards.length == 0){
+                turno.set("visible",false);
+                HandleWinner();
+                
             
 
-            leader.set("img","leader.png");
-            leader.set("occupied",false);
-            producer.set("img",players == 4 || players == 1 ? "producer.png" : "producer1.png");
-            producer.set("occupied",1);
-            builder.set("img", players < 4 ? "builder1.png" : "builder.png");
-            builder.set("occupied",1);
-            supplier.set("img",players < 4 ? "supplier1.png" : "supplier.png");
-            supplier.set("occupied",1);
-            let contador = 0;
-            let countStars = 0;
-            mypresence.cards.map((card:any) => {
-                if(card.active){
-                    if(card.name == "Wholesaler"){
-                        if(wholesaler.get("occupied") == "true"){
-                            contador = contador + 1;
-                        }
-                        wholesaler.set("img", "wholesaler.png");
-                        wholesaler.set("occupied", "false");
-                    }
-                    if(card.name == "Lotto"){
-                        if(lotto.get("occupied") == "true"){
-                            contador = contador + 2;
-                        }
-                        lotto.set("img", "lotto.png");
-                        lotto.set("occupied", "false");
-                    }
-                    var f = eval(card.name);
-                    contador = contador+f()[0];
-                    countStars = countStars+f()[1];
+            }else{
+                if (mypresence.first){
+                    update({first:false});
+                    const firstItem = self.connectionId;
+                    const lista = shuffleList.toArray().sort((x,y)=>{ return x === firstItem ? -1 : y === firstItem ? 1 : 0; });
+                    shuffleList.clear();
+                    lista.map((e)=>{
+                        shuffleList.push(e);
+                    });
+    
+                    turno.set("turn",shuffleList.get(0));
                 }
+    
                 
-            });
-            update({stars:countStars});
-            update({mint: mypresence.mint+30+contador});
-        }
+    
+                leader.set("img","leader.png");
+                leader.set("occupied",false);
+                producer.set("img",players == 4 || players == 1 ? "producer.png" : "producer1.png");
+                producer.set("occupied",1);
+                builder.set("img", players < 4 ? "builder1.png" : "builder.png");
+                builder.set("occupied",1);
+                supplier.set("img",players < 4 ? "supplier1.png" : "supplier.png");
+                supplier.set("occupied",1);
+                let contador = 0;
+                let countStars = 0;
+                mypresence.cards.map((card:any) => {
+                    if(card.active){
+                        if(card.name == "Wholesaler"){
+                            if(wholesaler.get("occupied") == "true"){
+                                contador = contador + 1;
+                            }
+                            wholesaler.set("img", "wholesaler.png");
+                            wholesaler.set("occupied", "false");
+                        }
+                        if(card.name == "Lotto"){
+                            if(lotto.get("occupied") == "true"){
+                                contador = contador + 2;
+                            }
+                            lotto.set("img", "lotto.png");
+                            lotto.set("occupied", "false");
+                        }
+                        var f = eval(card.name);
+                        contador = contador+f()[0];
+                        countStars = countStars+f()[1];
+                    }
+                    
+                });
+                update({stars:countStars});
+                update({mint: mypresence.mint+30+contador});
+            }
+            }
+            
 
     }
+    const HandleWinner = () => {
+        let valorAlto = [mypresence.stars,mypresence.username,mypresence.cards.length,mypresence.mint];
+        others.map(({presence}:any)=>{
+            if(presence == null){
+                return null;
+            }
+            if(valorAlto[0] < presence.stars){
+                valorAlto = [presence.stars,presence.username,presence.cards.length,presence.mint];
+            }else if(valorAlto[0] == presence.stars){
+                if(valorAlto[2] < presence.cards.length){
+                valorAlto = [presence.stars,presence.username,presence.cards.length,presence.mint];
+                }else if(valorAlto[2] == presence.cards.length){
+                    if(valorAlto[3] < presence.mint){
+                        valorAlto = [presence.stars,presence.username,presence.cards.length,presence.mint];
+                    }else if(valorAlto[3] == presence.cards.length){
+                        valorAlto = [presence.stars,"TIE",presence.cards.length,presence.mint];
 
+                    }
+                }
+            }
+        })
+        console.log(valorAlto);
+        winner.set("username",String(valorAlto[1]));
+        winner.set("visible","true");
+    }
+
+    const ExitGame = () => {
+        console.log("aqui se borra todo y se redirije a una ultima pagina de adios o al inicio");
+    }
     const WhoFirst = () => {
         const TotalIDs = [...IDs];
         const listShuffle = TotalIDs.sort(()=> Math.random() -0.5);
@@ -433,6 +477,11 @@ function Game(){
           <Modal  show={turno.get("visible")} onHide={() => turno.set("visible",false)} centered onExiting={() => MintsForAll()} >
                 <ModalBody>
                  its {usernameTurn} turn
+                </ModalBody>
+            </Modal>
+            <Modal  show={winner.get("visible") == "true" ? true : false} onHide={() => turno.set("visible","false")} centered onExiting={() => ExitGame()} >
+                <ModalBody>
+                 {winner.get("username")} Wins !!! 
                 </ModalBody>
             </Modal>
             {
