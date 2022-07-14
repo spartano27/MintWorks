@@ -17,8 +17,14 @@ const slice = createSlice({
   reducers: {
     addRooms: (state,action) => {
       state.roomList = [...state.roomList,action.payload];
-      console.log(state.roomList);
+      
 
+    },
+    removeRoom: (state,action) => {
+      let newa = state.roomList.slice();
+      newa.splice(action.payload,1);
+      state.roomList = newa;
+      console.log(state.roomList);
     },
     changeUsername: (state,action) => {
       state.username = action.payload;
@@ -57,7 +63,7 @@ const slice = createSlice({
     
 
 });
-export const {addRooms,changeUsername,setPlayers,addPlayer,initialStateCard,changeTurn,removeCard,usedCards} = slice.actions;
+export const {addRooms,removeRoom,changeUsername,setPlayers,addPlayer,initialStateCard,changeTurn,removeCard,usedCards} = slice.actions;
 export function makeStore() {
   return configureStore({
     reducer: slice.reducer,

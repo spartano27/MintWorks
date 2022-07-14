@@ -13,7 +13,7 @@ export function JoinRoom() {
     const [visible,setVisible] = useState(false);
     const [EsValido,setEsvalido] = useState(false);
     const [aviso,setAviso] = useState(false);
-    
+    console.log(roomList);
     useEffect(() => {
         dispatch(
           actions.enterRoom("rooms", {
@@ -47,8 +47,7 @@ export function JoinRoom() {
     const handleSubmit = (room: { name: any,users: any[], players:number }) => {
         if(room.users.length <= room.players){
             if(EsValido) {
-                room.users.push(username);
-                console.log(room.users);    
+                room.users.push(username);  
                 navigate(`/Room/${room.name}-${room.players}`);
             }else{
                 setAviso(true);

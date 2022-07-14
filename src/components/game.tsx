@@ -11,6 +11,9 @@ import { Cursor } from "./cursor";
 import handleChangeTurn from "../turn";
 import ModalHeader from "react-bootstrap/esm/ModalHeader";
 import { CardTypes } from "../types";
+import { useNavigate } from "react-router-dom";
+import { addRooms, removeRoom} from "../store";
+import { actions } from "@liveblocks/redux";
 
 type Presence = {
     focusedId: string | null;
@@ -45,11 +48,24 @@ function Game(){
     const [mypresence,update] = useMyPresence<Presence>();
     const [eleccion,setElegir] = useState(false);
     const username = useSelector((state:any)=>state.username);
+    const roomList = useSelector((state:any)=>state.roomList);
     const mints = useSelector((state:any)=>state.mints);
     const cards = useSelector((state:any)=>state.cards);
     const {name} = useParams();
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    useEffect(() => {
+        dispatch(
+          actions.enterRoom("rooms", {
+            roomList: [],
+          })
+        );
     
-    
+        return () => {
+          dispatch(actions.leaveRoom("rooms"));
+        };
+      }, [dispatch]);
+
     useEffect(()=>{
         
         update({username:username,mint:mints, cards:[],stars:0,first: false});
@@ -58,6 +74,7 @@ function Game(){
 
     const [mintOnGalley,setMint] = useState(0);
     const players = Number(String(name).split("-")[1]);
+    const roomName = (String(name).split("-")[0]).split("Gl")[1];
     const [countdown,setCountdown] = useState(true);
     const playersList = useList(`listPLayer-${name}`);
     const shuffleList = useList(`list-${name}`);
@@ -247,7 +264,7 @@ function Game(){
         return [1,2];
     }
 
-
+   
 
 
     const initialiceShop = () => {
@@ -289,13 +306,7 @@ function Game(){
         turno.set("firstTurn",false);
         
         if(turno.get("nuevaRonda")){
-            if(mypresence.stars >= 7 || shopCards.length == 0){
-                turno.set("visible",false);
-                HandleWinner();
-                
-            
-
-            }else{
+           
                 if (mypresence.first){
                     update({first:false});
                     const firstItem = self.connectionId;
@@ -304,7 +315,7 @@ function Game(){
                     lista.map((e)=>{
                         shuffleList.push(e);
                     });
-    
+                    
                     turno.set("turn",shuffleList.get(0));
                 }
     
@@ -344,7 +355,18 @@ function Game(){
                 });
                 update({stars:countStars});
                 update({mint: mypresence.mint+30+contador});
-            }
+                if(mypresence.stars >= 7 || shopCards.length == 0){
+                    turno.set("visible",false);
+                    HandleWinner();
+                    
+                    roomList.map((room: { name: string | undefined; },index: any)=>{
+                        if(roomName == room.name){
+                            dispatch(removeRoom(index));
+                            console.log(roomList);
+                        }
+                    });
+                    
+                }
             }
             
 
@@ -396,7 +418,7 @@ function Game(){
         
     }
     
-   if(others.count +1 < players){
+   if(others.count +1 < players && winner.get("username") == ""){
        return (
            <h1> waiting </h1>
        )
@@ -479,10 +501,13 @@ function Game(){
                  its {usernameTurn} turn
                 </ModalBody>
             </Modal>
-            <Modal  show={winner.get("visible") == "true" ? true : false} onHide={() => turno.set("visible","false")} centered onExiting={() => ExitGame()} >
+            <Modal  show={winner.get("visible") == "true" ? true : false} onHide={() => turno.set("visible","false")} backdrop="static" centered onExiting={() => ExitGame()} >
                 <ModalBody>
                  {winner.get("username")} Wins !!! 
                 </ModalBody>
+                <ModalFooter>
+                 <Button variant="primary" onClick={() => {navigate('/')}}>OK</Button> 
+                </ModalFooter>
             </Modal>
             {
                         /*Iterate over other users and display a cursor on their presence */
@@ -544,4 +569,5 @@ function Game(){
 }
 
 export default Game;
+
 
