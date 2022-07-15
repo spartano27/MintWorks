@@ -8,54 +8,28 @@ import Supplier from './board_components/supplier';
 import Wholesaler from './board_components/wholesaler';
 import '../assets/css/cards.css';
 
-
-
-interface IBoardProps {
-players: number;
-}
-
-interface IBoardState {
-
-}
-
-class Board extends React.Component<IBoardProps,IBoardState> {
-    constructor(props: IBoardProps){
-        super(props);
-
-    }
-  
-    public render() {
-
-        return (
-            
-            <Container >
-                
+function Board(){
+    
+    return (
+        
+        <Container >
             <Row className='justify-content-start'>
-                    <Leader/>
-                    <Producer/>               
-                
+                <Leader/>
+                <Producer/>                
             </Row>
+
             <Row className='justify-content-start'>
                 <Builder />
                 <Supplier/>
-            
             </Row>
 
             <Row className='justify-content-start'>
                 <Wholesaler />
                 <Lotto />
-            
             </Row>
-            
-            </Container>
+        </Container>
                 
-            
-            
-            
-            
-            
-        );
-    }
+    );
 }
 
 export default Board;

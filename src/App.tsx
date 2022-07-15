@@ -6,7 +6,7 @@ import GamePage from "./pages/Game";
 import Buscar from "./pages/Buscar";
 import Crear from "./pages/Crear";
 import RoomPage from "./pages/Room";
-import IndividualGame from "./pages/IndividiualGame";
+import IndividualGame from "./pages/IndividualGame";
 
 export default function App() {
 
@@ -21,15 +21,11 @@ export default function App() {
         <Route path="Buscar" element={<Buscar />}/>
         <Route path="Crear" element={<Crear />}/>
         <Route path="Room/:name" element={
-       
             <RoomPage /> 
-        
         }/>
 
       </Routes>
-      
     </BrowserRouter>
-
-  );
-  
+    
+  );  
 }

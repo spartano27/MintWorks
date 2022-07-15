@@ -1,39 +1,19 @@
 import React from "react";
 
+function Mort(){
 
-interface IMortProps {
-
-}
-interface IMortState {
-    build : boolean;
-    zoomed: boolean;
-
-}
-
-
-class Mort extends React.Component<IMortProps,IMortState> {
-    constructor(props : IMortProps){
-        super(props);
-        this.state = {build: false, zoomed: false};
-
-    }
-
-    DragHandler = (e: { preventDefault: () => void; }) => {
+    const DragHandler = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
     }
     
-    public render(){
-      
-      
-        return(
+    return(
 
-            <div>
+        <div>
             <img  src = {require("../../images/ias_images/MORT.PNG")} style={{width:'250px'}}
-            onDragStart={this.DragHandler} />
-           
-            </div>
+            onDragStart={(e) => DragHandler(e)} />   
+        </div>
 
-        );
-    }
+    );  
 }
+
 export default Mort;

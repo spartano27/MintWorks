@@ -1,16 +1,12 @@
 import React from 'react';  
 import Game from '../components/game';  
 
-
 function IndividualGame() {
 
-   
-    
     return (
                     
-                        <Game/> 
+        <Game/> 
     );
-
 }
 
 export default IndividualGame;

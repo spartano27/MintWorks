@@ -1,39 +1,38 @@
 import React from 'react';
 import {Carousel} from 'react-bootstrap';
 
-interface iCarruselProps {
-    jsonValues: {srcValue:any,altValue:any}[]
-}
+function Carrusel(){
+    
+    const carruselItem = [];
+    const lista = [{
+        srcValue: "mint1.jpg",
+        altValue: "First slide"
+      },{
+        srcValue: "mint1.jpg",
+        altValue: "Second slide"
+      },{
+        srcValue: "mint1.jpg",
+        altValue: "Third slide"
+      }];
 
-class Carrusel extends React.Component<iCarruselProps> {
-    public render() {
-        const carruselItem = [];
-        
-        console.log(this.props.jsonValues);
-        
-        /* Iterating through the jsonValues array and pushing the values into the carruselItem array. */
-        for (const value of this.props.jsonValues) {
-            console.log(value.srcValue);
-            carruselItem.push(
+    for (const value of lista) {
+
+        carruselItem.push(
             <Carousel.Item>
                 <img
                 className="d-block mx-auto"
                 src={require(`../images/${value.srcValue}`)}
-                alt={value.altValue}
-                />
-            </Carousel.Item>);
-
-        }
-        return(
-            
-            <Carousel className="center-block">
-                {carruselItem}
-            </Carousel>
-
-
+                alt={value.altValue}/>
+            </Carousel.Item>
         );
-
     }
+
+    return(
+        
+        <Carousel className="center-block">
+            {carruselItem}
+        </Carousel>
+    );   
 }
 
 export default Carrusel;

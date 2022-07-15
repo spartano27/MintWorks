@@ -1,14 +1,11 @@
 import React from 'react';  
 import {JoinRoom} from '../components/rooms/joinRoom';
 
-class Buscar extends React.Component {
+function Buscar(){
 
-    public render() {
-        return (
-
-            <JoinRoom/>
-        );
-    }
+    return (
+        <JoinRoom/>
+    );
 }
 
 export default Buscar;

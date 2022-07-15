@@ -1,30 +1,16 @@
 import { useObject, useSelf, useMyPresence, useList } from "@liveblocks/react";
 import React, { useState } from "react";
-import { Modal, ModalBody, ModalFooter, Button, ListGroup, ListGroupItem } from "react-bootstrap";
+import { Modal, ModalBody, ModalFooter, Button, ListGroup } from "react-bootstrap";
 import ModalHeader from "react-bootstrap/esm/ModalHeader";
 import { useParams } from "react-router-dom";
 import handleChangeTurn from "../../turn";
-
-type Presence = {
-    focusedId: string | null;
-    username: string;
-    mint: number;
-    cards: any[];
-    stars: number;
-    first: boolean;
-    cursor: {
-        x: number,
-        y: number
-      } | null
-  };
+import { Presence } from "../../types";
 
 function Lotto() {
    
-
     const {name} = useParams();
     const lotto = useObject(`lotto-${name}`);
     const self = useSelf();
-    const players = Number(String(name).split("-")[1]);
     const [mypresence,update] = useMyPresence<Presence>();
     const [visible,setVisible] = useState(false);
     const [visible1,setVisible1] = useState(false);
@@ -34,6 +20,7 @@ function Lotto() {
     const shopCards = useList(`InitialShop-${name}`);
     const actualCards = useList(`ActualCards-${name}`);
     const turno = useObject(`turno-${name}`,{firstTurn: true,turn:0, visible: false, nuevaRonda: false});
+
     const DragHandler = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
     }
@@ -43,24 +30,29 @@ function Lotto() {
     }
 
     const handleClickWholesoler = () => {
-        if(turno.get("turn") == self.connectionId ){
-                if((lotto.get("occupied") == "true")){
+        if(turno.get("turn") === self.connectionId ){
+
+                if((lotto.get("occupied") === "true")){
                     return;
-                }else{
+                }
+                
+                else{
                     setVisible(true)
                 }
-            }
-        
+        }
     }
+
     const handleClick = () => {
+
         if(shopCards == null || mypresence == null){
             return null;
         }
+
         if(mypresence.mint >= 3){
             
-                if(actualCards.length == 3){
+                if(actualCards.length === 3){
                     
-                    if (shopCards.get(0) != undefined && shopCards.get(1) != undefined && shopCards.get(2) != undefined && shopCards.get(3) != undefined){
+                    if (shopCards.get(0) !== undefined && shopCards.get(1) !== undefined && shopCards.get(2) !== undefined && shopCards.get(3) !== undefined){
                         lotto.set("img", "lottoUsed.png");
                         lotto.set("occupied", "true");
                         const cartaLista = shopCards.get(3);
@@ -74,15 +66,17 @@ function Lotto() {
                         setVisible(false);
                         setVisible2(true);
                         
-                    }else{
+                    }
+                    
+                    else{
                         setVisible(false);
                         setVisible1(true);
                     }
                 }
                
-                if(shopCards.get(0) != undefined && shopCards.get(1) != undefined && actualCards.length == 2){
+                if(shopCards.get(0) !== undefined && shopCards.get(1) !== undefined && actualCards.length === 2){
                     
-                    if (shopCards.get(2) != undefined){
+                    if (shopCards.get(2) !== undefined){
                         lotto.set("img", "lottoUsed.png");
                         lotto.set("occupied", "true");
                         const cartaLista = shopCards.get(2);
@@ -94,35 +88,39 @@ function Lotto() {
                         setVisible(false);
                         setVisible2(true);
                         
-                    }else{
+                    }
+                    
+                    else{
                         setVisible(false);
                         setVisible1(true);
                     }
                 }
-                if(shopCards.get(0) != undefined && actualCards.length == 1){
+                if(shopCards.get(0) !== undefined && actualCards.length === 1){
                     
-                    if (shopCards.get(1) != undefined){
+                    if (shopCards.get(1) !== undefined){
+
                         lotto.set("img", "lottoUsed.png");
                         lotto.set("occupied", "true");
                         const cartaLista = shopCards.get(1);
-                        
                         const totalCards = [...mypresence.cards,cartaLista];
                         shopCards.delete(1);
                         update({cards:totalCards});
                         update({mint:Number(mypresence.mint)-3});
                         handleChangeTurn(actualCards,shopCards,playersList,shuffleList,turno);
-                        
                         setVisible(false);
                         setVisible2(true);
                         
-                    }else{
+                    }
+                    
+                    else{
                         setVisible(false);
                         setVisible1(true);
                     }
                 }
-                if(actualCards.length == 0){
+
+                if(actualCards.length === 0){
                     
-                    if (shopCards.get(0) != undefined){
+                    if (shopCards.get(0) !== undefined){
                         lotto.set("img", "lottoUsed.png");
                         lotto.set("occupied", "true");
                         const cartaLista = shopCards.get(0);
@@ -131,7 +129,6 @@ function Lotto() {
                         update({cards:totalCards});
                         update({mint:Number(mypresence.mint)-3});
                         handleChangeTurn(actualCards,shopCards,playersList,shuffleList,turno);
-                       
                         setVisible(false);
                         setVisible2(true);
                         
@@ -140,67 +137,64 @@ function Lotto() {
                         setVisible1(true);
                     }
                 }
-          
-            
-            
-            
-            
-            }
-        
+        }
     }
 
 
-        return(
-            
-            <div>
-                <img style = {{width:210}} src = {require(`../../images/${lotto.get("img")}`)} onDragStart={(e) => DragHandler(e)} onClick={()=> handleClickWholesoler() } />
-                <Modal  show={visible} onHide={() => setVisible(false)} centered >
-                    <ModalHeader> 
-                        Use lotto card?
-                    </ModalHeader>
-                    <ModalBody>
-                    You will gain the top Plan from the Plan Deck.
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button onClick={()=>handleClick()}> Yes</Button>
-                        <Button onClick={() => setVisible(false)}> No </Button>
-                    </ModalFooter>
-                </Modal>
-                <Modal  show={visible1} onHide={() => setVisible1(false)} centered >
-                    <ModalHeader> 
-                        There isnt enough Plan on the Plan Deck.
-                        <Button onClick={() => setVisible1(false)}> Ok </Button>
-                    </ModalHeader>
-                </Modal>
-                <Modal  show={visible2} onHide={() => setVisible2(false)} centered >
-                    <ModalHeader> 
-                        You get:
-                        <Button onClick={() => setVisible2(false)}> Ok </Button>
-                    </ModalHeader>
-                    <ModalBody>
-                        <ListGroup key={"shop"} horizontal className="h-25 justify-content-center" style={{paddingTop:'24px'}} >
-                        
-                        {mypresence.cards.reverse().map((card:any,index)=> {
-                            if(index == mypresence.cards.length-1){
-                                return(
-                                    <div>
-                                    
-                                        <ListGroup.Item variant="primary">
-                                            <img key={`shop-${card.id}`} src = {require(`../../images/cards_images/${card.name.toUpperCase()}.PNG`)} style={{padding:'0px'}}/>
-                                        </ListGroup.Item>
+    return(
+        
+        <div>
+            <img alt="Lotto" style = {{width:210}} src = {require(`../../images/${lotto.get("img")}`)} onDragStart={(e) => DragHandler(e)} onClick={()=> handleClickWholesoler() } />
+            <Modal  show={visible} onHide={() => setVisible(false)} centered >
+                <ModalHeader> 
+                    Use lotto card?
+                </ModalHeader>
+                <ModalBody>
+                You will gain the top Plan from the Plan Deck.
+                </ModalBody>
+                <ModalFooter>
+                    <Button onClick={()=>handleClick()}> Yes</Button>
+                    <Button onClick={() => setVisible(false)}> No </Button>
+                </ModalFooter>
+            </Modal>
+            <Modal  show={visible1} onHide={() => setVisible1(false)} centered >
+                <ModalHeader> 
+                    There isnt enough Plan on the Plan Deck.
+                    <Button onClick={() => setVisible1(false)}> Ok </Button>
+                </ModalHeader>
+            </Modal>
+            <Modal  show={visible2} onHide={() => setVisible2(false)} centered >
+                <ModalHeader> 
+                    You get:
+                    <Button onClick={() => setVisible2(false)}> Ok </Button>
+                </ModalHeader>
+                <ModalBody>
+                    <ListGroup key={"shop"} horizontal className="h-25 justify-content-center" style={{paddingTop:'24px'}} >
+                    
+                    {mypresence.cards.reverse().map((card:any,index)=> {
+                        if(index === mypresence.cards.length-1){
+                            return(
+                                <div>
                                 
-                                    </div>
-                                
-                                )
-                            }
+                                    <ListGroup.Item variant="primary">
+                                        <img alt="CardLotto" key={`shop-${card.id}`} src = {require(`../../images/cards_images/${card.name.toUpperCase()}.PNG`)} style={{padding:'0px'}}/>
+                                    </ListGroup.Item>
                             
-                        })}
-                        </ListGroup>
-                    </ModalBody>
-                </Modal>
-                
-            </div>
-           
-        );
+                                </div>
+                            
+                            )
+                        }
+                        else{
+                            return null;
+                        }
+                        
+                    })}
+                    </ListGroup>
+                </ModalBody>
+            </Modal>
+            
+        </div>
+        
+    );
 }
 export default Lotto;

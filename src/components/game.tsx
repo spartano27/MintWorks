@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Board from "./board";
-import Player from "./player";
 import Shop from "./shop";
 import { useList, useMyPresence, useObject, useOthers, useSelf } from "@liveblocks/react";
 import { useParams } from "react-router-dom";
@@ -14,6 +13,7 @@ import { CardTypes } from "../types";
 import { useNavigate } from "react-router-dom";
 import { addRooms, removeRoom} from "../store";
 import { actions } from "@liveblocks/redux";
+import Neighborhood from "./neighborhood";
 
 type Presence = {
     focusedId: string | null;
@@ -28,7 +28,7 @@ type Presence = {
       } | null
   };
 
-  function Shuffle(array: any[]){
+function Shuffle(array: any[]){
     const arrayForSort = [...array];
     for (var i = arrayForSort.length -1; i > 0; i--){
         var j = Math.floor(Math.random()* (i-1));
@@ -68,7 +68,7 @@ function Game(){
 
     useEffect(()=>{
         
-        update({username:username,mint:mints, cards:[],stars:0,first: false});
+        update({username:username,mint:3, cards:[],stars:0,first: false});
         
       }, []);
 
@@ -464,7 +464,7 @@ function Game(){
                     <Shop players={players}/>
                     
                     
-                    <Board players={players}/>
+                    <Board/>
 
                 
                 </Col>
@@ -473,7 +473,7 @@ function Game(){
                 > Pass </Button> 
             </Row>
             <Row style={{marginTop:'50px'}} className="p-2 d-flex align-content-end" >
-                <Player id={self.connectionId} username={mypresence.username} mints={mypresence.mint} cards={mypresence.cards} stars={mypresence.stars} />
+                <Neighborhood id={self.connectionId} username={mypresence.username} mints={mypresence.mint} cards={mypresence.cards} stars={mypresence.stars} />
                 {others.map(({connectionId,presence}: any) => {
 
                     
@@ -484,7 +484,7 @@ function Game(){
                     return(
                         <div>
                             
-                            <Player id={connectionId} username={presence.username} mints={presence.mint} cards={presence.cards} stars={presence.stars} />
+                            <Neighborhood id={connectionId} username={presence.username} mints={presence.mint} cards={presence.cards} stars={presence.stars} />
                             
                         </div>
                       

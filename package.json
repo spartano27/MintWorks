@@ -25,7 +25,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "build-css": "node-sass --include-path ./node_modules src/assets/scss -o ./src/assets/css --recursive",
-    "watch-css": "npm run build-css && node-sass --include-path ./node_modules src/assets/scss -o src/assets/scss --watch --recursive"
+    "watch-css": "npm run build-css && node-sass --include-path ./node_modules src/assets/scss -o src/assets/scss --watch --recursive",
+    "lint": "eslint . --ext .ts"
   },
   "eslintConfig": {
     "extends": [
@@ -53,6 +54,8 @@
     "@types/webpack": "^5.28.0",
     "bootstrap-scss": "^4.6.1",
     "node-sass": "^7.0.1",
-    "npm-run-all": "^4.1.5"
+    "npm-run-all": "^4.1.5",
+    "react-scripts": "^5.0.1"
+
   }
 }

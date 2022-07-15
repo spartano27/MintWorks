@@ -9,11 +9,10 @@ function Stars( valor: any) {
     return(
 
         <div>
-            <img  src = {require("../images/STAR.png")} style={{width:'50px',padding:'0px'}}
+            <img alt="Stars"  src = {require("../images/STAR.png")} style={{width:'50px',padding:'0px'}}
             onDragStart={(e) => DragHandler(e)} />
             x{valor.stars}
         </div>
-
     )
 }
 

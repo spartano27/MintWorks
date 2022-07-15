@@ -1,14 +1,11 @@
 import React from 'react';  
 import {CreateRoom} from "../components/rooms/createRoom";
 
-class Crear extends React.Component {
+function Crear(){
 
-    public render() {
-        return (
-
-            <CreateRoom/>
-        );
-    }
+    return (
+        <CreateRoom/>
+    );
 }
 
 export default Crear;

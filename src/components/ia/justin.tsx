@@ -1,39 +1,19 @@
 import React from "react";
 
+function Justin(){
 
-interface IJustinProps {
-
-}
-interface IJustinState {
-    build : boolean;
-    zoomed: boolean;
-
-}
-
-
-class Justin extends React.Component<IJustinProps,IJustinState> {
-    constructor(props : IJustinProps){
-        super(props);
-        this.state = {build: false, zoomed: false};
-
-    }
-
-    DragHandler = (e: { preventDefault: () => void; }) => {
+    const DragHandler = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
     }
     
-    public render(){
-      
-      
-        return(
+    return(
 
-            <div>
+        <div>
             <img  src = {require("../../images/ias_images/JUSTIN.PNG")} style={{width:'250px'}} 
-            onDragStart={this.DragHandler}/>
-           
-            </div>
+            onDragStart={(e) => DragHandler(e)}/>
+        </div>
 
-        );
-    }
+    );    
 }
+
 export default Justin;

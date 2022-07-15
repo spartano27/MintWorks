@@ -18,8 +18,8 @@ export const Cursor = React.memo(({ x, y, color, name }: CursorPresence) => {
         top: 0,
         transition: "transform 0.5s cubic-bezier(.17,.93,.38,1)",
         transform: `translateX(${x}px) translateY(${y}px)`
-      }}
-    >
+      }}>
+
       <svg
         className="cursor"
         width="24"
@@ -27,12 +27,12 @@ export const Cursor = React.memo(({ x, y, color, name }: CursorPresence) => {
         viewBox="0 0 24 36"
         fill="none"
         stroke="white"
-        xmlns="http://www.w3.org/2000/svg"
-      >
+        xmlns="http://www.w3.org/2000/svg">
+
         <path
           d="M5.65376 12.3673H5.46026L5.31717 12.4976L0.500002 16.8829L0.500002 1.19841L11.7841 12.3673H5.65376Z"
-          fill={color}
-        />
+          fill={color}/>
+
       </svg>
 
       <div
@@ -43,16 +43,17 @@ export const Cursor = React.memo(({ x, y, color, name }: CursorPresence) => {
           top: 20,
           left: 10,
           padding: "5px 10px"
-        }}
-      >
+        }}>
+
         <p
           style={{
             whiteSpace: "nowrap",
             fontSize: 13,
             color: "white"
-          }}
-        >
+          }}>
+
           {name}
+          
         </p>
       </div>
     </div>
