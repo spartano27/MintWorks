@@ -1,29 +1,17 @@
 import React, { useState } from "react";
 import {useCountdown,CountdownCircleTimer} from 'react-countdown-circle-timer';
 
-interface IClockProps {
-    players: number;
-    playerId: number;
-    currentPlayer: number;
-    ChangePlayer: (playerId: number) => any;
-}
-
-interface IClockState {
-
-}
 
 
-class Clock extends React.Component<IClockProps,IClockState> {
-    constructor (props: IClockProps) {
-        super(props)
-    }
+
+
+function Clock() {
     
-    public render() {
-        console.log(this.props.playerId)
+        
         return (
             <CountdownCircleTimer
                 
-                isPlaying={this.props.playerId === this.props.currentPlayer}
+                isPlaying={true}
                 duration={6}
                 colors={'#43716c'}
                 size={50}
@@ -38,7 +26,7 @@ class Clock extends React.Component<IClockProps,IClockState> {
             </CountdownCircleTimer>
 
         );
-    }
+    
 }
 
 export default Clock;

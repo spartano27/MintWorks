@@ -1,12 +1,10 @@
-import React, {useEffect, useState } from "react";;
-import { Alert, Button, ListGroup} from "react-bootstrap";
+import React, {useState } from "react";
 import '../assets/css/cards.css';
 import { useList, useMyPresence, useObject} from "@liveblocks/react";
 import { useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { ShopCardsTypes } from "../types";
-import { removeCard, usedCards } from "../store";
-import Landfill from "../components/cards/landfillCard";
+import { ListGroup } from "react-bootstrap";
+
+
 type Presence = {
     focusedId: string | null;
     username: string;

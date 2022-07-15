@@ -11,8 +11,8 @@ const client = createClient({
   publicApiKey: "pk_test_rGCwfxKjuMTNJOLSxeiLTtV3",
 
 });
+
 ReactDOM.render(
-  
   <LiveblocksProvider client={client}>
   <React.StrictMode>
     <Provider store={store}>

@@ -4,7 +4,7 @@ import {Button, ListGroup, Row} from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import '../assets/css/neighborhood.css';
-import Clock from "../containers/clock";
+import Clock from "../components/clock";
 import Mint from "./mint";
 import Stars from "./stars";
 
@@ -38,7 +38,7 @@ function Neighborhood(valor:any){
                         <div className={turno.get("turn") == valor.id ? "squareSelected": "square"}>
                             <Row className="">
                                 <div className="pl-4 pt-2">
-                                    <Clock playerId={valor.id}/>
+                                    <Clock/>
                                     
                                 </div>
                                 <div className="pt-2 pl-2">

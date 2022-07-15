@@ -1,7 +1,5 @@
 import { CardTypes } from "../types";
 
-
-/* Defining the initial state of the game. */
 interface IGlobalState {
     players: number;
     username: string;
@@ -10,12 +8,12 @@ interface IGlobalState {
     roomList: {}[];
     playerList: {}[];
     cards: {}[];
-    mazo_inicial: {}[];
-    rand: number;
-    turnoId: number;
 }
 
 export default IGlobalState;
+
+/* Defining the initial state of the game. */
+
 export const initialState: IGlobalState = {
     players: 4,
     username: "",
@@ -44,12 +42,8 @@ export const initialState: IGlobalState = {
     ,{id:"19", name:"Wholesaler", value:1, owner: 0, active:false, stars: 1, type: CardTypes.deed}
     ,{id:"20", name:"Windmill", value:1, owner: 0, active:false, stars: 1, type: CardTypes.culture}
     ,{id:"21", name:"Workshop", value:3, owner: 0, active:false, stars: 2, type: CardTypes.production}
-],
-    mazo_inicial: [],
-    rand: (1 + Math.random() * (21-1)),
-    turnoId: 0
-    
-    
-   
+
+    ],
+
 }
 

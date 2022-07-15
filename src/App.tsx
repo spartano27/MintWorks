@@ -1,6 +1,4 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { actions } from "@liveblocks/redux";
+import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import HomeP from "./pages/Home";
 import Lobby from "./pages/Lobby";
@@ -10,23 +8,7 @@ import Crear from "./pages/Crear";
 import RoomPage from "./pages/Room";
 import IndividualGame from "./pages/IndividiualGame";
 
-
-
 export default function App() {
-  //const dispatch = useDispatch();
-/*
-  useEffect(() => {
-    dispatch(
-      actions.enterRoom("redux-demo-room", {
-        todos: [],
-      })
-    );
-
-    return () => {
-      dispatch(actions.leaveRoom("redux-demo-room"));
-    };
-  }, [dispatch]);
-*/
 
   return (
     
@@ -43,8 +25,11 @@ export default function App() {
             <RoomPage /> 
         
         }/>
+
       </Routes>
       
-      </BrowserRouter>
+    </BrowserRouter>
+
   );
+  
 }
