@@ -1,6 +1,6 @@
 import React from "react";
 
-function Stars( valor: any) {
+function Stars(valor:{stars:number}) {
 
    const DragHandler = (e: { preventDefault: () => void; }) => {
         e.preventDefault();

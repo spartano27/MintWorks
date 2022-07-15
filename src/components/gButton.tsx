@@ -1,8 +1,8 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, To } from 'react-router-dom';
 
-function GButton(valor:any){
+function GButton(valor: {link: To; title: string}){
 
     return(
         

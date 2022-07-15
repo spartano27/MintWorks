@@ -19,7 +19,7 @@ function Lotto() {
     const shuffleList = useList(`list-${name}`);
     const shopCards = useList(`InitialShop-${name}`);
     const actualCards = useList(`ActualCards-${name}`);
-    const turno = useObject(`turno-${name}`,{firstTurn: true,turn:0, visible: false, nuevaRonda: false});
+    const turno = useObject(`turno-${name}`,{firstTurn: "true",turn:0, visible: "false", nuevaRonda: "false"});
 
     const DragHandler = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
@@ -171,7 +171,7 @@ function Lotto() {
                 <ModalBody>
                     <ListGroup key={"shop"} horizontal className="h-25 justify-content-center" style={{paddingTop:'24px'}} >
                     
-                    {mypresence.cards.reverse().map((card:any,index)=> {
+                    {mypresence.cards.reverse().map((card,index)=> {
                         if(index === mypresence.cards.length-1){
                             return(
                                 <div>

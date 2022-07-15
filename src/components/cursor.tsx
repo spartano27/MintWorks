@@ -59,3 +59,5 @@ export const Cursor = React.memo(({ x, y, color, name }: CursorPresence) => {
     </div>
   );
 });
+
+Cursor.displayName = "Cursor";

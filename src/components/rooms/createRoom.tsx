@@ -3,13 +3,15 @@ import React, { useEffect, useState } from "react";
 import { Button, Container, Form, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import {useNavigate } from "react-router-dom";
-import { addRooms} from "../../store";
+import { addRooms, RootState} from "../../store";
+
+const user = (state:RootState) => state.username;
 
 export function CreateRoom() {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const username = useSelector((state:any) => state.username);
+    const username = useSelector(user);
     const [isSwitchOn,setIsSwitchOn] = useState(false);
     const [validated,setValidated] = useState(false);
     const [room,setRoom] = useState({

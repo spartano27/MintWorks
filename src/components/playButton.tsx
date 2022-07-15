@@ -1,4 +1,3 @@
-import {useSelf} from '@liveblocks/react';
 import React from 'react';
 import {Alert, Container, Form, Row} from 'react-bootstrap';
 import {Button} from 'react-bootstrap';
@@ -16,14 +15,13 @@ function PlayButton() {
         value: "/"
     });
 
-    const PushName = (e: { target: { value: any; }; }) => {
+    const PushName = (e: { target: { value: string; }; }) => {
 
-        const format = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
-        let data = e.target.value
+        const format = /[ `!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~]/;
+        const data = e.target.value
 
         if (data === '' || data.length < 8 || data.length > 21 || format.test(data)){
                 
-            console.log("The username must be 8-20 characters long and must not contain spaces");
             const value1 = "/";
             const error1 = true;
             setLink({

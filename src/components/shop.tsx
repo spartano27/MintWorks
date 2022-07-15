@@ -25,10 +25,10 @@ function Shop(players: any) {
         {actualCards.map((card:any)=> {
           return(
 
-              <div>
+              <div key={"Shop"}>
                 <ListGroup.Item variant="primary"
                 onFocus={(e) => update({ focusedId: e.target.id })}
-                onClick={(e) => setValorId(card.id)}
+                onClick={() => setValorId(card.id)}
                 onBlur={() => update({ focusedId: null })}>
 
                   <img alt="CardShop" key={`shop-${card.id}`} src = {require(`../images/cards_images/${card.name.toUpperCase()}.PNG`)} style={{padding:'0px'}}/>

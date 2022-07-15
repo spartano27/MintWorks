@@ -4,11 +4,11 @@ import {ListGroup, Row} from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import '../assets/css/neighborhood.css';
 import Clock from "../components/clock";
-import { Presence } from "../types";
+import { CardTypes, Presence } from "../types";
 import Mint from "./mint";
 import Stars from "./stars";
 
-function Neighborhood(valor:any){
+function Neighborhood(valor: { username: undefined | string; id: number; mints: number; stars: number; cards: {id:string,name:string,value:number,owner:number,active:boolean,stars:number,type:CardTypes}[]; }){
     const {name} = useParams();
     const turno = useObject(`turno-${name}`);
     const self = useSelf();
@@ -52,7 +52,7 @@ function Neighborhood(valor:any){
                 {valor.cards.map((card: any)=>{
                         
                         return(
-                            <ListGroup.Item style={{width:'50px',height:'100px', padding: '0px'}}  variant="secondary">
+                            <ListGroup.Item key={"CardNeigh"} style={{width:'50px',height:'100px', padding: '0px'}}  variant="secondary">
                                 
                                 <img alt="CardsNeigh" key={`neigh-${card.id}`} src = {require(`../images/cards_images/${card.active ? card.name.toUpperCase() : "REVERSO"}.PNG`)} style={{width:'50px',height:'100px', padding: '0px'}}/>
                             </ListGroup.Item>

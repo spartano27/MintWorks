@@ -18,7 +18,7 @@ function Supplier(){
     const playersList = useList(`listPLayer-${name}`);
     const actualCards = useList(`ActualCards-${name}`);
     const shuffleList = useList(`list-${name}`);
-    const turno = useObject(`turno-${name}`,{firstTurn: true,turn:0, visible: false, nuevaRonda: false});
+    const turno = useObject(`turno-${name}`,{firstTurn: "true",turn:0, visible: "false", nuevaRonda: "false"});
     const shopCards = useList(`InitialShop-${name}`);
     const wholesaler = useObject(`wholesaler-${name}`);
     const lotto = useObject(`lotto-${name}`);
@@ -57,7 +57,7 @@ function Supplier(){
         }   
     }
  
-    const handleCompra = (card: { id: string; effect:any; value: number; name: string; active: boolean; stars: number; type: CardTypes}) => {
+    const handleCompra = (card: { id: string; value: number; name: string; active: boolean; stars: number; type: CardTypes}) => {
         
         let discount = 0;
         let builderEffect = false;
@@ -95,7 +95,7 @@ function Supplier(){
             const cardOwner = {id: card.id,name: card.name, value: card.value, owner: mypresence.username, active: builderEffect ? true : false, stars: card.stars, type: card.type}
             const totalCards = [...mypresence.cards,cardOwner];
             
-            for (var i = 0; i< shopCards.length; i++){
+            for (let i = 0; i< shopCards.length; i++){
                 const carta: any = shopCards.get(i);
                 for (const property in carta){
                      if (property === "id"){
@@ -145,13 +145,13 @@ function Supplier(){
                     {actualCards.map((card:any)=> {
                         return(
 
-                            <div>
+                            <div key={"SupplierCards"}>
                                 <ListGroup.Item variant="primary"
                                 onFocus={(e) => update({ focusedId: e.target.id })}
-                                onClick={(e) => setValorId(card.id)}
+                                onClick={() => setValorId(card.id)}
                                 onBlur={() => update({ focusedId: null })}>
                                     
-                                    <img alt="SupplierCards" key={`shop-${card.id}`} src = {require(`../../images/cards_images/${card.name.toUpperCase()}.PNG`)} style={{padding:'0px'}}/>
+                                    <img alt="SupplierCard" key={`shop-${card.id}`} src = {require(`../../images/cards_images/${card.name.toUpperCase()}.PNG`)} style={{padding:'0px'}}/>
 
                                 </ListGroup.Item>
 

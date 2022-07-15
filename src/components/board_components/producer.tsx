@@ -18,7 +18,7 @@ function Producer() {
     const shuffleList = useList(`list-${name}`);
     const shopCards = useList(`InitialShop-${name}`);
     const actualCards = useList(`ActualCards-${name}`);
-    const turno = useObject(`turno-${name}`,{firstTurn: true,turn:0, visible: false, nuevaRonda: false});
+    const turno = useObject(`turno-${name}`,{firstTurn: "true",turn:0, visible: "false", nuevaRonda: "false"});
 
     const DragHandler = (e: { preventDefault: () => void; }) => {
         e.preventDefault();

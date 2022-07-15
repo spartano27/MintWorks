@@ -26,7 +26,7 @@
     "eject": "react-scripts eject",
     "build-css": "node-sass --include-path ./node_modules src/assets/scss -o ./src/assets/css --recursive",
     "watch-css": "npm run build-css && node-sass --include-path ./node_modules src/assets/scss -o src/assets/scss --watch --recursive",
-    "lint": "eslint . --ext .ts"
+    "lint": "eslint ."
   },
   "eslintConfig": {
     "extends": [
@@ -53,9 +53,10 @@
     "@types/react-router-redux": "^5.0.21",
     "@types/webpack": "^5.28.0",
     "bootstrap-scss": "^4.6.1",
+    "eslint-plugin-react": "^7.30.1",
+    "eslint-plugin-react-redux": "^4.0.0",
     "node-sass": "^7.0.1",
     "npm-run-all": "^4.1.5",
     "react-scripts": "^5.0.1"
-
   }
 }

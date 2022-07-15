@@ -1,3 +1,4 @@
+
 export enum CardTypes {
     culture = "culture",
     production = "production",
@@ -17,7 +18,6 @@ export type Presence = {
         y: number
       } | null
   };
-
   
 export type PresenceRoom = {
     focusedId: string | null;

@@ -3,11 +3,16 @@ import { CardTypes } from "../types";
 interface IGlobalState {
     players: number;
     username: string;
-    mints: number;
-    currentPlayer: number;
-    roomList: {}[];
-    playerList: {}[];
-    cards: {}[];
+    roomList: {
+        author: string,
+        name: string,
+        password: string,
+        players: number,
+        difficult: boolean,
+        publico: boolean,
+        users: string[],
+    }[];
+    cards: any[];
 }
 
 export default IGlobalState;
@@ -17,9 +22,6 @@ export default IGlobalState;
 export const initialState: IGlobalState = {
     players: 4,
     username: "",
-    mints: 3,
-    playerList: [],
-    currentPlayer:0,
     roomList:[],
     cards: [{id:"1", name: "Assembler", value:5, owner: 0, active:false, stars: 1, type: CardTypes.utility}
     ,{id:"2", name:"Bridge", value:1, owner: 0, active:false, stars: 0, type: CardTypes.culture}
@@ -42,7 +44,6 @@ export const initialState: IGlobalState = {
     ,{id:"19", name:"Wholesaler", value:1, owner: 0, active:false, stars: 1, type: CardTypes.deed}
     ,{id:"20", name:"Windmill", value:1, owner: 0, active:false, stars: 1, type: CardTypes.culture}
     ,{id:"21", name:"Workshop", value:3, owner: 0, active:false, stars: 2, type: CardTypes.production}
-
     ],
 
 }

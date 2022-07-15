@@ -4,11 +4,15 @@ import { Button, Card, Col, Container,Modal,ModalBody,ModalFooter,ModalTitle,Row
 import ModalHeader from "react-bootstrap/esm/ModalHeader";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { RootState } from "../../store";
+
+const user = (state:RootState) => state.username;
+const rooms = (state:RootState) => state.roomList;
 
 export function JoinRoom() {
 
-    const roomList = useSelector((state:any) => state.roomList);
-    const username = useSelector((state:any) => state.username);
+    const roomList = useSelector(rooms);
+    const username = useSelector(user);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [visible,setVisible] = useState(false);
@@ -26,7 +30,7 @@ export function JoinRoom() {
         };
       }, [dispatch]);   
    
-    const handleClick = (room: { publico: boolean, name: string, users: any[], players:number }) => {
+    const handleClick = (room: { publico: boolean, name: string, users: string[], players:number }) => {
         if(room.users.length <= room.players){
             if(room.publico){
                 room.users.push(username);
@@ -42,7 +46,7 @@ export function JoinRoom() {
         }
     }
 
-    const handleSubmit = (room: { name: any,users: any[], players:number }) => {
+    const handleSubmit = (room: { name: string,users: string[], players:number }) => {
         if(room.users.length <= room.players){
             if(EsValido) {
                 room.users.push(username);  
@@ -54,7 +58,7 @@ export function JoinRoom() {
         }
     }
 
-    const handlePassword = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,password: any) => {
+    const handlePassword = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,password: string) => {
         if(e.target.value === password ){
             setEsvalido(true);
         }
@@ -69,11 +73,11 @@ export function JoinRoom() {
             <h1 className="text-center p-4"> List of Rooms</h1>
             <Col className="justify-content-center">
 
-                {roomList.map(function(item: any,i: React.Key | null | undefined){
+                {roomList.map(function(item){
 
                     return(
 
-                        <div>
+                        <div key={"JoinRoom"}>
                             <Modal show={visible} onHide={() => setVisible(false)} >
                                 <ModalHeader closeButton>
                                 <ModalTitle>Introduce the correct password</ModalTitle>
@@ -106,7 +110,7 @@ export function JoinRoom() {
                                             difficult: {item.difficult ? "Normal":"Hard"}
                                         </Row >
                                     </Card.Text>
-                                    <Button onClick={e => handleClick(item)} className="flex-right ml-auto" type="submit"> Join </Button>
+                                    <Button onClick={() => handleClick(item)} className="flex-right ml-auto" type="submit"> Join </Button>
                                 </Card.Body>
                             </Card>
                         </div>

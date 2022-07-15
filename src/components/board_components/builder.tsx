@@ -20,7 +20,7 @@ function Builder() {
     const wholesaler = useObject(`wholesaler-${name}`);
     const lotto = useObject(`lotto-${name}`);
     const shuffleList = useList(`list-${name}`);
-    const turno = useObject(`turno-${name}`,{firstTurn: true, turn:0, visible: false, nuevaRonda: false});
+    const turno = useObject(`turno-${name}`,{firstTurn: "true", turn:0, visible: "false", nuevaRonda: "false"});
 
     const DragHandler = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
@@ -55,7 +55,7 @@ function Builder() {
         }
     }
 
-    const handleBuild = (card: { id: string; effect:any; value: number; name: string; active:boolean; stars: number; type:CardTypes}) => {
+    const handleBuild = (card: { id: string; value: number; name: string; active:boolean; stars: number; type:CardTypes}) => {
         
         let discount = 0;
 
@@ -72,7 +72,7 @@ function Builder() {
 
         if(mypresence.mint >= 2){
             
-            const cardOwner = {id: card.id,name: card.name, effect: card.effect, value: card.value, owner: mypresence.username, active: true, stars: card.stars, type: card.type}
+            const cardOwner = {id: card.id,name: card.name, value: card.value, owner: mypresence.username, active: true, stars: card.stars, type: card.type}
             
             if(card.name === "Wholesaler"){
                 wholesaler.set("img", "wholesaler.png");
@@ -84,8 +84,8 @@ function Builder() {
                 lotto.set("occupied", "false");
             }
 
-            for (var i = 0; i< mypresence.cards.length; i++){
-                const carta: any = mypresence.cards[i];
+            for (let i = 0; i< mypresence.cards.length; i++){
+                const carta = mypresence.cards[i];
                 for (const property in carta){
                      if (property === "id"){
                         if(carta[property] === card.id){
@@ -121,7 +121,7 @@ function Builder() {
                     <div className="p-4">
 
                         <ListGroup key={"shop"} horizontal className="h-25 justify-content-center" style={{paddingTop:'24px'}} >
-                            {mypresence.cards.map((card:any)=> {
+                            {mypresence.cards.map((card)=> {
                                 
                                 if(!card.active){
 

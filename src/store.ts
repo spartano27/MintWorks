@@ -19,7 +19,7 @@ const slice = createSlice({
     },
 
     removeRoom: (state,action) => {
-      let newa = state.roomList.slice();
+      const newa = state.roomList.slice();
       newa.splice(action.payload,1);
       state.roomList = newa;
       console.log(state.roomList);
@@ -28,29 +28,10 @@ const slice = createSlice({
     changeUsername: (state,action) => {
       state.username = action.payload;
     },
-
-    setPlayers: (state,action) => {
-      state.players = action.payload;
-    },
-
-    addPlayer: (state,action) => {
-      state.playerList = [...state.playerList,action.payload];
-      console.log(state.playerList);
-    },
-
-    deleteCard: (state,action) => {
-      state.cards = []
-    },
-
-    removeCard: (state,action) => {  
-      let newa = state.cards.slice();
-      newa.splice(action.payload,1);
-      state.cards = newa;
-    }
   },
 });
 
-export const {addRooms,removeRoom,changeUsername,setPlayers,addPlayer,removeCard} = slice.actions;
+export const {addRooms,removeRoom,changeUsername} = slice.actions;
 
 export function makeStore() {
   return configureStore({
@@ -68,3 +49,4 @@ export function makeStore() {
 const store = makeStore();
 
 export default store;
+export type RootState = ReturnType<typeof slice.reducer>

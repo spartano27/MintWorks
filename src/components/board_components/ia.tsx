@@ -12,7 +12,7 @@ function IA() {
     const ia = () =>  {
   
         const rand = (1 + Math.random() * (4-1));
-            for(var i in ias){
+            for(const i in ias){
                 if(parseInt(ias[i].id) === Math.round(rand)){
                     return(
                         ias[i].component

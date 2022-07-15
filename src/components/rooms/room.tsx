@@ -5,13 +5,16 @@ import {useOthers, useObject, useMyPresence} from "@liveblocks/react";
 import {Cursor} from "../cursor";
 import {useSelector} from "react-redux";
 import {Logo, PresenceRoom} from "../../types";
+import { RootState } from "../../store";
+
+const user = (state:RootState) => state.username;
 
 function Room(){
 
     const {name} = useParams();
     const players = Number(String(name).split("-")[1]);
     const navigate = useNavigate();
-    const username = useSelector((state:any)=>state.username);
+    const username = useSelector(user);
     const COLORS_PRESENCE = ["255, 69, 225", "255, 64, 64", "255, 166, 3"];
     const others = useOthers();
     const [visible,setVisible] = useState(false);
@@ -70,7 +73,7 @@ function Room(){
             onPointerMove={(event) => {
                 handleOn(event);
             }}
-            onPointerLeave={(event) => {
+            onPointerLeave={() => {
               update({cursor: null});
             }}>
 
@@ -99,7 +102,7 @@ function Room(){
 
                     return(
 
-                      <div className="p-4">
+                      <div key={"room"} className="p-4">
                         {presence.username}
                         <Form>
                           <Form.Check

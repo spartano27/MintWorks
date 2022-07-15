@@ -1,6 +1,6 @@
 import React from "react";
 
-function Mint( valor: any) {
+function Mint( valor:{mints:number}) {
 
    const DragHandler = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
