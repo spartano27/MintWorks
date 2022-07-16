@@ -6,6 +6,8 @@ import { useParams } from "react-router-dom";
 import handleChangeTurn from "../../turn";
 import { CardTypes, Presence } from "../../types";
 
+/* The above code is a React component that is used to build a card. */
+
 function Builder() {
 
     const {name} = useParams();
@@ -22,6 +24,12 @@ function Builder() {
     const shuffleList = useList("listShuffle");
     const turno = useObject<{ firstTurn: boolean; turn: number; visible: boolean; nuevaRonda: boolean; }>("turno");
 
+    /**
+     * DragHandler is a function that takes an object with a property called preventDefault that is a
+     * function that takes no arguments and returns nothing.
+     * @param e - { preventDefault: () => void; }
+     */
+
     const DragHandler = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
     }
@@ -29,6 +37,13 @@ function Builder() {
     if (lotto == null || wholesaler == null || actualCards == null || shopCards == null || playersList == null || shuffleList == null || builder == null || turno == null || self == null) {
         return null;
     }
+
+    /**
+     * If the turn is equal to the connectionId, and the number of players is less than 4, and the
+     * number of occupied builders is greater than 2, then return. Otherwise, set the visibility to
+     * true.
+     * @returns the value of the function.
+     */
 
     const handleClickBuilder = () => {
         if(turno.get("turn") === self.connectionId ){
@@ -55,6 +70,15 @@ function Builder() {
         }
     }
 
+    /**
+     * "If the player has enough money, he can build a card and add it to his neighborhood, and then the turn
+     * changes."
+     *
+     * @param card - { id: string; value: number; name: string; active:boolean; stars: number;
+     * type:CardTypes}
+     * @returns null.
+     */
+    
     const handleBuild = (card: { id: string; value: number; name: string; active:boolean; stars: number; type:CardTypes}) => {
         
         let discount = 0;

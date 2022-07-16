@@ -5,6 +5,7 @@ import {useDispatch} from 'react-redux';
 import {Link} from 'react-router-dom';
 import {changeUsername} from "../store";
 
+/* A function that is used to validate the username. */
 function PlayButton() {
 
     let aviso;
@@ -15,6 +16,12 @@ function PlayButton() {
         value: "/"
     });
 
+    /**
+     * If the input is empty, less than 8 characters, more than 21 characters, or contains a special
+     * character, then set the error to true and the value to "/". Otherwise, set the error to false
+     * and the value to "Lobby".
+     * @param e - { target: { value: string; }; }
+     */
     const PushName = (e: { target: { value: string; }; }) => {
 
         const format = /[ `!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~]/;

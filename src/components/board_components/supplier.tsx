@@ -6,6 +6,8 @@ import { useParams } from "react-router-dom";
 import handleChangeTurn from "../../turn";
 import { Card, Presence } from "../../types";
 
+/* The above code is a React component that is used to buy a card from the supplier. */
+
 function Supplier(){
     
     const {name} = useParams();
@@ -23,6 +25,12 @@ function Supplier(){
     const wholesaler = useObject("wholesaler");
     const lotto = useObject("lotto");
     
+    /**
+     * DragHandler is a function that takes an object with a property called preventDefault that is a
+     * function that takes no arguments and returns nothing.
+     * @param e - { preventDefault: () => void; }
+     */
+
     const DragHandler = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
     }
@@ -31,7 +39,17 @@ function Supplier(){
         return null;
     }
 
-    const handleClickBuilder = () => {
+    /**
+     * If the turn is equal to the connectionId, and the number of players is less than 4, and the
+     * number of occupied suppliers is greater than 2, then return. Otherwise, setVisible(true).
+     * 
+     * If the number of players is greater than 4, and the number of occupied suppliers is greater than
+     * 3, then return. Otherwise, setVisible(true).
+     * 
+     * @returns the value of the function.
+     */
+
+    const handleClickSupplier = () => {
         if(turno.get("turn") === self.connectionId ){
 
             if (players < 4){
@@ -57,6 +75,19 @@ function Supplier(){
         }   
     }
  
+   /**
+    * It's a function that handles the purchase of a card, it has a parameter of type Card, it has a
+    * discount variable of type number, a builderEffect variable of type boolean, it has a forEach loop
+    * that iterates over the cards in the mypresence object, it has a conditional that checks if the
+    * card name is equal to "Truck", it has a conditional that checks if the card value is equal to 1
+    * and if the card is active, it has a conditional that checks if the card name is equal to
+    * "Assembler" and if the card is active, it has a conditional that checks if the card name is equal
+    * to "Wholesaler", it has a conditional that checks if the card name is equal to "Lotto", it has a
+    * conditional that checks if the mypresence mint is greater than or equal to the card value, it has
+    * a cardOwner variable of type object, it has a totalCards variable of type array,
+    * @param {Card} card
+    * @returns null.
+    */
     const handleCompra = (card: Card) => {
         
         let discount = 0;
@@ -134,7 +165,7 @@ function Supplier(){
     return(
         
         <div>
-            <img alt="Supplier" style = {{width:210}} src = {require(`../../images/${supplier.get("img")}`)} onDragStart={(e) => DragHandler(e)} onClick={()=> handleClickBuilder() } />
+            <img alt="Supplier" style = {{width:210}} src = {require(`../../images/${supplier.get("img")}`)} onDragStart={(e) => DragHandler(e)} onClick={()=> handleClickSupplier() } />
             <Modal size="lg" show={visible} onHide={() => setVisible(false)} centered >
                 <ModalHeader> 
                     Use Supplier card?

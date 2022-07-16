@@ -5,6 +5,12 @@ import ModalHeader from "react-bootstrap/esm/ModalHeader";
 import handleChangeTurn from "../../turn";
 import { Card, Presence } from "../../types";
 
+/**
+ * If the turn is equal to the connectionId, then if the lotto is occupied, return, else setVisible to
+ * true
+ * @returns a div with an image, and three modals.
+ */
+
 function Lotto() {
    
     const lotto = useObject("lotto");
@@ -19,6 +25,12 @@ function Lotto() {
     const actualCards = useList<Card>("ActualCards");
     const turno = useObject<{ firstTurn: boolean; turn: number; visible: boolean; nuevaRonda: boolean; }>("turno");
 
+    /**
+     * DragHandler is a function that takes an object with a property called preventDefault that is a
+     * function that takes no arguments and returns nothing.
+     * @param e - { preventDefault: () => void; }
+     */
+
     const DragHandler = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
     }
@@ -27,7 +39,13 @@ function Lotto() {
         return null;
     }
 
-    const handleClickWholesoler = () => {
+    /**
+     * If the turn is equal to the connectionId, then if the lotto is occupied, return, else setVisible
+     * to true.
+     * @returns the value of the if statement.
+     */
+
+    const handleClickLotto = () => {
         if(turno.get("turn") === self.connectionId ){
 
                 if((lotto.get("occupied"))){
@@ -39,6 +57,12 @@ function Lotto() {
                 }
         }
     }
+
+    /**
+     * If the player has enough money, and the shop has enough cards, then the player gets a card from
+     * the shop, and the shop loses a card.
+     * @returns null.
+     */
 
     const handleClick = () => {
 
@@ -142,7 +166,7 @@ function Lotto() {
     return(
         
         <div>
-            <img alt="Lotto" style = {{width:210}} src = {require(`../../images/${lotto.get("img")}`)} onDragStart={(e) => DragHandler(e)} onClick={()=> handleClickWholesoler() } />
+            <img alt="Lotto" style = {{width:210}} src = {require(`../../images/${lotto.get("img")}`)} onDragStart={(e) => DragHandler(e)} onClick={()=> handleClickLotto() } />
             <Modal  show={visible} onHide={() => setVisible(false)} centered >
                 <ModalHeader> 
                     Use lotto card?

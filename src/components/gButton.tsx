@@ -2,6 +2,13 @@ import React from 'react';
 import { Button } from 'react-bootstrap';
 import { Link, To } from 'react-router-dom';
 
+/**
+ * GButton is a function that takes an object with a link and a title and returns a div with a link and
+ * a button with the title.
+ * @param valor - {link: To; title: string}
+ * @returns A function that returns a div with a link and a button.
+ */
+
 function GButton(valor: {link: To; title: string}){
 
     return(

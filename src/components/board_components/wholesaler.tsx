@@ -5,6 +5,12 @@ import ModalHeader from "react-bootstrap/esm/ModalHeader";
 import handleChangeTurn from "../../turn";
 import { Presence } from "../../types";
 
+/**
+ * If the turn is equal to the connectionId, then if the wholesaler is occupied, return, else
+ * setVisible to true
+ * Returning a div with an image and a modal..
+ */
+
 function Wholesaler() {
     
     const wholesaler = useObject("wholesaler");
@@ -17,6 +23,12 @@ function Wholesaler() {
     const actualCards = useList("ActualCards");
     const turno = useObject<{ firstTurn: boolean; turn: number; visible: boolean; nuevaRonda: boolean; }>("turno");
 
+    /**
+     * DragHandler is a function that takes an object with a property called preventDefault that is a
+     * function that takes no arguments and returns nothing.
+     * @param e - { preventDefault: () => void; }
+     */
+
     const DragHandler = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
     }
@@ -24,6 +36,12 @@ function Wholesaler() {
     if (actualCards == null || shopCards == null || playersList == null || shuffleList == null || wholesaler == null || turno == null || self == null) {
         return null;
     }
+
+   /**
+    * If the turn is equal to the connectionId, then if the wholesaler is occupied, return, else
+    * setVisible to true.
+    * @returns the value of the function.
+    */
 
     const handleClickWholesoler = () => {
         if(turno.get("turn") === self.connectionId ){
@@ -37,6 +55,10 @@ function Wholesaler() {
             } 
     }
 
+    /**
+     * When the button is clicked, the image of the wholesaler is changed, the wholesaler is occupied,
+     * the mint is updated, the button is hidden, and the turn is changed.
+     */
     const handleClick = () => {
         wholesaler.set("img", "wholesalerUsed.png");
         wholesaler.set("occupied", true);

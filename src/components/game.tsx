@@ -19,6 +19,13 @@ const user = (state:RootState) => state.username;
 const rooms = (state:RootState) => state.roomList;
 const cardsList = (state:RootState) => state.cards;
 
+/**
+ * It takes an array of objects, and returns a new array of objects, with the same objects, but in a
+ * different order.
+ * @param {Json[]} array - Json[] - the array of objects you want to shuffle
+ * @returns The array is being returned.
+ */
+
 function Shuffle(array: Json[]){
 
     const arrayForSort = [...array];
@@ -32,6 +39,8 @@ function Shuffle(array: Json[]){
 
     return arrayForSort;
 } 
+
+/* A game. */
 
 function Game(){
     
@@ -83,6 +92,7 @@ function Game(){
     const lotto = useObject("lotto");
 
     /* eslint-disable @typescript-eslint/no-unused-vars */
+
     const Assembler = () => {
         return [0,1];
     }
@@ -96,6 +106,13 @@ function Game(){
        return [1,1];
     }
 
+    /**
+     * If the connectionId of the presence object is equal to the connectionId of the player who
+     * clicked the button, then add 1 to the mint property of the presence object.
+     * @param {number} EleccionconnectionId - number =&gt; The connectionId of the person who was
+     * chosen.
+     */
+
     const CoopElegido = (EleccionconnectionId: number) => {
         others.toArray().forEach(({connectionId,presence})=>{
             if(presence == null){
@@ -108,6 +125,12 @@ function Game(){
         setElegir(false);  
     }
     
+    /**
+     * If the card is null, return [0,0], otherwise if the card is active, add 1 to retorno, and return
+     * [retorno,0].
+     * @returns An array with two elements.
+     */
+
     const Corporate = () => {
         let retorno = 0;
         mypresence.cards.forEach((card)=>{
@@ -140,6 +163,20 @@ function Game(){
         return [0,3];
     }
 
+    /**
+     * "If the card is active and a culture card, then subtract one from the stars variable."
+     * 
+     * The function is called Landfill. It's a function that returns an array of two numbers. The first
+     * number is always 0. The second number is the number of stars the player has. 
+     * 
+     * The function starts by setting the stars variable to 3. Then it loops through all the cards in
+     * the player's hand. If the card is active and a culture card, then it subtracts one from the
+     * stars variable. 
+     * 
+     * The function returns the array [0,stars].
+     * @returns [0,stars]
+     */
+
     const Landfill = () => {
         let stars = 3;
         mypresence.cards.forEach((card)=>{
@@ -170,6 +207,14 @@ function Game(){
         return [1,1];
     }
 
+    /**
+     * "If the player has a card called "Bridge" in their hand, they get 2 stars, otherwise they get 1
+     * star."
+     * The function is called "Museum" because it's a function that calculates the number of stars a
+     * player gets from the "Museum" card.
+     * @returns an array of two numbers.
+     */
+
     const Museum = () => {
         let stars = 0;
         mypresence.cards.forEach((card)=>{
@@ -194,6 +239,11 @@ function Game(){
         
         return [0,stars];
     }
+
+    /**
+     * If the card is active, add one to the stars variable, otherwise return 0,0.
+     * @returns An array of two numbers.
+     */
 
     const Obelisk = () => {
         let stars = 0;
@@ -224,6 +274,14 @@ function Game(){
         return [0,1];
     }
 
+    /**
+     * "If the card is null, return [0,0]. If the card is not active, add 2 to the stars variable.
+     * Otherwise, do nothing."
+     * 
+     * The function is supposed to return an array of two numbers. The first number is the number of
+     * mints, and the second number is the number of stars.
+     * @returns An array with two values.
+     */
     const Vault = () => {
         let stars = 1;
         mypresence.cards.forEach((card)=>{
@@ -257,6 +315,12 @@ function Game(){
         return [1,2];
     }
 
+    /**
+     * If shopCards and actualCards are not null, shuffle the cards array and push the first 21
+     * elements into shopCards and the first 3 elements into actualCards.
+     * @returns null.
+     */
+
     const initialiceShop = () => {
 
         if(shopCards == null || actualCards == null){
@@ -281,6 +345,12 @@ function Game(){
     
     let usernameTurn = turno.get("turn") === self.connectionId ? mypresence.username : "";
 
+    /**
+     * The function handleOn takes an event of type React.PointerEvent<HTMLDivElement> and returns
+     * nothing.
+     * @param event - React.PointerEvent<HTMLDivElement>
+     */
+
     const handleOn = (event: React.PointerEvent<HTMLDivElement>) => {
         update({
             cursor: {
@@ -290,6 +360,10 @@ function Game(){
         })
     }
     
+    /**
+     * if turno.get("nuevaRonda") is true then a new round begins and the function MintsForAll do all
+     * the stuff necesary when a new round begins.
+     */
     const MintsForAll = () => {
 
         turno.set("firstTurn",false);
@@ -358,6 +432,10 @@ function Game(){
         }       
     }
 
+    /**
+     * If the value of the variable valorAlto is less than the value of the variable presence, then the
+     * value of the variable valorAlto is equal to the value of the variable presence.
+     */
     const HandleWinner = () => {
         let valorAlto = [mypresence.stars,mypresence.username,mypresence.cards.length,mypresence.mint];
         others.toArray().forEach(({presence})=>{
@@ -391,6 +469,10 @@ function Game(){
         console.log("aqui se borra todo y se redirije a una ultima pagina de adios o al inicio");
     }
 
+    /**
+     * It takes a list of numbers, shuffles them, and then sets the first number in the list as the
+     * first turn.
+     */
     const WhoFirst = () => {
 
         const TotalIDs: number[] = [];

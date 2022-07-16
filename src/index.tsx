@@ -12,6 +12,8 @@ const client = createClient({
 
 });
 
+/* Rendering the app to the DOM. */
+
 ReactDOM.render(
   <LiveblocksProvider client={client}>
   <React.StrictMode>

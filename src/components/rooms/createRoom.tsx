@@ -7,6 +7,8 @@ import { addRooms, RootState} from "../../store";
 
 const user = (state:RootState) => state.username;
 
+/* A form that allows you to create a room. */
+
 export function CreateRoom() {
 
     const navigate = useNavigate();
@@ -24,17 +26,33 @@ export function CreateRoom() {
         users: [username],
     });
 
+    /**
+     * When the switch is clicked, set the state of the switch to the opposite of what it currently is,
+     * and set the state of the room to the opposite of what it currently is.
+     */
+
     const onSwitchAction = () => {
         setIsSwitchOn(!isSwitchOn);
         setRoom({...room,
             difficult: !isSwitchOn});
     }
 
+    /**
+     * The function handleName takes an event object as an argument, and returns a new room object with
+     * the name property set to the value of the event target.
+     * @param e - { target: { value: string; }; }
+     */
+
     const handleName = (e: { target: { value: string; }; }) => {
       setRoom({...room,
               name: e.target.value});
     }
 
+    /**
+     * "If the input is empty, set the room to public, otherwise set the room to private and set the
+     * password to the input value.
+     * @param e - { target: { value: string; }; }
+     */
     const handlePassword = (e: { target: { value: string; }; }) => {
       if (e.target.value === ""){
           setRoom({...room,
@@ -47,11 +65,28 @@ export function CreateRoom() {
       }   
     }
 
+    /**
+     * The function takes an event object as an argument, and then sets the state of the room object to
+     * the value of the event target.
+     * @param e - { target: { value: string; }; }
+     */
     const handlePlayers = (e: { target: { value: string; }; }) =>{ 
       setRoom({...room,
           players: Number(e.target.value)});
     }
 
+    /**
+     * "handleSubmit is a function that takes an event as an argument and returns nothing. The event is
+     * of type React.FormEvent<HTMLFormElement>."
+     * 
+     * The function is called when the form is submitted. It prevents the default action of the form
+     * (which is to reload the page) and then checks if the form is valid. If it is, it calls the
+     * addRooms action creator and navigates to the room page. If it isn't, it stops the event from
+     * propagating
+     * @param event - { currentTarget: EventTarget & HTMLFormElement; preventDefault: () => void;
+     * stopPropagation: () => void; }
+     */
+    
     const handleSubmit = (event: { currentTarget: EventTarget & HTMLFormElement; preventDefault: () => void; stopPropagation: () => void; }) => {
       const form = event.currentTarget;
       event.preventDefault();

@@ -8,6 +8,12 @@ import Supplier from './board_components/supplier';
 import Wholesaler from './board_components/wholesaler';
 import '../assets/css/cards.css';
 
+/**
+ * The Board function returns a Container component that contains three rows, each of which contains
+ * two components.
+ * @returns A React component.
+ */
+
 function Board(){
     
     return (

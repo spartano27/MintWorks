@@ -4,6 +4,10 @@ import { useList, useMyPresence, useObject} from "@liveblocks/react";
 import { ListGroup } from "react-bootstrap";
 import { Card, Presence } from "../types";
 
+/**
+ * @param valor - {players: number}
+ * @returns A list of cards that are being displayed in the shop.
+ */
 function Shop(valor:{players: number}) {
     
     const [,setValorId] = useState("0");

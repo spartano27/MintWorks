@@ -9,6 +9,8 @@ export const client = createClient({
 
 });
 
+/* Creating a slice of the state. */
+
 const slice = createSlice({
   
   name: "state",    

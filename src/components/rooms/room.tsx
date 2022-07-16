@@ -9,6 +9,7 @@ import { RootState } from "../../store";
 
 const user = (state:RootState) => state.username;
 
+/* A function that is used to create a room. */
 function Room(){
 
     const {name} = useParams();
@@ -37,10 +38,21 @@ function Room(){
       );
     }
 
+    /**
+     * The function takes a boolean or undefined and returns a function that takes an object and
+     * returns a function that takes an object and returns undefined.
+     * @param {boolean | undefined} check - boolean | undefined
+     */
+
     const handleOnChange = (check: boolean | undefined) => {
       update({check: !check});
     }
 
+   /**
+    * I'm trying to check if all the players are present in the room, if they are, then I want to set
+    * the visibility of a div to true
+    * @param event - React.PointerEvent<HTMLDivElement>
+    */
     const handleOn = (event: React.PointerEvent<HTMLDivElement>) => {
       update({
         cursor: {

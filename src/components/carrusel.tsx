@@ -1,6 +1,12 @@
 import React from 'react';
 import {Carousel} from 'react-bootstrap';
 
+/**
+ * It takes an array of objects, and for each object in the array, it creates a Carousel.Item component
+ * with the object's srcValue and altValue as props.
+ * @returns An array of Carousel.Item components.
+ */
+
 function Carrusel(){
     
     const carruselItem = [];

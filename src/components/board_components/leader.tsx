@@ -5,6 +5,11 @@ import ModalHeader from "react-bootstrap/esm/ModalHeader";
 import handleChangeTurn from "../../turn";
 import { Presence } from "../../types";
 
+/**
+ * The function Leader takes no parameters and returns a React element
+ * @returns A div with an image and a modal.
+ */
+
 function Leader() {
 
     const leader = useObject("leader");
@@ -17,6 +22,12 @@ function Leader() {
     const actualCards = useList("ActualCards");
     const turno = useObject<{ firstTurn: boolean; turn: number; visible: boolean; nuevaRonda: boolean; }>("turno");
 
+   /**
+    * The function DragHandler takes an object with a property called preventDefault that is a function
+    * that takes no parameters and returns nothing.
+    * @param e - { preventDefault: () => void; }
+    */
+
     const DragHandler = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
     }
@@ -24,6 +35,12 @@ function Leader() {
     if (actualCards == null || shopCards == null || playersList == null || shuffleList == null || leader == null || turno == null || self == null) {
         return null;
     }
+
+    /**
+     * If the turn is equal to the connectionId, and the leader is occupied, then return. Otherwise,
+     * set the visible state to true.
+     * @returns Nothing.
+     */
 
     const handleClickLeader = () => {
 
@@ -38,6 +55,11 @@ function Leader() {
         }  
     }
 
+    /**
+     * When the button is clicked, the image of the leader card is changed, the leader card is set to
+     * occupied, the state is updated, the button is set to invisible and the turn is changed.
+     */
+    
     const handleClick = () => {
 
         leader.set("img", "leaderUsed.png");

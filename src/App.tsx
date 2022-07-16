@@ -8,6 +8,13 @@ import Crear from "./pages/Crear";
 import RoomPage from "./pages/Room";
 import IndividualGame from "./pages/IndividualGame";
 
+/**
+ * It returns a BrowserRouter component that contains a Routes component that contains a Route
+ * component that contains a HomeP component
+ * @returns A BrowserRouter component that contains a Routes component that contains a Route component
+ * that contains a HomeP component.
+ */
+
 export default function App() {
 
   return (

@@ -5,6 +5,20 @@ import { useParams } from 'react-router-dom';
 import Game from '../components/game';  
 import { Card, LocationTypes } from '../types';
 
+/**
+ * It's a function that returns a component that is wrapped in a RoomProvider component. The
+ * RoomProvider component is a component that is provided by the library that I'm using. It's a
+ * component that is used to provide the state of the game to the rest of the components.
+ * 
+ * The RoomProvider component takes two props: initialStorage and id.
+ * 
+ * The initialStorage prop is a function that returns an object. The object contains the initial state
+ * of the game.
+ * 
+ * The id prop is a string that is used to identify the game.
+ * @returns A React component that is a wrapper for the Game component.
+ */
+
 function GamePage() {
    
         const {name} = useParams();

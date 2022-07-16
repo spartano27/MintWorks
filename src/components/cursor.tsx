@@ -7,6 +7,8 @@ interface CursorPresence {
   color: string;
 }
 
+/* A React component. */
+
 export const Cursor = React.memo(({ x, y, color, name }: CursorPresence) => {
   return (
     <div

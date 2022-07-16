@@ -7,6 +7,7 @@ import { Card, Presence } from "../types";
 import Mint from "./mint";
 import Stars from "./stars";
 
+/* A function that returns a div with a list of cards. */
 function Neighborhood(valor: { username: undefined | string; id: number; mints: number; stars: number; cards: (Card | undefined)[]; }){
     
     const turno = useObject("turno");
@@ -17,6 +18,10 @@ function Neighborhood(valor: { username: undefined | string; id: number; mints: 
         return null
     }
 
+    /**
+     * If the username is undefined, return an empty string, otherwise return the username as a string.
+     * @returns A function.
+     */
     const user = () => {
         if(valor.username === undefined){
             return ""

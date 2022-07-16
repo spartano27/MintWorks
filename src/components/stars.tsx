@@ -1,5 +1,11 @@
 import React from "react";
 
+/**
+ * The function Stars takes a parameter valor of type {stars:number} and returns a div containing an
+ * image and the value of valor.stars
+ * @param valor - {stars:number}
+ */
+
 function Stars(valor:{stars:number}) {
 
    const DragHandler = (e: { preventDefault: () => void; }) => {

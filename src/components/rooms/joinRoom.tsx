@@ -9,6 +9,8 @@ import { RootState } from "../../store";
 const user = (state:RootState) => state.username;
 const rooms = (state:RootState) => state.roomList;
 
+/* The above code is a React component that is used to display a list of rooms that are available to
+join. */
 export function JoinRoom() {
 
     const roomList = useSelector(rooms);
@@ -30,6 +32,15 @@ export function JoinRoom() {
         };
       }, [dispatch]);   
    
+    /**
+     * "If the room is public, add the user to the room and navigate to the room, otherwise, set the
+     * visibility to true."
+     * 
+     * I'm trying to make a function that will add the user to the room and navigate to the room if the
+     * room is public, otherwise, set the visibility to true
+     * @param room - { publico: boolean, name: string, users: string[], players:number }
+     */
+
     const handleClick = (room: { publico: boolean, name: string, users: string[], players:number }) => {
         if(room.users.length <= room.players){
             if(room.publico){
@@ -43,6 +54,16 @@ export function JoinRoom() {
         }
     }
 
+    /**
+     * If the room has less than the maximum number of players, and the username is valid, then add the
+     * username to the room and navigate to the room.
+     * 
+     * If the room has less than the maximum number of players, and the username is not valid, then set
+     * the warning to true.
+     * 
+     * If the room has the maximum number of players, then do nothing. ERROR CAMBIAR
+     * @param room - { name: string,users: string[], players:number }
+     */
     const handleSubmit = (room: { name: string,users: string[], players:number }) => {
         if(room.users.length <= room.players){
             if(EsValido) {
@@ -55,6 +76,13 @@ export function JoinRoom() {
         }
     }
 
+    /**
+     * The function takes an event and a string, and if the event's target's value is equal to the
+     * string, it sets the state to true, otherwise it sets the state to false.
+     * @param e - React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+     * @param {string} password - string -&gt; The password that the user has to enter.
+     */
+    
     const handlePassword = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,password: string) => {
         if(e.target.value === password ){
             setEsvalido(true);

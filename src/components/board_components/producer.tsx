@@ -20,6 +20,12 @@ function Producer() {
     const actualCards = useList("ActualCards");
     const turno = useObject<{ firstTurn: boolean; turn: number; visible: boolean; nuevaRonda: boolean; }>("turno");
 
+    /**
+     * DragHandler is a function that takes an object with a property called preventDefault that is a
+     * function that takes no arguments and returns nothing.
+     * @param e - { preventDefault: () => void; }
+     */
+
     const DragHandler = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
     }
@@ -28,6 +34,15 @@ function Producer() {
         return null;
     }
 
+    /**
+     * If the turn is equal to the connectionId, and the number of players is 2 or 3, and the number of
+     * occupied producers is greater than 2, then return. Otherwise, setVisible(true).
+     * 
+     * If the number of players is not 2 or 3, then if the number of occupied producers is greater than
+     * 3, return. Otherwise, setVisible(true).
+     * 
+     * @returns the value of the variable "visible"
+     */
     const handleClickProducer = () => {
         if(turno.get("turn") === self.connectionId ){
             if (players === 2 || players === 3){
@@ -52,6 +67,11 @@ function Producer() {
             
         } 
     }
+
+    /**
+     * When the user clicks on the producer, the image changes to a used producer, the occupied value
+     * increases by 1, the mint value increases by 1, the producer is hidden, and the turn changes.
+     */
 
     const handleClick = () => {
         
