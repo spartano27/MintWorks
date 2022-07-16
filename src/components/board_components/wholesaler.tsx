@@ -2,22 +2,20 @@ import { useObject, useSelf, useMyPresence, useList } from "@liveblocks/react";
 import React, { useState } from "react";
 import { Modal, ModalBody, ModalFooter, Button } from "react-bootstrap";
 import ModalHeader from "react-bootstrap/esm/ModalHeader";
-import { useParams } from "react-router-dom";
 import handleChangeTurn from "../../turn";
 import { Presence } from "../../types";
 
 function Wholesaler() {
     
-    const {name} = useParams();
-    const wholesaler = useObject(`wholesaler-${name}`);
+    const wholesaler = useObject("wholesaler");
     const self = useSelf();
     const [mypresence,update] = useMyPresence<Presence>();
     const [visible,setVisible] = useState(false);
-    const playersList = useList(`listPLayer-${name}`);
-    const shuffleList = useList(`list-${name}`);
-    const shopCards = useList(`InitialShop-${name}`);
-    const actualCards = useList(`ActualCards-${name}`);
-    const turno = useObject(`turno-${name}`,{firstTurn: "true",turn:0, visible: "false", nuevaRonda: "false"});
+    const playersList = useList("listPLayer");
+    const shuffleList = useList("listShuffle");
+    const shopCards = useList("ShopCards");
+    const actualCards = useList("ActualCards");
+    const turno = useObject<{ firstTurn: boolean; turn: number; visible: boolean; nuevaRonda: boolean; }>("turno");
 
     const DragHandler = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
@@ -30,7 +28,7 @@ function Wholesaler() {
     const handleClickWholesoler = () => {
         if(turno.get("turn") === self.connectionId ){
             
-                if((wholesaler.get("occupied") === "true")){
+                if((wholesaler.get("occupied"))){
                     return;
                 }
                 else{
@@ -41,7 +39,7 @@ function Wholesaler() {
 
     const handleClick = () => {
         wholesaler.set("img", "wholesalerUsed.png");
-        wholesaler.set("occupied", "true");
+        wholesaler.set("occupied", true);
         update({mint:Number(mypresence.mint)+1});
         setVisible(false);
         handleChangeTurn(actualCards,shopCards,playersList,shuffleList,turno);

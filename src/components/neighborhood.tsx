@@ -1,16 +1,15 @@
 import { useMyPresence, useObject, useSelf } from "@liveblocks/react";
 import React from "react";
 import {ListGroup, Row} from "react-bootstrap";
-import { useParams } from "react-router-dom";
 import '../assets/css/neighborhood.css';
 import Clock from "../components/clock";
-import { CardTypes, Presence } from "../types";
+import { Card, Presence } from "../types";
 import Mint from "./mint";
 import Stars from "./stars";
 
-function Neighborhood(valor: { username: undefined | string; id: number; mints: number; stars: number; cards: {id:string,name:string,value:number,owner:number,active:boolean,stars:number,type:CardTypes}[]; }){
-    const {name} = useParams();
-    const turno = useObject(`turno-${name}`);
+function Neighborhood(valor: { username: undefined | string; id: number; mints: number; stars: number; cards: (Card | undefined)[]; }){
+    
+    const turno = useObject("turno");
     const self = useSelf();
     const [mypresence,] = useMyPresence<Presence>();
     
@@ -49,10 +48,12 @@ function Neighborhood(valor: { username: undefined | string; id: number; mints: 
             </Row>
             <ListGroup key={"neighborhood"} horizontal>
             
-                {valor.cards.map((card: any)=>{
-                        
+                {valor.cards.map((card)=>{
+                        if(card == null){
+                            return null;
+                        }
                         return(
-                            <ListGroup.Item key={"CardNeigh"} style={{width:'50px',height:'100px', padding: '0px'}}  variant="secondary">
+                            <ListGroup.Item key={card.name} style={{width:'50px',height:'100px', padding: '0px'}}  variant="secondary">
                                 
                                 <img alt="CardsNeigh" key={`neigh-${card.id}`} src = {require(`../images/cards_images/${card.active ? card.name.toUpperCase() : "REVERSO"}.PNG`)} style={{width:'50px',height:'100px', padding: '0px'}}/>
                             </ListGroup.Item>

@@ -1,31 +1,30 @@
 import React, {useState } from "react";
 import '../assets/css/cards.css';
 import { useList, useMyPresence, useObject} from "@liveblocks/react";
-import { useParams } from "react-router-dom";
 import { ListGroup } from "react-bootstrap";
-import { Presence } from "../types";
+import { Card, Presence } from "../types";
 
-function Shop(players: any) {
+function Shop(valor:{players: number}) {
     
     const [,setValorId] = useState("0");
     const [,update] = useMyPresence<Presence>();
-    const {name} = useParams();
-    const shopCards = useList(`InitialShop-${name}`);
-    const actualCards = useList(`ActualCards-${name}`);
-    const turno = useObject(`turno-${name}`);
+    const shopCards = useList<Card>("ShopCards");
+    const actualCards = useList<Card>("ActualCards");
+    const turno = useObject("turno");
 
     if(actualCards == null || shopCards == null || turno == null){
       return null;
     }
-
+    
     return (    
 
       <div className="p-4">
         <ListGroup key={"shop"} horizontal className="h-25 justify-content-center" style={{paddingTop:'24px'}} >
-        {actualCards.map((card:any)=> {
+        {actualCards.map((card)=> {
+        
           return(
-
-              <div key={"Shop"}>
+             
+              <div key={card.name}>
                 <ListGroup.Item variant="primary"
                 onFocus={(e) => update({ focusedId: e.target.id })}
                 onClick={() => setValorId(card.id)}

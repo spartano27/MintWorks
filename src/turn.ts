@@ -1,6 +1,6 @@
 import { LiveList, Lson, LiveObject } from "@liveblocks/client";
   
-const handleChangeTurn = (actualCards: LiveList<Lson>, shopCards: LiveList<Lson>,playersList: LiveList<Lson>,shuffleList: LiveList<Lson> | null,turno: LiveObject<{ firstTurn: string; turn: number; visible: string; nuevaRonda: string; }> | null) => {
+const handleChangeTurn = (actualCards: LiveList<Lson>, shopCards: LiveList<Lson>,playersList: LiveList<Lson>,shuffleList: LiveList<Lson> | null,turno: LiveObject<{ firstTurn: boolean; turn: number; visible: boolean; nuevaRonda: boolean; }> | null) => {
 
     if(shopCards == null || actualCards == null || shuffleList == null || playersList == null || turno == null
         ){
@@ -10,7 +10,7 @@ const handleChangeTurn = (actualCards: LiveList<Lson>, shopCards: LiveList<Lson>
     shuffleList.delete(0);
 
     if(shuffleList.length === 0){
-        turno.set("nuevaRonda","true"); 
+        turno.set("nuevaRonda",true); 
         for (let i = 0; i< shopCards.length; i++){
             if(actualCards.length < 3){
             actualCards.clear();
@@ -35,12 +35,12 @@ const handleChangeTurn = (actualCards: LiveList<Lson>, shopCards: LiveList<Lson>
        
     }
     else{
-        turno.set("nuevaRonda","false");
+        turno.set("nuevaRonda",false);
     }
     
     turno.set("turn",Number(shuffleList.get(0)));
-    turno.set("visible","true");
-    setTimeout(()=>{ turno.set("visible","false");},2000);
+    turno.set("visible",true);
+    setTimeout(()=>{ turno.set("visible",false);},2000);
 }
 
 export default handleChangeTurn;

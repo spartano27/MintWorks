@@ -6,14 +6,14 @@ import PlayButton from '../components/playButton';
 function HomeP(){
   
     return (
-      <RoomProvider id={'home'} >
-        <body >
+      <RoomProvider 
+      id={'home'}>
+
           <img alt='LogoHome' className="d-block mx-auto w-50" src={require("../images/logoMint.png")}/>
           <PlayButton />
           <div className='mt-5'>
             <Carrusel/> 
           </div>
-        </body>
       </RoomProvider>
     );
 }

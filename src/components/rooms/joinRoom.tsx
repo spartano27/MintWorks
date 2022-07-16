@@ -1,6 +1,6 @@
 import { actions } from "@liveblocks/redux";
 import React, { useEffect, useState } from "react";
-import { Button, Card, Col, Container,Modal,ModalBody,ModalFooter,ModalTitle,Row, Form, Alert } from "react-bootstrap";
+import { Button, Card, Col, Container,Modal,ModalBody,ModalFooter,ModalTitle, Form, Alert } from "react-bootstrap";
 import ModalHeader from "react-bootstrap/esm/ModalHeader";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -34,14 +34,11 @@ export function JoinRoom() {
         if(room.users.length <= room.players){
             if(room.publico){
                 room.users.push(username);
-                console.log(room.users);
                 navigate(`/Room/${room.name}-${room.players}`);
                 
             }
             else{
                 setVisible(true);
-                console.log(visible);
-                
             }
         }
     }
@@ -77,7 +74,7 @@ export function JoinRoom() {
 
                     return(
 
-                        <div key={"JoinRoom"}>
+                        <div key={item.name}>
                             <Modal show={visible} onHide={() => setVisible(false)} >
                                 <ModalHeader closeButton>
                                 <ModalTitle>Introduce the correct password</ModalTitle>
@@ -103,12 +100,10 @@ export function JoinRoom() {
                                     <Card.Title>{item.name}</Card.Title>
                                     <Card.Subtitle className="mb-2">by: {item.author}</Card.Subtitle>
                                     <Card.Text>
-                                        <Row className="p-2">
                                             number of players: {item.players}
-                                        </Row>
-                                        <Row className="p-2">
-                                            difficult: {item.difficult ? "Normal":"Hard"}
-                                        </Row >
+                                    </Card.Text>
+                                    <Card.Text>        
+                                            difficult: {item.difficult ? "Normal":"Hard"}                    
                                     </Card.Text>
                                     <Button onClick={() => handleClick(item)} className="flex-right ml-auto" type="submit"> Join </Button>
                                 </Card.Body>

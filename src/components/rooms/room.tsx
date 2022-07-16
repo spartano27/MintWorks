@@ -16,7 +16,7 @@ function Room(){
     const navigate = useNavigate();
     const username = useSelector(user);
     const COLORS_PRESENCE = ["255, 69, 225", "255, 64, 64", "255, 166, 3"];
-    const others = useOthers();
+    const others = useOthers<PresenceRoom>();
     const [visible,setVisible] = useState(false);
     const [mypresence,update] = useMyPresence<PresenceRoom>();
 
@@ -25,9 +25,7 @@ function Room(){
       update({check:false});
     }, []);
 
-    const data = useObject<Logo>("logo", {
-      check: false,
-    });
+    const data = useObject<Logo>("logo");
 
     if (!data) {
       return (
@@ -95,14 +93,14 @@ function Room(){
                 </div>
               </Row>
               <Row className="d-flex justify-content-center">
-                {others.map(({connectionId, presence}:any) => {
+                {others.map(({connectionId, presence}) => {
                     if (presence == null) {
                       return null;
                     }
 
                     return(
 
-                      <div key={"room"} className="p-4">
+                      <div key={connectionId} className="p-4">
                         {presence.username}
                         <Form>
                           <Form.Check
@@ -127,7 +125,7 @@ function Room(){
                     )
                 })}
               </Row>
-                {others.map(({connectionId, presence}:any) => {
+                {others.map(({connectionId, presence}) => {
 
                   if (presence == null || presence.cursor == null) {
                       return null;

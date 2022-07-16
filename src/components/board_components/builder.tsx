@@ -9,18 +9,18 @@ import { CardTypes, Presence } from "../../types";
 function Builder() {
 
     const {name} = useParams();
-    const builder = useObject(`builder-${name}`);
+    const builder = useObject("builder");
     const self = useSelf();
-    const shopCards = useList(`InitialShop-${name}`);
-    const actualCards = useList(`ActualCards-${name}`);
+    const shopCards = useList("ShopCards");
+    const actualCards = useList("ActualCards");
     const players = Number(String(name).split("-")[1]);
     const [mypresence,update] = useMyPresence<Presence>();
     const [visible,setVisible] = useState(false);
-    const playersList = useList(`listPLayer-${name}`);
-    const wholesaler = useObject(`wholesaler-${name}`);
-    const lotto = useObject(`lotto-${name}`);
-    const shuffleList = useList(`list-${name}`);
-    const turno = useObject(`turno-${name}`,{firstTurn: "true", turn:0, visible: "false", nuevaRonda: "false"});
+    const playersList = useList("listPLayer");
+    const wholesaler = useObject("wholesaler");
+    const lotto = useObject("lotto");
+    const shuffleList = useList("listShuffle");
+    const turno = useObject<{ firstTurn: boolean; turn: number; visible: boolean; nuevaRonda: boolean; }>("turno");
 
     const DragHandler = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
@@ -64,7 +64,9 @@ function Builder() {
         }
 
         mypresence.cards.forEach((carta)=>{
-        
+            if(carta == null){
+                return null;
+            }
             if(carta.name === "Crane" && carta.active){
                     discount = 1;
             }
@@ -72,16 +74,16 @@ function Builder() {
 
         if(mypresence.mint >= 2){
             
-            const cardOwner = {id: card.id,name: card.name, value: card.value, owner: mypresence.username, active: true, stars: card.stars, type: card.type}
+            const cardOwner = {id: card.id,name: card.name, value: card.value, active: true, stars: card.stars, type: card.type}
             
             if(card.name === "Wholesaler"){
                 wholesaler.set("img", "wholesaler.png");
-                wholesaler.set("occupied", "false");
+                wholesaler.set("occupied", false);
             }
 
             if(card.name === "Lotto"){
                 lotto.set("img", "lotto.png");
-                lotto.set("occupied", "false");
+                lotto.set("occupied", false);
             }
 
             for (let i = 0; i< mypresence.cards.length; i++){
@@ -122,12 +124,14 @@ function Builder() {
 
                         <ListGroup key={"shop"} horizontal className="h-25 justify-content-center" style={{paddingTop:'24px'}} >
                             {mypresence.cards.map((card)=> {
-                                
+                                if(card == null){
+                                    return null;
+                                }
                                 if(!card.active){
 
                                     return(
 
-                                        <div>
+                                        <div key={card.id}>
                                             <ListGroup.Item variant="primary"
                                             onFocus={(e) => update({ focusedId: e.target.id })}
                                             onBlur={() => update({ focusedId: null })}>

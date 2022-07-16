@@ -43,7 +43,6 @@ function PlayButton() {
 
     if (link.error){
 
-        console.log("The username must be 8-20 characters long and must not contain spaces");
         aviso = <Alert className='mx-auto'variant='danger' style={{ width: "35rem" }}> 
         The username must be 8-20 characters long and must not contain spaces</Alert>;
     }

@@ -9,7 +9,7 @@ import {Button, Col, Container, ListGroup, Modal, ModalBody, ModalFooter, Row} f
 import {Cursor} from "./cursor";
 import handleChangeTurn from "../turn";
 import ModalHeader from "react-bootstrap/esm/ModalHeader";
-import {CardTypes, Presence} from "../types";
+import {Card, CardTypes, Presence} from "../types";
 import {useNavigate} from "react-router-dom";
 import {removeRoom, RootState} from "../store";
 import {actions} from "@liveblocks/redux";
@@ -36,8 +36,8 @@ function Shuffle(array: Json[]){
 function Game(){
     
     const COLORS_PRESENCE = ["255, 69, 225", "255, 64, 64", "255, 166, 3"];
-    const others = useOthers();
-    const self = useSelf();
+    const others = useOthers<Presence>();
+    const self = useSelf<Presence>();
     const [mypresence,update] = useMyPresence<Presence>();
     const [eleccion,setElegir] = useState(false);
     const username = useSelector(user);
@@ -69,31 +69,18 @@ function Game(){
     const players = Number(String(name).split("-")[1]);
     const roomName = (String(name).split("-")[0]).split("Gl")[1];
     const [countdown,setCountdown] = useState(true);
-    const playersList = useList(`listPLayer-${name}`);
-    const shuffleList = useList(`list-${name}`);
-    const shopCards = useList(`InitialShop-${name}`);
-    const actualCards = useList(`ActualCards-${name}`);
-    const turno = useObject(`turno-${name}`,{firstTurn:"true", turn:0, visible:"false", nuevaRonda: "false"});
-    const winner = useObject(`winner-${name}`,{username:"", visible:"false"});
-    const leader = useObject(`leader-${name}`,{img: "leader.png",occupied: "false"});
-    const producer = useObject(`producer-${name}`,{img: players === 4 || players === 1 ? "producer.png" : "producer1.png",occupied: 1});
-    const builder = useObject(`builder-${name}`,{img: players < 4 ? "builder1.png" : "builder.png",occupied: 1});
-    const supplier = useObject(`supplier-${name}`,{img: players < 4 ? "supplier1.png" : "supplier.png",occupied: 1});
-    const wholesaler = useObject(`wholesaler-${name}`,{img: "wholesaler1.png",occupied: "true"});
-    const lotto = useObject(`lotto-${name}`,{img: "lotto1.png",occupied: "true"});
-    const Mentas: number[] = []
-    const Users: string[] = []
-    const IDs: number[] = []
-
-    const [] = useState(
-        others.toArray().forEach(({connectionId,presence}) => {
-            if(presence == null){
-                return null;
-            }
-             Mentas.push(Number(presence.mint));
-             Users.push(String(presence.username));
-             IDs.push(Number(connectionId))
-        }));
+    const playersList = useList("listPLayer");
+    const shuffleList = useList("listShuffle");
+    const shopCards = useList("ShopCards");
+    const actualCards = useList("ActualCards");
+    const turno = useObject<{ firstTurn: boolean; turn: number; visible: boolean; nuevaRonda: boolean; }>("turno");
+    const winner = useObject<{ username: string; visible: boolean}>("winner");
+    const leader = useObject("leader");
+    const producer = useObject("producer");
+    const builder = useObject("builder");
+    const supplier = useObject("supplier");
+    const wholesaler = useObject("wholesaler");
+    const lotto = useObject("lotto");
 
     /* eslint-disable @typescript-eslint/no-unused-vars */
     const Assembler = () => {
@@ -124,6 +111,9 @@ function Game(){
     const Corporate = () => {
         let retorno = 0;
         mypresence.cards.forEach((card)=>{
+            if(card == null){
+                return [0,0];
+            }
             if(card.active){
                 retorno = retorno + 1;
             }
@@ -153,6 +143,9 @@ function Game(){
     const Landfill = () => {
         let stars = 3;
         mypresence.cards.forEach((card)=>{
+            if(card == null){
+                return [0,0];
+            }
             if(card.active && card.type === CardTypes.culture){
                 if(card.stars > 0){
                     stars = stars -1;
@@ -166,7 +159,7 @@ function Game(){
         if (lotto == null){
             return [0,2];
         }
-        if(lotto.get("occupied") === "true"){
+        if(lotto.get("occupied")){
             return [2,2];
         }else{
             return [0,2];
@@ -180,8 +173,11 @@ function Game(){
     const Museum = () => {
         let stars = 0;
         mypresence.cards.forEach((card)=>{
+            if(card == null){
+                return [0,0];
+            }
             if(card.active && card.type === CardTypes.culture){
-
+                
                 if(card.name === "Bridge"){
                     stars = stars + 2; 
                 } 
@@ -202,6 +198,9 @@ function Game(){
     const Obelisk = () => {
         let stars = 0;
         mypresence.cards.forEach((card)=>{
+            if(card == null){
+                return [0,0];
+            }
             if(card.active){
                 stars = stars + 1 ;
             } 
@@ -228,6 +227,9 @@ function Game(){
     const Vault = () => {
         let stars = 1;
         mypresence.cards.forEach((card)=>{
+            if(card == null){
+                return [0,0];
+            }
             if(!card.active){
                 stars = stars + 2 ;
             } 
@@ -239,7 +241,7 @@ function Game(){
         if (wholesaler == null){
             return [0,1];
         }
-        if(wholesaler.get("occupied") === "true"){
+        if(wholesaler.get("occupied")){
             return [1,1];
         }else{
             return [0,1];
@@ -276,7 +278,7 @@ function Game(){
         initialiceShop();
         return null;
     }
-
+    
     let usernameTurn = turno.get("turn") === self.connectionId ? mypresence.username : "";
 
     const handleOn = (event: React.PointerEvent<HTMLDivElement>) => {
@@ -290,8 +292,8 @@ function Game(){
     
     const MintsForAll = () => {
 
-        turno.set("firstTurn","false");
-        if(turno.get("nuevaRonda") === "true" ? true : false){
+        turno.set("firstTurn",false);
+        if(turno.get("nuevaRonda")){
            
             if (mypresence.first){
                 update({first:false});
@@ -306,7 +308,7 @@ function Game(){
             }
 
             leader.set("img","leader.png");
-            leader.set("occupied","false");
+            leader.set("occupied",false);
             producer.set("img",players === 4 || players === 1 ? "producer.png" : "producer1.png");
             producer.set("occupied",1);
             builder.set("img", players < 4 ? "builder1.png" : "builder.png");
@@ -315,21 +317,24 @@ function Game(){
             supplier.set("occupied",1);
             let contador = 0;
             let countStars = 0;
-            mypresence.cards.forEach((card) => {
+            mypresence.cards.forEach((card:Card | undefined) => {
+                if(card == null){
+                    return null;
+                }
                 if(card.active){
                     if(card.name === "Wholesaler"){
-                        if(wholesaler.get("occupied") === "true"){
+                        if(wholesaler.get("occupied")){
                             contador = contador + 1;
                         }
                         wholesaler.set("img", "wholesaler.png");
-                        wholesaler.set("occupied", "false");
+                        wholesaler.set("occupied", false);
                     }
                     if(card.name === "Lotto"){
-                        if(lotto.get("occupied") === "true"){
+                        if(lotto.get("occupied")){
                             contador = contador + 2;
                         }
                         lotto.set("img", "lotto.png");
-                        lotto.set("occupied", "false");
+                        lotto.set("occupied", false);
                     }
                     const f = eval(card.name);
                     contador = contador+f()[0];
@@ -341,13 +346,12 @@ function Game(){
             update({mint: mypresence.mint+30+contador});
 
             if(mypresence.stars >= 7 || shopCards.length === 0){
-                turno.set("visible","false");
+                turno.set("visible",false);
                 HandleWinner();
                 
                 roomList.forEach((room: { name: string | undefined; },index:  number)=>{
                     if(roomName === room.name){
                         dispatch(removeRoom(index));
-                        console.log(roomList);
                     }
                 });
             }
@@ -356,7 +360,7 @@ function Game(){
 
     const HandleWinner = () => {
         let valorAlto = [mypresence.stars,mypresence.username,mypresence.cards.length,mypresence.mint];
-        others.toArray().forEach((presence: any)=>{
+        others.toArray().forEach(({presence})=>{
 
             if(presence == null){
                 return null;
@@ -380,7 +384,7 @@ function Game(){
             }
         })
         winner.set("username",String(valorAlto[1]));
-        winner.set("visible","true");
+        winner.set("visible",true);
     }
 
     const ExitGame = () => {
@@ -389,18 +393,25 @@ function Game(){
 
     const WhoFirst = () => {
 
-        const TotalIDs = [...IDs];
+        const TotalIDs: number[] = [];
+        others.toArray().forEach(({connectionId,presence}) => {
+            if(presence == null){
+                return null;
+            }
+
+             TotalIDs.push(Number(connectionId))
+        });
         const listShuffle = TotalIDs.sort(()=> Math.random() -0.5);
         listShuffle.forEach((e)=>{
                 shuffleList.push(e);
                 playersList.push(e);
         });
 
-        turno.set("firstTurn","true");
-        turno.set("nuevaRonda","false");
+        turno.set("firstTurn",true);
+        turno.set("nuevaRonda",false);
         turno.set("turn",Number(shuffleList.get(0)));
-        turno.set("visible","true");
-        setTimeout(()=>{ turno.set("visible","false");},2000);
+        turno.set("visible",true);
+        setTimeout(()=>{ turno.set("visible",false);},2000);
     
     }
     
@@ -451,8 +462,11 @@ function Game(){
                 </Row>
                 <Row style={{marginTop:'50px'}} className="p-2 d-flex align-content-end" >
                     <Neighborhood id={self.connectionId} username={mypresence.username} mints={mypresence.mint} cards={mypresence.cards} stars={mypresence.stars} />
-                    {others.map(({connectionId,presence}: any) => {
+                    {others.map(({connectionId,presence}) => {
 
+                        if(presence == null){
+                            return null;
+                        }
                         if(usernameTurn === ""){
                             usernameTurn = turno.get("turn") === connectionId ? presence.username : "";
                         }
@@ -465,13 +479,13 @@ function Game(){
                 </Row>
             </Container>
 
-            <Modal show={turno.get("visible") === "true" ? true : false} onHide={() => turno.set("visible","false")} centered onExiting={() => MintsForAll()} >
+            <Modal show={turno.get("visible")} onHide={() => turno.set("visible",false)} centered onExiting={() => MintsForAll()} >
                 <ModalBody>
                     its {usernameTurn} turn
                 </ModalBody>
             </Modal>
 
-            <Modal show={winner.get("visible") === "true" ? true : false} onHide={() => turno.set("visible","false")} backdrop="static" centered onExiting={() => ExitGame()} >
+            <Modal show={winner.get("visible")} onHide={() => turno.set("visible",false)} backdrop="static" centered onExiting={() => ExitGame()} >
                 <ModalBody>
                     {winner.get("username")} Wins !!! 
                 </ModalBody>
@@ -480,7 +494,7 @@ function Game(){
                 </ModalFooter>
             </Modal>
 
-            {others.map(({connectionId, presence}:any) => {
+            {others.map(({connectionId, presence}) => {
                         if (presence == null || presence.cursor == null) {
                             return null;
                         }
@@ -505,7 +519,7 @@ function Game(){
                     <div className="p-4">
                         <ListGroup key={"shop"} horizontal className="h-25 justify-content-center" style={{paddingTop:'24px'}}>
 
-                            {others.map(({connectionId,presence}:any)=> {
+                            {others.map(({connectionId,presence})=> {
                                 if (presence == null) {
                                     return null;
                                 }

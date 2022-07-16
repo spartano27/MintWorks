@@ -2,24 +2,22 @@ import { useObject, useSelf, useMyPresence, useList } from "@liveblocks/react";
 import React, { useState } from "react";
 import { Modal, ModalBody, ModalFooter, Button, ListGroup } from "react-bootstrap";
 import ModalHeader from "react-bootstrap/esm/ModalHeader";
-import { useParams } from "react-router-dom";
 import handleChangeTurn from "../../turn";
-import { Presence } from "../../types";
+import { Card, Presence } from "../../types";
 
 function Lotto() {
    
-    const {name} = useParams();
-    const lotto = useObject(`lotto-${name}`);
+    const lotto = useObject("lotto");
     const self = useSelf();
     const [mypresence,update] = useMyPresence<Presence>();
     const [visible,setVisible] = useState(false);
     const [visible1,setVisible1] = useState(false);
     const [visible2,setVisible2] = useState(false);
-    const playersList = useList(`listPLayer-${name}`);
-    const shuffleList = useList(`list-${name}`);
-    const shopCards = useList(`InitialShop-${name}`);
-    const actualCards = useList(`ActualCards-${name}`);
-    const turno = useObject(`turno-${name}`,{firstTurn: "true",turn:0, visible: "false", nuevaRonda: "false"});
+    const playersList = useList("listPLayer");
+    const shuffleList = useList("listShuffle");
+    const shopCards = useList<Card>("ShopCards");
+    const actualCards = useList<Card>("ActualCards");
+    const turno = useObject<{ firstTurn: boolean; turn: number; visible: boolean; nuevaRonda: boolean; }>("turno");
 
     const DragHandler = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
@@ -32,7 +30,7 @@ function Lotto() {
     const handleClickWholesoler = () => {
         if(turno.get("turn") === self.connectionId ){
 
-                if((lotto.get("occupied") === "true")){
+                if((lotto.get("occupied"))){
                     return;
                 }
                 
@@ -54,7 +52,7 @@ function Lotto() {
                     
                     if (shopCards.get(0) !== undefined && shopCards.get(1) !== undefined && shopCards.get(2) !== undefined && shopCards.get(3) !== undefined){
                         lotto.set("img", "lottoUsed.png");
-                        lotto.set("occupied", "true");
+                        lotto.set("occupied", true);
                         const cartaLista = shopCards.get(3);
                         const totalCards = [...mypresence.cards,cartaLista];
                         shopCards.delete(3);
@@ -173,8 +171,11 @@ function Lotto() {
                     
                     {mypresence.cards.reverse().map((card,index)=> {
                         if(index === mypresence.cards.length-1){
+                            if(card == null){
+                                return null;
+                            }
                             return(
-                                <div>
+                                <div key={index}>
                                 
                                     <ListGroup.Item variant="primary">
                                         <img alt="CardLotto" key={`shop-${card.id}`} src = {require(`../../images/cards_images/${card.name.toUpperCase()}.PNG`)} style={{padding:'0px'}}/>

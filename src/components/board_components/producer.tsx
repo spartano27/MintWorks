@@ -9,16 +9,16 @@ import { Presence } from "../../types";
 function Producer() {
     
     const {name} = useParams();
-    const producer = useObject(`producer-${name}`);
+    const producer = useObject("producer");
     const self = useSelf();
     const players = Number(String(name).split("-")[1]);
     const [mypresence,update] = useMyPresence<Presence>();
     const [visible,setVisible] = useState(false);
-    const playersList = useList(`listPLayer-${name}`);
-    const shuffleList = useList(`list-${name}`);
-    const shopCards = useList(`InitialShop-${name}`);
-    const actualCards = useList(`ActualCards-${name}`);
-    const turno = useObject(`turno-${name}`,{firstTurn: "true",turn:0, visible: "false", nuevaRonda: "false"});
+    const playersList = useList("listPLayer");
+    const shuffleList = useList("listShuffle");
+    const shopCards = useList("ShopCards");
+    const actualCards = useList("ActualCards");
+    const turno = useObject<{ firstTurn: boolean; turn: number; visible: boolean; nuevaRonda: boolean; }>("turno");
 
     const DragHandler = (e: { preventDefault: () => void; }) => {
         e.preventDefault();

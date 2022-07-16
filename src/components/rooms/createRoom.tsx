@@ -1,5 +1,5 @@
 import { actions } from "@liveblocks/redux";
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState } from "react";
 import { Button, Container, Form, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import {useNavigate } from "react-router-dom";
@@ -30,12 +30,12 @@ export function CreateRoom() {
             difficult: !isSwitchOn});
     }
 
-    const handleName = (e: { target: { value: any; }; }) => {
+    const handleName = (e: { target: { value: string; }; }) => {
       setRoom({...room,
               name: e.target.value});
     }
 
-    const handlePassword = (e: { target: { value: any; }; }) => {
+    const handlePassword = (e: { target: { value: string; }; }) => {
       if (e.target.value === ""){
           setRoom({...room,
               publico: true});
@@ -47,15 +47,16 @@ export function CreateRoom() {
       }   
     }
 
-    const handlePlayers = (e: { target: { value: any; }; }) =>{ 
+    const handlePlayers = (e: { target: { value: string; }; }) =>{ 
       setRoom({...room,
-          players: e.target.value});
+          players: Number(e.target.value)});
     }
 
-    const handleSubmit = (event: { currentTarget: any; preventDefault: () => void; stopPropagation: () => void; }) => {
+    const handleSubmit = (event: { currentTarget: EventTarget & HTMLFormElement; preventDefault: () => void; stopPropagation: () => void; }) => {
       const form = event.currentTarget;
+      event.preventDefault();
       if (form.checkValidity() === false) {
-        event.preventDefault();
+        
         event.stopPropagation();
       }
       else{
@@ -82,7 +83,7 @@ export function CreateRoom() {
         <Container className="p-4">
             <h1 className="text-center p-4 "> Configuration </h1>
             <Row className="justify-content-center">
-                <Form noValidate validated={validated} onSubmit={handleSubmit}>
+                <Form noValidate validated={validated} onSubmit={(e:React.FormEvent<HTMLFormElement>): void => handleSubmit(e)}>
 
                     <Form.Group>
                         <Form.Label className="text-end p-2"> Author</Form.Label>
@@ -106,7 +107,7 @@ export function CreateRoom() {
 
                     <Form.Group>
                         <Form.Label className="p-2">Number of players</Form.Label>
-                        <Form.Control onChange={e => handlePlayers(e)} required as="select" placeholder="Enter Password">
+                        <Form.Control onChange={(e: { target: { value: string }}) => handlePlayers(e)} required as="select" placeholder="Enter Password">
                           <option className="d-none" value="">
                               Select Option
                           </option>
@@ -123,7 +124,7 @@ export function CreateRoom() {
                         label = "Hard Difficult?"
                         checked={isSwitchOn}/> 
 
-                <Button type="submit" className="justify-content-center"> Crear</Button>       
+                    <Button type="submit" className="justify-content-center"> Crear</Button>       
                 </Form>
             </Row>
         </Container> 

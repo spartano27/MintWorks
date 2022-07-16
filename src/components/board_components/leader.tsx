@@ -2,21 +2,20 @@ import { useList, useMyPresence, useObject, useSelf } from "@liveblocks/react";
 import React, { useState } from "react";
 import { Button, Modal, ModalBody, ModalFooter } from "react-bootstrap";
 import ModalHeader from "react-bootstrap/esm/ModalHeader";
-import { useParams } from "react-router-dom";
 import handleChangeTurn from "../../turn";
 import { Presence } from "../../types";
 
 function Leader() {
-    const {name} = useParams();
-    const leader = useObject(`leader-${name}`);
+
+    const leader = useObject("leader");
     const self = useSelf();
     const [,update] = useMyPresence<Presence>();
     const [visible,setVisible] = useState(false);
-    const playersList = useList(`listPLayer-${name}`);
-    const shuffleList = useList(`list-${name}`);
-    const shopCards = useList(`InitialShop-${name}`);
-    const actualCards = useList(`ActualCards-${name}`);
-    const turno = useObject(`turno-${name}`,{firstTurn: "true", turn:0, visible: "false", nuevaRonda: "false"});
+    const playersList = useList("listPLayer");
+    const shuffleList = useList("listShuffle");
+    const shopCards = useList("ShopCards");
+    const actualCards = useList("ActualCards");
+    const turno = useObject<{ firstTurn: boolean; turn: number; visible: boolean; nuevaRonda: boolean; }>("turno");
 
     const DragHandler = (e: { preventDefault: () => void; }) => {
         e.preventDefault();

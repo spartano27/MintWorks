@@ -18,7 +18,7 @@ function Carrusel(){
     for (const value of lista) {
 
         carruselItem.push(
-            <Carousel.Item>
+            <Carousel.Item key={value.altValue}>
                 <img
                 className="d-block mx-auto"
                 src={require(`../images/${value.srcValue}`)}

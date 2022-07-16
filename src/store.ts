@@ -22,7 +22,6 @@ const slice = createSlice({
       const newa = state.roomList.slice();
       newa.splice(action.payload,1);
       state.roomList = newa;
-      console.log(state.roomList);
     },
 
     changeUsername: (state,action) => {
@@ -39,7 +38,7 @@ export function makeStore() {
     enhancers: [
       enhancer({
         client,
-        storageMapping: {roomList: true,turnoId: true}, 
+        storageMapping: {roomList: true}, 
         
       }),
     ],

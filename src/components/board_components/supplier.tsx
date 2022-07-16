@@ -4,24 +4,24 @@ import { Modal, ModalBody, Button, ListGroup } from "react-bootstrap";
 import ModalHeader from "react-bootstrap/esm/ModalHeader";
 import { useParams } from "react-router-dom";
 import handleChangeTurn from "../../turn";
-import { CardTypes, Presence } from "../../types";
+import { Card, Presence } from "../../types";
 
 function Supplier(){
     
     const {name} = useParams();
     const [,setValorId] = useState("0");
-    const supplier = useObject(`supplier-${name}`);
+    const supplier = useObject("supplier");
     const self = useSelf();
     const players = Number(String(name).split("-")[1]);
     const [mypresence,update] = useMyPresence<Presence>();
     const [visible,setVisible] = useState(false);
-    const playersList = useList(`listPLayer-${name}`);
-    const actualCards = useList(`ActualCards-${name}`);
-    const shuffleList = useList(`list-${name}`);
-    const turno = useObject(`turno-${name}`,{firstTurn: "true",turn:0, visible: "false", nuevaRonda: "false"});
-    const shopCards = useList(`InitialShop-${name}`);
-    const wholesaler = useObject(`wholesaler-${name}`);
-    const lotto = useObject(`lotto-${name}`);
+    const playersList = useList("listPLayer");
+    const actualCards = useList<Card>("ActualCards");
+    const shuffleList = useList("listShuffle");
+    const turno = useObject<{ firstTurn: boolean; turn: number; visible: boolean; nuevaRonda: boolean; }>("turno");
+    const shopCards = useList<Card>("ShopCards");
+    const wholesaler = useObject("wholesaler");
+    const lotto = useObject("lotto");
     
     const DragHandler = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
@@ -57,7 +57,7 @@ function Supplier(){
         }   
     }
  
-    const handleCompra = (card: { id: string; value: number; name: string; active: boolean; stars: number; type: CardTypes}) => {
+    const handleCompra = (card: Card) => {
         
         let discount = 0;
         let builderEffect = false;
@@ -67,7 +67,10 @@ function Supplier(){
         }
 
         mypresence.cards.forEach((carta)=>{
-
+            if(carta == null){
+                return null
+            }
+            
             if(carta.name === "Truck"){
                 if(card.value === 1 && carta.active){
                     discount = 0;
@@ -81,22 +84,22 @@ function Supplier(){
                 builderEffect = true;
                 if(card.name === "Wholesaler"){
                     wholesaler.set("img", "wholesaler.png");
-                    wholesaler.set("occupied", "false");
+                    wholesaler.set("occupied", false);
                 }
                 if(card.name === "Lotto"){
                     lotto.set("img", "lotto.png");
-                    lotto.set("occupied", "false");
+                    lotto.set("occupied", false);
                 }
             }
         })
 
         if(mypresence.mint >= card.value){
             
-            const cardOwner = {id: card.id,name: card.name, value: card.value, owner: mypresence.username, active: builderEffect ? true : false, stars: card.stars, type: card.type}
+            const cardOwner = {id: card.id,name: card.name, value: card.value, active: builderEffect ? true : false, stars: card.stars, type: card.type}
             const totalCards = [...mypresence.cards,cardOwner];
             
             for (let i = 0; i< shopCards.length; i++){
-                const carta: any = shopCards.get(i);
+                const carta = shopCards.get(i);
                 for (const property in carta){
                      if (property === "id"){
                         if(carta[property] === card.id){
@@ -105,7 +108,7 @@ function Supplier(){
                      }
                 }
 
-                const actualCarta: any = actualCards.get(i);
+                const actualCarta = actualCards.get(i);
 
                 for (const property in actualCarta){
                     if (property === "id"){
@@ -142,10 +145,10 @@ function Supplier(){
                     <div className="p-4">
                     <ListGroup key={"shop"} horizontal className="h-25 justify-content-center" style={{paddingTop:'24px'}} >
 
-                    {actualCards.map((card:any)=> {
+                    {actualCards.map((card)=> {
                         return(
 
-                            <div key={"SupplierCards"}>
+                            <div key={card.name}>
                                 <ListGroup.Item variant="primary"
                                 onFocus={(e) => update({ focusedId: e.target.id })}
                                 onClick={() => setValorId(card.id)}
