@@ -1,17 +1,10 @@
-import { Card, CardTypes } from "../types";
+import { Card, CardTypes, Room } from "../types";
 
 interface IGlobalState {
     players: number;
     username: string;
-    roomList: {
-        author: string,
-        name: string,
-        password: string,
-        players: number,
-        difficult: boolean,
-        publico: boolean,
-        users: string[],
-    }[];
+    room: Room;
+    roomList: Room[];
     cards: Card[];
 }
 
@@ -22,6 +15,15 @@ export default IGlobalState;
 export const initialState: IGlobalState = {
     players: 4,
     username: "",
+    room:{
+        author: "",
+        name: "",
+        password: "",
+        players: 2,
+        difficult: false,
+        publico: true,
+        users: [""]
+    },
     roomList:[],
     cards: [{id:"1", name: "Assembler", value:5, active:false, stars: 1, type: CardTypes.utility}
     ,{id:"2", name:"Bridge", value:1, active:false, stars: 0, type: CardTypes.culture}

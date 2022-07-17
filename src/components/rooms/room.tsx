@@ -3,31 +3,60 @@ import {Button, Form, Modal, Row, ModalFooter,ModalBody, Alert } from "react-boo
 import { useNavigate, useParams } from "react-router-dom";
 import {useOthers, useObject, useMyPresence} from "@liveblocks/react";
 import {Cursor} from "../cursor";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {Logo, PresenceRoom} from "../../types";
-import { RootState } from "../../store";
+import { changeRoom, modifyRoom, RootState } from "../../store";
+import { actions } from "@liveblocks/redux";
 
 const user = (state:RootState) => state.username;
-
+const thisRoom = (state:RootState) => state.room;
+const rooms = (state:RootState) => state.roomList;
 /* A function that is used to create a room. */
 function Room(){
 
     const {name} = useParams();
+    const dispatch = useDispatch();
     const players = Number(String(name).split("-")[1]);
     const navigate = useNavigate();
     const username = useSelector(user);
+    const roomList = useSelector(rooms);
+    const room = useSelector(thisRoom);
     const COLORS_PRESENCE = ["255, 69, 225", "255, 64, 64", "255, 166, 3"];
     const others = useOthers<PresenceRoom>();
     const [visible,setVisible] = useState(false);
     const [mypresence,update] = useMyPresence<PresenceRoom>();
-
     useEffect(()=>{
       update({username:username});
       update({check:false});
-    }, []);
+      dispatch(
+        actions.enterRoom("rooms", {
+          roomList: [],
+          room: {}
+        })
+      );
+      console
+      return () => {
+      
+        roomList.forEach((r,index) => {
+          if(r.name == room.name){
+              r.users.forEach((user,i)=>{
+                if(username == user){
+                  const newRoomUsers = room.users.slice();
+                  newRoomUsers.splice(i,1);
+                  const newRoom = {author: room.author,publico: room.publico, password: room.password,difficult: room.difficult,name: room.name,users:newRoomUsers,players:room.players}
+                  dispatch(modifyRoom([index,newRoom]));
+                  dispatch(changeRoom(newRoom));
+                }
+              });
+          }
+        });
 
+        dispatch(actions.leaveRoom("rooms"));
+      };
+    }, [dispatch]);
+    
     const data = useObject<Logo>("logo");
-
+  
     if (!data) {
       return (
         <div>
@@ -44,7 +73,8 @@ function Room(){
      * @param {boolean | undefined} check - boolean | undefined
      */
 
-    const handleOnChange = (check: boolean | undefined) => {
+    const handleOnChange = (check: boolean | undefined,e: React.ChangeEvent<HTMLInputElement>) => {
+      e.preventDefault();
       update({check: !check});
     }
 
@@ -98,7 +128,7 @@ function Room(){
                     key={"first"}
                     onFocus={(e) => update({ focusedId: e.target.id })}
                     onBlur={() => update({ focusedId: null })}
-                    onChange={() => handleOnChange(mypresence.check)}
+                    onChange={(e) => handleOnChange(mypresence.check,e)}
                             id = "Ready?"
                             label = "Are you ready?"/>
                   </Form>
@@ -121,7 +151,7 @@ function Room(){
                             key={`switch-${connectionId}`}
                             onFocus={(e) => update({ focusedId: e.target.id })}
                             onBlur={() => update({ focusedId: null })}
-                            onChange = {() => handleOnChange(presence.check)}
+                            onChange = {(e) => handleOnChange(presence.check,e)}
                             disabled
                             style={{outline:'1px solid black',backgroundColor: `rgb(${
                               COLORS_PRESENCE[connectionId % COLORS_PRESENCE.length]
@@ -155,7 +185,7 @@ function Room(){
                   )
                 })}
 
-              <Modal show={visible} onHide={() => setVisible(false)} centered >
+              <Modal show={visible} onHide={() => setVisible(false)} backdrop="static" centered >
                 <ModalBody>
                   <Alert className="mx-auto" variant="primary">Go to the Game! </Alert>
                 </ModalBody>

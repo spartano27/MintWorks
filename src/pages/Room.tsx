@@ -15,11 +15,12 @@ function RoomPage(){
         
         const {name} = useParams();
         const initialStorage = () => ({
-                "logo": new LiveObject({check: false})
+                "logo": new LiveObject({check: false}),
         });
 
         return (
                 <RoomProvider 
+
                 initialStorage={initialStorage}
                 id={String(name)}>
                         <Room/>

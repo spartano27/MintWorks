@@ -26,13 +26,23 @@ const slice = createSlice({
       state.roomList = newa;
     },
 
+    modifyRoom: (state,action) => {
+      const newa = state.roomList.slice();
+      newa.splice(action.payload[0],1);
+      state.roomList = [...newa,action.payload[1]];
+    },
+
     changeUsername: (state,action) => {
       state.username = action.payload;
+    },
+
+    changeRoom: (state,action) => {
+      state.room = action.payload;
     },
   },
 });
 
-export const {addRooms,removeRoom,changeUsername} = slice.actions;
+export const {addRooms,removeRoom,modifyRoom,changeUsername,changeRoom} = slice.actions;
 
 export function makeStore() {
   return configureStore({
@@ -40,7 +50,7 @@ export function makeStore() {
     enhancers: [
       enhancer({
         client,
-        storageMapping: {roomList: true}, 
+        storageMapping: {roomList: true,room: true}, 
         
       }),
     ],

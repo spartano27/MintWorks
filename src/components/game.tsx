@@ -417,7 +417,7 @@ function Game(){
             });
 
             update({stars:countStars});
-            update({mint: mypresence.mint+30+contador});
+            update({mint: mypresence.mint+1+contador});
 
             if(mypresence.stars >= 7 || shopCards.length === 0){
                 turno.set("visible",false);
@@ -476,13 +476,9 @@ function Game(){
     const WhoFirst = () => {
 
         const TotalIDs: number[] = [];
-        others.toArray().forEach(({connectionId,presence}) => {
-            if(presence == null){
-                return null;
-            }
 
-             TotalIDs.push(Number(connectionId))
-        });
+        TotalIDs.push(Number(self.connectionId))
+        
         const listShuffle = TotalIDs.sort(()=> Math.random() -0.5);
         listShuffle.forEach((e)=>{
                 shuffleList.push(e);
@@ -537,7 +533,7 @@ function Game(){
                         <Shop players={players}/>
                         <Board/>
                     </Col>
-                    <Button className="justify-content-end" variant="secondary" hidden={turno.get("turn") == self.connectionId ? false : false} style={{width:'50%', height:'50px'}}
+                    <Button className="justify-content-end" variant="secondary" hidden={turno.get("turn") === self.connectionId ? false : true} style={{width:'50%', height:'50px'}}
                     onClick={()=> handleChangeTurn(actualCards,shopCards,playersList,shuffleList,turno)}>
                         Pass 
                     </Button> 
@@ -553,7 +549,7 @@ function Game(){
                             usernameTurn = turno.get("turn") === connectionId ? presence.username : "";
                         }
                         return(
-                            <div key={"Neighborhood"}>
+                            <div key={connectionId}>
                                 <Neighborhood id={connectionId} username={presence.username} mints={presence.mint} cards={presence.cards} stars={presence.stars} />
                             </div>
                         )
@@ -592,7 +588,7 @@ function Game(){
                         )
             })}
 
-            <Modal size="lg" show={eleccion} onHide={() => setElegir(false)} centered >
+            <Modal backdrop="static" size="lg" show={eleccion} onHide={() => setElegir(false)} centered >
                 <ModalHeader> 
                     Co-Op Card
                 </ModalHeader>

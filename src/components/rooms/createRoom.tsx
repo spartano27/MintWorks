@@ -3,7 +3,7 @@ import React, {useEffect, useState } from "react";
 import { Button, Container, Form, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import {useNavigate } from "react-router-dom";
-import { addRooms, RootState} from "../../store";
+import { addRooms, changeRoom, RootState} from "../../store";
 
 const user = (state:RootState) => state.username;
 
@@ -96,6 +96,7 @@ export function CreateRoom() {
       }
       else{
           dispatch(addRooms(room));
+          dispatch(changeRoom(room));
           navigate(`/Room/${room.name}-${room.players}`);
           
       }
@@ -106,6 +107,7 @@ export function CreateRoom() {
         dispatch(
           actions.enterRoom("rooms", {
             roomList: [],
+            room: {}
           })
         );
     

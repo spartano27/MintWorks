@@ -10,7 +10,25 @@ export enum LocationTypes {
   deed = "deed",
   advanced = "advanced"
 }
-export type Card = {id:string,name:string,value:number,active:boolean,stars:number,type:CardTypes};
+export type Room = {
+      author: string,
+      name: string,
+      password: string,
+      players: number,
+      difficult: boolean,
+      publico: boolean,
+      users: string[],
+    };
+
+export type Card = {
+    id:string,
+    name:string,
+    value:number,
+    active:boolean,
+    stars:number,
+    type:CardTypes
+  };
+
 export type Presence = {
     focusedId: string | null;
     username: string;

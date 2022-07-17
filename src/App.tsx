@@ -27,9 +27,7 @@ export default function App() {
         <Route path="IndividualGame" element={<IndividualGame />}/>
         <Route path="Buscar" element={<Buscar />}/>
         <Route path="Crear" element={<Crear />}/>
-        <Route path="Room/:name" element={
-            <RoomPage /> 
-        }/>
+        <Route path="Room/:name" element={<RoomPage />} />
 
       </Routes>
     </BrowserRouter>

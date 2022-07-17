@@ -4,7 +4,7 @@ import { Button, Card, Col, Container,Modal,ModalBody,ModalFooter,ModalTitle, Fo
 import ModalHeader from "react-bootstrap/esm/ModalHeader";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { RootState } from "../../store";
+import {changeRoom, modifyRoom, RootState } from "../../store";
 
 const user = (state:RootState) => state.username;
 const rooms = (state:RootState) => state.roomList;
@@ -20,11 +20,13 @@ export function JoinRoom() {
     const [visible,setVisible] = useState(false);
     const [EsValido,setEsvalido] = useState(false);
     const [aviso,setAviso] = useState(false);
+    const [full,setFull] = useState(false);
     
     useEffect(() => {
         dispatch(
           actions.enterRoom("rooms", {
             roomList: [],
+            room: {}
           })
         );
         return () => {
@@ -41,16 +43,21 @@ export function JoinRoom() {
      * @param room - { publico: boolean, name: string, users: string[], players:number }
      */
 
-    const handleClick = (room: { publico: boolean, name: string, users: string[], players:number }) => {
-        if(room.users.length <= room.players){
+    const handleClick = (room: {author:string, password:string, publico: boolean,difficult:boolean, name: string, users: string[], players:number }, index: number) => {
+        if(room.users.length < room.players){
             if(room.publico){
-                room.users.push(username);
+                const newRoom = {author: room.author,publico: room.publico, password: room.password,difficult: room.difficult,name: room.name,users:[...room.users,username],players:room.players}
+                dispatch(modifyRoom([index,newRoom]));
+                dispatch(changeRoom(newRoom));
                 navigate(`/Room/${room.name}-${room.players}`);
                 
             }
             else{
                 setVisible(true);
             }
+        }
+        else{
+            setFull(true);
         }
     }
 
@@ -61,18 +68,22 @@ export function JoinRoom() {
      * If the room has less than the maximum number of players, and the username is not valid, then set
      * the warning to true.
      * 
-     * If the room has the maximum number of players, then do nothing. ERROR CAMBIAR
      * @param room - { name: string,users: string[], players:number }
      */
-    const handleSubmit = (room: { name: string,users: string[], players:number }) => {
-        if(room.users.length <= room.players){
+    const handleSubmit = (room: {author:string, password:string, publico: boolean,difficult:boolean, name: string, users: string[], players:number }, index: number) => {
+        if(room.users.length < room.players){
             if(EsValido) {
-                room.users.push(username);  
+                const newRoom = {author: room.author,publico: room.publico, password: room.password,difficult: room.difficult,name: room.name,users:[...room.users,username],players:room.players}
+                dispatch(modifyRoom([index,newRoom]));
+                dispatch(changeRoom(newRoom));
                 navigate(`/Room/${room.name}-${room.players}`);
             }
             else{
                 setAviso(true);
             }
+        }
+        else{
+            setFull(true);
         }
     }
 
@@ -98,8 +109,8 @@ export function JoinRoom() {
             <h1 className="text-center p-4"> List of Rooms</h1>
             <Col className="justify-content-center">
 
-                {roomList.map(function(item){
-
+                {roomList.map(function(item,index){
+                    console.log(item);
                     return(
 
                         <div key={item.name}>
@@ -117,11 +128,23 @@ export function JoinRoom() {
                                 <Alert show={aviso} className="mx-auto" variant="danger"> the password is wrong </Alert>
                                 </ModalBody>
                                 <ModalFooter>
-                                <Button variant="primary" onClick={() => handleSubmit(item)} >
+                                <Button variant="primary" onClick={() => handleSubmit(item,index)} >
                                     Submit 
                                 </Button>
                                 </ModalFooter>
                             </Modal>
+
+                            <Modal  show={full} onHide={() => setFull(false)} >
+                                <ModalBody>
+                                    The room you try to access is full. Try another one!
+                                </ModalBody>
+                                <ModalFooter>
+                                <Button variant="primary" onClick={() => setFull(false)} >
+                                    Ok
+                                </Button>
+                                </ModalFooter>
+                            </Modal>
+
                             <Card className="mx-auto justify-content-center" style={{width:"30rem"}} bg={item.publico ? "secondary": "success"}>
                                 <Card.Header > {item.publico ? "Public room":"Private room"} </Card.Header>
                                 <Card.Body>
@@ -133,7 +156,7 @@ export function JoinRoom() {
                                     <Card.Text>        
                                             difficult: {item.difficult ? "Normal":"Hard"}                    
                                     </Card.Text>
-                                    <Button onClick={() => handleClick(item)} className="flex-right ml-auto" type="submit"> Join </Button>
+                                    <Button onClick={() => handleClick(item,index)} className="flex-right ml-auto" type="submit"> Join </Button>
                                 </Card.Body>
                             </Card>
                         </div>
