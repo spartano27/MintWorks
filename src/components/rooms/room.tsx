@@ -4,19 +4,20 @@ import { useNavigate, useParams } from "react-router-dom";
 import {useOthers, useObject, useMyPresence} from "@liveblocks/react";
 import {Cursor} from "../cursor";
 import {useDispatch, useSelector} from "react-redux";
-import {Logo, PresenceRoom} from "../../types";
+import {Logo, PresenceRoom, Room as RoomType} from "../../types";
 import { changeRoom, modifyRoom, RootState } from "../../store";
 import { actions } from "@liveblocks/redux";
 
 const user = (state:RootState) => state.username;
 const thisRoom = (state:RootState) => state.room;
 const rooms = (state:RootState) => state.roomList;
+const playersSet = (state:RootState) => state.playersGeneral;
 /* A function that is used to create a room. */
 function Room(){
 
     const {name} = useParams();
     const dispatch = useDispatch();
-    const players = Number(String(name).split("-")[1]);
+    const players = useSelector(playersSet);
     const navigate = useNavigate();
     const username = useSelector(user);
     const roomList = useSelector(rooms);
@@ -25,6 +26,11 @@ function Room(){
     const others = useOthers<PresenceRoom>();
     const [visible,setVisible] = useState(false);
     const [mypresence,update] = useMyPresence<PresenceRoom>();
+    let lista : RoomType[] = [];
+    useEffect(()=>{
+      lista = roomList;
+    },[roomList]);
+
     useEffect(()=>{
       update({username:username});
       update({check:false});
@@ -34,16 +40,15 @@ function Room(){
           room: {}
         })
       );
-      console
       return () => {
-      
-        roomList.forEach((r,index) => {
+        
+        lista.forEach((r,index) => {
           if(r.name == room.name){
               r.users.forEach((user,i)=>{
                 if(username == user){
-                  const newRoomUsers = room.users.slice();
+                  const newRoomUsers = r.users.slice();
                   newRoomUsers.splice(i,1);
-                  const newRoom = {author: room.author,publico: room.publico, password: room.password,difficult: room.difficult,name: room.name,users:newRoomUsers,players:room.players}
+                  const  newRoom = {author: room.author,publico: room.publico, password: room.password,difficult: room.difficult,name: room.name,users:[...newRoomUsers,""],players:room.players}
                   dispatch(modifyRoom([index,newRoom]));
                   dispatch(changeRoom(newRoom));
                 }

@@ -2,16 +2,20 @@ import { useList, useMyPresence, useObject, useSelf } from "@liveblocks/react";
 import React, { useState } from "react";
 import { Button, Modal, ModalBody, ModalFooter } from "react-bootstrap";
 import ModalHeader from "react-bootstrap/esm/ModalHeader";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import { RootState } from "../../store";
 import handleChangeTurn from "../../turn";
 import { Presence } from "../../types";
 
+const playersSet = (state:RootState) => state.playersGeneral;
+
 function Producer() {
     
-    const {name} = useParams();
+    
     const producer = useObject("producer");
     const self = useSelf();
-    const players = Number(String(name).split("-")[1]);
+    const players = useSelector(playersSet);
     const [mypresence,update] = useMyPresence<Presence>();
     const [visible,setVisible] = useState(false);
     const playersList = useList("listPLayer");

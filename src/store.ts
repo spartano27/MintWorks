@@ -4,9 +4,10 @@ import {configureStore, createSlice } from "@reduxjs/toolkit";
 import { initialState } from "./state/globalState";
 
 //pk_live_qWBJrta6dfM5FdwAlCjK-ejY
+//pk_test_rGCwfxKjuMTNJOLSxeiLTtV3
 export const client = createClient({
-    publicApiKey: "pk_test_rGCwfxKjuMTNJOLSxeiLTtV3",
-
+    publicApiKey: "pk_test_6lrj7sCqINeSrTkImX2Vc_9y",
+    
 });
 
 /* Creating a slice of the state. */
@@ -35,6 +36,9 @@ const slice = createSlice({
     changeUsername: (state,action) => {
       state.username = action.payload;
     },
+    changePlayer: (state,action) => {
+      state.playersGeneral = action.payload;
+    },
 
     changeRoom: (state,action) => {
       state.room = action.payload;
@@ -42,7 +46,7 @@ const slice = createSlice({
   },
 });
 
-export const {addRooms,removeRoom,modifyRoom,changeUsername,changeRoom} = slice.actions;
+export const {addRooms,removeRoom,modifyRoom,changeUsername,changeRoom,changePlayer} = slice.actions;
 
 export function makeStore() {
   return configureStore({

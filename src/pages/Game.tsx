@@ -1,8 +1,10 @@
 import { LiveList, LiveObject } from '@liveblocks/client';
 import { RoomProvider } from '@liveblocks/react';
 import React from 'react';  
+import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import Game from '../components/game';  
+import { RootState } from '../store';
 import { Card, LocationTypes } from '../types';
 
 /**
@@ -18,11 +20,12 @@ import { Card, LocationTypes } from '../types';
  * The id prop is a string that is used to identify the game.
  * @returns A React component that is a wrapper for the Game component.
  */
-
+ const playersSet = (state:RootState) => state.playersGeneral;
+ 
 function GamePage() {
    
         const {name} = useParams();
-        const players = Number(String(name).split("-")[1]);
+        const players = useSelector(playersSet);
         const initialStorage = () => ({
             "listPLayer": new LiveList(),
             "listShuffle": new LiveList(),

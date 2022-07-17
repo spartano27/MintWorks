@@ -2,19 +2,21 @@ import { useObject, useSelf, useMyPresence, useList } from "@liveblocks/react";
 import React, { useState } from "react";
 import { Modal, ModalBody, Button, ListGroup } from "react-bootstrap";
 import ModalHeader from "react-bootstrap/esm/ModalHeader";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import { RootState } from "../../store";
 import handleChangeTurn from "../../turn";
 import { Card, Presence } from "../../types";
 
 /* The above code is a React component that is used to buy a card from the supplier. */
+const playersSet = (state:RootState) => state.playersGeneral;
 
 function Supplier(){
-    
-    const {name} = useParams();
+
     const [,setValorId] = useState("0");
     const supplier = useObject("supplier");
     const self = useSelf();
-    const players = Number(String(name).split("-")[1]);
+    const players = useSelector(playersSet);
     const [mypresence,update] = useMyPresence<Presence>();
     const [visible,setVisible] = useState(false);
     const playersList = useList("listPLayer");

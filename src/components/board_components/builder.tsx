@@ -2,20 +2,22 @@ import { useList, useMyPresence, useObject, useSelf } from "@liveblocks/react";
 import React, { useState } from "react";
 import { Modal, ModalBody, Button, ListGroup } from "react-bootstrap";
 import ModalHeader from "react-bootstrap/esm/ModalHeader";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import { RootState } from "../../store";
 import handleChangeTurn from "../../turn";
 import { CardTypes, Presence } from "../../types";
-
+const playersSet = (state:RootState) => state.playersGeneral;
 /* The above code is a React component that is used to build a card. */
 
 function Builder() {
 
-    const {name} = useParams();
+    
     const builder = useObject("builder");
     const self = useSelf();
     const shopCards = useList("ShopCards");
     const actualCards = useList("ActualCards");
-    const players = Number(String(name).split("-")[1]);
+    const players = useSelector(playersSet);
     const [mypresence,update] = useMyPresence<Presence>();
     const [visible,setVisible] = useState(false);
     const playersList = useList("listPLayer");

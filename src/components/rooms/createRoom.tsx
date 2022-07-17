@@ -3,19 +3,21 @@ import React, {useEffect, useState } from "react";
 import { Button, Container, Form, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import {useNavigate } from "react-router-dom";
-import { addRooms, changeRoom, RootState} from "../../store";
+import { addRooms, changePlayer, changeRoom, RootState} from "../../store";
 
 const user = (state:RootState) => state.username;
 
 /* A form that allows you to create a room. */
-
+const playersSet = (state:RootState) => state.playersGeneral;
 export function CreateRoom() {
-
+  
+    const players = useSelector(playersSet);
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const username = useSelector(user);
     const [isSwitchOn,setIsSwitchOn] = useState(false);
     const [validated,setValidated] = useState(false);
+    const [pla,setPla] = useState(3);
     const [room,setRoom] = useState({
         author: username,
         name: "",
@@ -65,15 +67,28 @@ export function CreateRoom() {
       }   
     }
 
+    useEffect(()=>{
+      dispatch(changePlayer(pla));
+    },[pla]);
+
     /**
      * The function takes an event object as an argument, and then sets the state of the room object to
      * the value of the event target.
      * @param e - { target: { value: string; }; }
      */
     const handlePlayers = (e: { target: { value: string; }; }) =>{ 
+      const ePlayers = Number(e.target.value);
+      setPla(ePlayers);
       setRoom({...room,
-          players: Number(e.target.value)});
+          players: ePlayers});
+        for(let i = 0; i< ePlayers; i++){
+          setRoom({...room,
+            users:[...room.users,""] });
+        }
+      
     }
+    
+    
 
     /**
      * "handleSubmit is a function that takes an event as an argument and returns nothing. The event is
