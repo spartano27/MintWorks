@@ -9,14 +9,13 @@ import handleChangeTurn from "../../turn";
 import { Card, Presence } from "../../types";
 
 /* The above code is a React component that is used to buy a card from the supplier. */
-const playersSet = (state:RootState) => state.playersGeneral;
 
 function Supplier(){
 
     const [,setValorId] = useState("0");
     const supplier = useObject("supplier");
     const self = useSelf();
-    const players = useSelector(playersSet);
+    const players = Number(String(name).split("-")[1]);
     const [mypresence,update] = useMyPresence<Presence>();
     const [visible,setVisible] = useState(false);
     const playersList = useList("listPLayer");

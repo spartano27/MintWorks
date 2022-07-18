@@ -36,17 +36,17 @@ const slice = createSlice({
     changeUsername: (state,action) => {
       state.username = action.payload;
     },
-    changePlayer: (state,action) => {
-      state.playersGeneral = action.payload;
-    },
 
     changeRoom: (state,action) => {
       state.room = action.payload;
     },
+    changeDifficult: (state,action) => {
+      state.difficult = action.payload;
+    },
   },
 });
 
-export const {addRooms,removeRoom,modifyRoom,changeUsername,changeRoom,changePlayer} = slice.actions;
+export const {addRooms,removeRoom,modifyRoom,changeUsername,changeRoom,changeDifficult} = slice.actions;
 
 export function makeStore() {
   return configureStore({

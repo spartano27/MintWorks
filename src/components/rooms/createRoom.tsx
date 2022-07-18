@@ -1,23 +1,21 @@
 import { actions } from "@liveblocks/redux";
 import React, {useEffect, useState } from "react";
-import { Button, Container, Form, Row } from "react-bootstrap";
+import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import {useNavigate } from "react-router-dom";
-import { addRooms, changePlayer, changeRoom, RootState} from "../../store";
+import { addRooms, changeDifficult, changeRoom, RootState} from "../../store";
 
 const user = (state:RootState) => state.username;
 
 /* A form that allows you to create a room. */
-const playersSet = (state:RootState) => state.playersGeneral;
+
 export function CreateRoom() {
-  
-    const players = useSelector(playersSet);
+    
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const username = useSelector(user);
     const [isSwitchOn,setIsSwitchOn] = useState(false);
     const [validated,setValidated] = useState(false);
-    const [pla,setPla] = useState(3);
     const [room,setRoom] = useState({
         author: username,
         name: "",
@@ -35,6 +33,8 @@ export function CreateRoom() {
 
     const onSwitchAction = () => {
         setIsSwitchOn(!isSwitchOn);
+        dispatch(changeDifficult(!isSwitchOn));
+        
         setRoom({...room,
             difficult: !isSwitchOn});
     }
@@ -67,10 +67,6 @@ export function CreateRoom() {
       }   
     }
 
-    useEffect(()=>{
-      dispatch(changePlayer(pla));
-    },[pla]);
-
     /**
      * The function takes an event object as an argument, and then sets the state of the room object to
      * the value of the event target.
@@ -78,7 +74,6 @@ export function CreateRoom() {
      */
     const handlePlayers = (e: { target: { value: string; }; }) =>{ 
       const ePlayers = Number(e.target.value);
-      setPla(ePlayers);
       setRoom({...room,
           players: ePlayers});
         for(let i = 0; i< ePlayers; i++){
@@ -132,17 +127,18 @@ export function CreateRoom() {
       }, [dispatch]);
     
     return(
-        <Container className="p-4">
+        <Container  className="p-4">
             <h1 className="text-center p-4 "> Configuration </h1>
-            <Row className="justify-content-center">
-                <Form noValidate validated={validated} onSubmit={(e:React.FormEvent<HTMLFormElement>): void => handleSubmit(e)}>
-
-                    <Form.Group>
-                        <Form.Label className="text-end p-2"> Author</Form.Label>
+            <Row style={{borderColor:'#bcd0cf',border:"double",borderRadius: '25px',padding: '25px'}} className="justify-content-center">
+            <Form noValidate validated={validated} onSubmit={(e:React.FormEvent<HTMLFormElement>): void => handleSubmit(e)}>  
+              <Row style={{borderColor:'#bcd0cf',borderBottomStyle:'double'}} className="p-4">
+                <h2 className="text-center p-4" > Data</h2>
+                <Form.Group style={{paddingTop:'25px',paddingLeft:'80px'}}>
+                        <Form.Label className="text- p-2"> Author</Form.Label>
                         <Form.Control type="text" defaultValue={username} plaintext readOnly/> 
                     </Form.Group>
 
-                    <Form.Group>
+                    <Form.Group className="p-4">
                         <Form.Label className="text-center p-2"> Room name</Form.Label>
                         <Form.Control required onChange={ e => handleName(e)} type="text" placeholder="Enter name"/> 
                         <Form.Control.Feedback type="invalid">
@@ -150,14 +146,18 @@ export function CreateRoom() {
                         </Form.Control.Feedback>
                     </Form.Group>
 
-                    <Form.Group>
+                    <Form.Group className="p-4">
                         <Form.Label className="p-2">Password</Form.Label>
                         <Form.Control onChange={ e => handlePassword(e)} type="password" placeholder="Enter Password"/> 
                     </Form.Group>
 
-                    <h2 className="text-center p-4" > Rules </h2>
+              </Row>
+              <Row className="p-4">
 
-                    <Form.Group>
+              
+                    <h2 className="text-start p-4" > Rules </h2>
+
+                    <Form.Group style={{marginLeft:'20px'}} className="p-4">
                         <Form.Label className="p-2">Number of players</Form.Label>
                         <Form.Control onChange={(e: { target: { value: string }}) => handlePlayers(e)} required as="select" placeholder="Enter Password">
                           <option className="d-none" value="">
@@ -170,14 +170,16 @@ export function CreateRoom() {
                     </Form.Group>
                     
                     <Form.Switch
-                        className="p-4"
+                        style={{paddingTop:'50px',paddingLeft:'80px'}}
                         onChange={onSwitchAction}
                         id = "difficult"
                         label = "Hard Difficult?"
                         checked={isSwitchOn}/> 
 
-                    <Button type="submit" className="justify-content-center"> Crear</Button>       
-                </Form>
+                  </Row>
+                    <Button style={{marginTop:'25px'}} className="mx-auto d-block" variant="secondary" type="submit"> Create Game</Button> 
+                      
+            </Form>
             </Row>
         </Container> 
     );

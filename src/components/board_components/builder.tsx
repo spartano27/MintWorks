@@ -7,7 +7,6 @@ import { useParams } from "react-router-dom";
 import { RootState } from "../../store";
 import handleChangeTurn from "../../turn";
 import { CardTypes, Presence } from "../../types";
-const playersSet = (state:RootState) => state.playersGeneral;
 /* The above code is a React component that is used to build a card. */
 
 function Builder() {
@@ -17,7 +16,7 @@ function Builder() {
     const self = useSelf();
     const shopCards = useList("ShopCards");
     const actualCards = useList("ActualCards");
-    const players = useSelector(playersSet);
+    const players = Number(String(name).split("-")[1]);
     const [mypresence,update] = useMyPresence<Presence>();
     const [visible,setVisible] = useState(false);
     const playersList = useList("listPLayer");

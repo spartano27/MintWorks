@@ -1,14 +1,36 @@
 $primary: #44716c;
-$secondary: #e83e8c;
+$secondary: #bcd0cf;
+$success: #abe575;
+$danger: #e55664;
+.btn-secondary {
+    color: #000;
+    background: #bcd0cf linear-gradient(180deg, #bcd0cf , #bcd0cf ) repeat-x;
+    border-color: #263231;
+}
 $enable-gradients: true;
 
-
-
+.Warning_modal .modal-content {
+    background-color: rgba(224, 137, 15, 0.726);
+    color: #fff;
+  }
+ 
+.Normal_modal .modal-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    pointer-events: auto;
+    background-color: #bcd0cf;
+    color: #000;
+    background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 0.3rem;
+    outline: 0; }
 /* finally, import Bootstrap */
 @import "bootstrap-scss/bootstrap";
 
 body {
     background-image: url('/src/images/fondo1.png');
-    background-color: #44716c;
+    background-color: #213331;
 
 }

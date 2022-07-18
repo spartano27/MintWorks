@@ -2,7 +2,7 @@
   height: 200px;
   width: 270px;
   margin: 5px;
-  background-color: #e83e8c;
+  background-color: #bcd0cf;
   border-color: blueviolet; }
 
 .squareSelected {
@@ -12,4 +12,4 @@
   border-color: blueviolet;
   border-width: 5px;
   border-style: solid;
-  background-color: #e83e8c; }
+  background-color: #bcd0cf; }

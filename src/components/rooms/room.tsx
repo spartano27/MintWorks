@@ -11,13 +11,12 @@ import { actions } from "@liveblocks/redux";
 const user = (state:RootState) => state.username;
 const thisRoom = (state:RootState) => state.room;
 const rooms = (state:RootState) => state.roomList;
-const playersSet = (state:RootState) => state.playersGeneral;
 /* A function that is used to create a room. */
 function Room(){
 
     const {name} = useParams();
     const dispatch = useDispatch();
-    const players = useSelector(playersSet);
+    const players = Number(String(name).split("-")[1]);
     const navigate = useNavigate();
     const username = useSelector(user);
     const roomList = useSelector(rooms);
@@ -26,9 +25,9 @@ function Room(){
     const others = useOthers<PresenceRoom>();
     const [visible,setVisible] = useState(false);
     const [mypresence,update] = useMyPresence<PresenceRoom>();
-    let lista : RoomType[] = [];
+    const [lista,setLista] = useState(roomList);
     useEffect(()=>{
-      lista = roomList;
+      setLista(roomList);
     },[roomList]);
 
     useEffect(()=>{
@@ -41,7 +40,6 @@ function Room(){
         })
       );
       return () => {
-        
         lista.forEach((r,index) => {
           if(r.name == room.name){
               r.users.forEach((user,i)=>{

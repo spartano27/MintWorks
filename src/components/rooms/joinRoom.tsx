@@ -5,6 +5,7 @@ import ModalHeader from "react-bootstrap/esm/ModalHeader";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {changeRoom, modifyRoom, RootState } from "../../store";
+import GButton from "../gButton";
 
 const user = (state:RootState) => state.username;
 const rooms = (state:RootState) => state.roomList;
@@ -78,12 +79,20 @@ export function JoinRoom() {
      * @param room - { name: string,users: string[], players:number }
      */
     const handleSubmit = (room: {author:string, password:string, publico: boolean,difficult:boolean, name: string, users: string[], players:number }, index: number) => {
-        if(room.users.length < room.players){
-            if(EsValido) {
-                const newRoom = {author: room.author,publico: room.publico, password: room.password,difficult: room.difficult,name: room.name,users:[...room.users,username],players:room.players}
+        let newRoomUsers : string[] = [];
+        room.users.forEach((user,i)=>{
+            if(user === ""){    
+                newRoomUsers = room.users.slice();
+                newRoomUsers.splice(i,1);
+            }
+        });
+        if(room.users.includes("")){
+            if(EsValido){
+                const newRoom = {author: room.author,publico: room.publico, password: room.password,difficult: room.difficult,name: room.name,users:[...newRoomUsers,username],players:room.players}
                 dispatch(modifyRoom([index,newRoom]));
                 dispatch(changeRoom(newRoom));
                 navigate(`/Room/${room.name}-${room.players}`);
+                
             }
             else{
                 setAviso(true);
@@ -109,19 +118,27 @@ export function JoinRoom() {
             setEsvalido(false);
         }
     }
-
-    return(
-        
+    
+    if(roomList.length === 0){
+        return(
         <Container>
             <h1 className="text-center p-4"> List of Rooms</h1>
-            <Col className="justify-content-center">
+            <h2 className="text-center p-4"> There are currently no rooms created </h2>
+            <GButton title='Create a Game!' link='/Crear'/> 
+        </Container>
+        );
+    }
+    return(
+        
+        <Container >
+            <h1 className="text-center p-4"> List of Rooms</h1>
+            <Col  className="justify-content-center">
 
                 {roomList.map(function(item,index){
-                  
                     return(
-
+                        
                         <div key={item.name}>
-                            <Modal show={visible} onHide={() => setVisible(false)} >
+                            <Modal className="Normal_modal" centered show={visible} onHide={() => setVisible(false)} >
                                 <ModalHeader closeButton>
                                 <ModalTitle>Introduce the correct password</ModalTitle>
                                 </ModalHeader>
@@ -134,25 +151,34 @@ export function JoinRoom() {
                                 </Form>
                                 <Alert show={aviso} className="mx-auto" variant="danger"> the password is wrong </Alert>
                                 </ModalBody>
-                                <ModalFooter>
+                                <ModalFooter style={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                }}>
                                 <Button variant="primary" onClick={() => handleSubmit(item,index)} >
                                     Submit 
                                 </Button>
                                 </ModalFooter>
                             </Modal>
 
-                            <Modal  show={full} onHide={() => setFull(false)} >
+                            <Modal className="Warning_modal" centered show={full} onHide={() => setFull(false)} >
+                                <ModalHeader>
+                                    Oh no...
+                                </ModalHeader>
                                 <ModalBody>
                                     The room you try to access is full. Try another one!
                                 </ModalBody>
-                                <ModalFooter>
+                                <ModalFooter style={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                }}>
                                 <Button variant="primary" onClick={() => setFull(false)} >
                                     Ok
                                 </Button>
                                 </ModalFooter>
                             </Modal>
 
-                            <Card className="mx-auto justify-content-center" style={{width:"30rem"}} bg={item.publico ? "secondary": "success"}>
+                            <Card className="mx-auto justify-content-center" style={{width:"30rem"}} bg={item.publico ? "success": "danger"}>
                                 <Card.Header > {item.publico ? "Public room":"Private room"} </Card.Header>
                                 <Card.Body>
                                     <Card.Title>{item.name}</Card.Title>
@@ -161,7 +187,7 @@ export function JoinRoom() {
                                             number of players: {item.players}
                                     </Card.Text>
                                     <Card.Text>        
-                                            difficult: {item.difficult ? "Normal":"Hard"}                    
+                                            difficult: {item.difficult ? "Hard":"Normal"}                    
                                     </Card.Text>
                                     <Button onClick={() => handleClick(item,index)} className="flex-right ml-auto" type="submit"> Join </Button>
                                 </Card.Body>

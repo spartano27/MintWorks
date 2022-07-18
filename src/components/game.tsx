@@ -18,7 +18,6 @@ import Neighborhood from "./neighborhood";
 const user = (state:RootState) => state.username;
 const rooms = (state:RootState) => state.roomList;
 const cardsList = (state:RootState) => state.cards;
-const playersSet = (state:RootState) => state.playersGeneral;
 /**
  * It takes an array of objects, and returns a new array of objects, with the same objects, but in a
  * different order.
@@ -75,7 +74,7 @@ function Game(){
       }, []);
 
     const [mintOnGalley,setMint] = useState(0);
-    const players = useSelector(playersSet);
+    const players = Number(String(name).split("-")[1]);
     const roomName = (String(name).split("-")[0]).split("Gl")[1];
     const [countdown,setCountdown] = useState(true);
     const playersList = useList("listPLayer");

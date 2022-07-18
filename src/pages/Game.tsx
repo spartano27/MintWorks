@@ -20,12 +20,11 @@ import { Card, LocationTypes } from '../types';
  * The id prop is a string that is used to identify the game.
  * @returns A React component that is a wrapper for the Game component.
  */
- const playersSet = (state:RootState) => state.playersGeneral;
  
 function GamePage() {
    
         const {name} = useParams();
-        const players = useSelector(playersSet);
+        const players = Number(String(name).split("-")[1]);
         const initialStorage = () => ({
             "listPLayer": new LiveList(),
             "listShuffle": new LiveList(),
