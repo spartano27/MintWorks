@@ -20,6 +20,36 @@
   border-radius: 0.3rem;
   outline: 0; }
 
+.pageNumbers {
+  padding-top: 25px;
+  list-style: none;
+  display: flex;
+  justify-content: center; }
+
+.pageNumbers .list-group-item {
+  padding: 10px;
+  background-color: #bcd0cf;
+  border: 1px solid #bcd0cf;
+  cursor: pointer; }
+
+.pageNumbers .list-group-item.active {
+  background-color: #bcd0cf;
+  color: black; }
+
+.pageNumbers .list-group-item.button {
+  background-color: transparent;
+  border: none;
+  color: #bcd0cf;
+  font-size: 1.5rem;
+  cursor: pointer; }
+
+.pageNumbers .list-group-item.button:hover {
+  background-color: #bcd0cf;
+  color: black; }
+
+.pageNumbers .list-group-item.button:focus {
+  outline: none; }
+
 /* finally, import Bootstrap */
 /*!
  * Bootstrap v4.6.1 (https://getbootstrap.com/)

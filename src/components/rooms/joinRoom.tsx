@@ -1,6 +1,6 @@
 import { actions } from "@liveblocks/redux";
 import React, { useEffect, useState } from "react";
-import { Button, Card, Col, Container,Modal,ModalBody,ModalFooter,ModalTitle, Form, Alert } from "react-bootstrap";
+import { Button, Card, Col, Container,Modal,ModalBody,ModalFooter,ModalTitle, Form, Alert, ListGroupItem, ListGroup } from "react-bootstrap";
 import ModalHeader from "react-bootstrap/esm/ModalHeader";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -21,8 +21,8 @@ export function JoinRoom() {
     const [visible,setVisible] = useState(false);
     const [EsValido,setEsvalido] = useState(false);
     const [aviso,setAviso] = useState(false);
-    const [full,setFull] = useState(false);
-    
+    const [full,setFull] = useState(false);   
+
     useEffect(() => {
         dispatch(
           actions.enterRoom("rooms", {
@@ -118,7 +118,66 @@ export function JoinRoom() {
             setEsvalido(false);
         }
     }
-    
+
+    const [currentPage,setcurrentPage] = useState(1);
+    const [itemsPerPage,setitemsPerPage] = useState(1);
+    const [pageNumberLimit,setPageNumberLimit] = useState(2);
+    const [maxPageNumberLimit,setMaxPageNumberLimit] = useState(2);
+    const [minPageNumberLimit,setMinPageNumberLimit] = useState(0);
+
+    const handleClickPage = (event: { target: { id: any; }; }) =>{
+        setcurrentPage(Number(event.target.id));
+        console.log(currentPage);
+    }
+
+    const handleNextbtn = () => {
+        setcurrentPage(currentPage+1);
+        if(currentPage+1 > maxPageNumberLimit){
+            setMaxPageNumberLimit(maxPageNumberLimit + pageNumberLimit);
+            setMinPageNumberLimit(minPageNumberLimit + pageNumberLimit);
+        }
+    }
+    const handlePrevbtn = () => {
+        setcurrentPage(currentPage-1);
+        if((currentPage-1)%pageNumberLimit == 0){
+            setMaxPageNumberLimit(maxPageNumberLimit - pageNumberLimit);
+            setMinPageNumberLimit(minPageNumberLimit - pageNumberLimit);
+        }
+    }
+
+    const handleLoadMore = () => {
+        setitemsPerPage(itemsPerPage+5);
+    }
+
+    const pages = [];
+    for(let i=1; i<=Math.ceil(roomList.length/itemsPerPage);i++){
+        pages.push(i);
+    }
+    const indexOfLastItem = currentPage*itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = roomList.slice(indexOfFirstItem,indexOfLastItem);
+    const renderPageNumbers = pages.map(number=>{
+       if(number < maxPageNumberLimit+1 && number>minPageNumberLimit){
+        return(
+            <ListGroupItem key={number} id={String(number)}  onClick={(e:any)=> handleClickPage(e)} 
+            className={currentPage == number ? "active" : undefined}>
+                {number}
+            </ListGroupItem>
+        )
+       } else{
+            return null;
+       }
+    });
+
+    let pageIncrementBtn = null;
+    if(pages.length > maxPageNumberLimit){
+        pageIncrementBtn = <ListGroupItem onClick={() => handleNextbtn()}> &hellip;</ListGroupItem>
+    }
+    let pageDecrementBtn = null;
+    if(minPageNumberLimit >= 1){
+        pageDecrementBtn = <ListGroupItem onClick={() => handlePrevbtn()}> &hellip;</ListGroupItem>
+    }
+
     if(roomList.length === 0){
         return(
         <Container>
@@ -133,8 +192,8 @@ export function JoinRoom() {
         <Container >
             <h1 className="text-center p-4"> List of Rooms</h1>
             <Col  className="justify-content-center">
-
-                {roomList.map(function(item,index){
+                
+                {currentItems.map(function(item,index){
                     return(
                         
                         <div key={item.name}>
@@ -193,8 +252,25 @@ export function JoinRoom() {
                                 </Card.Body>
                             </Card>
                         </div>
-                    )                        
+                    )                
                 })} 
+
+           <ListGroup horizontal className="pageNumbers">
+            <ListGroupItem>
+                <Button onClick={()=>handlePrevbtn()}
+                disabled={currentPage==pages[0] ? true : false}>
+                        Prev</Button>
+            </ListGroupItem>
+            {pageDecrementBtn}
+            {renderPageNumbers}
+            {pageIncrementBtn}
+            <ListGroupItem>
+                <Button onClick={()=>handleNextbtn()}
+                disabled={currentPage==pages[pages.length-1] ? true : false}>
+                Next</Button>
+            </ListGroupItem>
+            </ListGroup>
+            <Button onClick={()=>handleLoadMore()} className="mx-auto d-block mt-2">Load More</Button>
             </Col>
         </Container>
     );
