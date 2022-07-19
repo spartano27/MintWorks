@@ -1,4 +1,5 @@
 import { actions } from "@liveblocks/redux";
+import e from "express";
 import React, { useEffect, useState } from "react";
 import { Button, Card, Col, Container,Modal,ModalBody,ModalFooter,ModalTitle, Form, Alert, ListGroupItem, ListGroup } from "react-bootstrap";
 import ModalHeader from "react-bootstrap/esm/ModalHeader";
@@ -119,10 +120,16 @@ export function JoinRoom() {
         }
     }
 
+    const [inputText,setInputText] = useState("");
+    const inputHandler = (e: { target: { value: string; }; }) => {
+        const lowercase = e.target.value.toLowerCase();
+        setInputText(lowercase);
+    };
+
     const [currentPage,setcurrentPage] = useState(1);
-    const [itemsPerPage,setitemsPerPage] = useState(1);
-    const [pageNumberLimit,setPageNumberLimit] = useState(2);
-    const [maxPageNumberLimit,setMaxPageNumberLimit] = useState(2);
+    const [itemsPerPage,setitemsPerPage] = useState(3);
+    const [pageNumberLimit,setPageNumberLimit] = useState(5);
+    const [maxPageNumberLimit,setMaxPageNumberLimit] = useState(5);
     const [minPageNumberLimit,setMinPageNumberLimit] = useState(0);
 
     const handleClickPage = (event: { target: { id: any; }; }) =>{
@@ -155,7 +162,19 @@ export function JoinRoom() {
     }
     const indexOfLastItem = currentPage*itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = roomList.slice(indexOfFirstItem,indexOfLastItem);
+    const currentItems = (inputText: string) => {
+        const filteredData = roomList.filter((el: { name: string; })=>{
+            if(inputText == ""){
+                return el;
+            }
+            else{
+                return el.name.toLowerCase().includes(inputText);
+            }
+        })
+        console.log(filteredData.slice(indexOfFirstItem,indexOfLastItem));
+        return filteredData.slice(indexOfFirstItem,indexOfLastItem);
+        
+    };
     const renderPageNumbers = pages.map(number=>{
        if(number < maxPageNumberLimit+1 && number>minPageNumberLimit){
         return(
@@ -192,8 +211,12 @@ export function JoinRoom() {
         <Container >
             <h1 className="text-center p-4"> List of Rooms</h1>
             <Col  className="justify-content-center">
-                
-                {currentItems.map(function(item,index){
+                <Form className="p-4 justify-content-center">
+                    <Form.Group>
+                        <Form.Control className="mx-auto" style={{width:'50%'}}  type="text" placeholder="Search a room by name" onChange={(e) :any => inputHandler(e)} /> 
+                    </Form.Group>
+                </Form>
+                {currentItems(inputText).map(function(item,index){
                     return(
                         
                         <div key={item.name}>

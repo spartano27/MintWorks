@@ -36,6 +36,7 @@ export type Presence = {
     cards:(Card | undefined)[];
     stars: number;
     first: boolean;
+    color: number;
     cursor: {
         x: number,
         y: number
@@ -46,6 +47,7 @@ export type PresenceRoom = {
     focusedId: string | null;
     username: string;
     check: boolean;
+    color: number;
     cursor: {
       x: number,
       y: number

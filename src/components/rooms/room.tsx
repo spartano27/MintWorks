@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {Button, Form, Modal, Row, ModalFooter,ModalBody, Alert } from "react-bootstrap";
+import {Button, Form, Modal, Row, ModalFooter,ModalBody, Alert, ModalHeader } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import {useOthers, useObject, useMyPresence} from "@liveblocks/react";
 import {Cursor} from "../cursor";
@@ -21,18 +21,20 @@ function Room(){
     const username = useSelector(user);
     const roomList = useSelector(rooms);
     const room = useSelector(thisRoom);
-    const COLORS_PRESENCE = ["255, 69, 225", "255, 64, 64", "255, 166, 3"];
+    const COLORS_PRESENCE = ["255, 69, 225", "255, 64, 64", "255, 166, 3","25, 164, 7","155, 166, 3","255, 266, 3","125, 266, 32"];
     const others = useOthers<PresenceRoom>();
     const [visible,setVisible] = useState(false);
     const [mypresence,update] = useMyPresence<PresenceRoom>();
     const [lista,setLista] = useState(roomList);
+    const [listaCheck,setListaCheck] = useState(false); 
     useEffect(()=>{
       setLista(roomList);
     },[roomList]);
-
+  
     useEffect(()=>{
       update({username:username});
       update({check:false});
+      update({color: Math.floor(Math.random()* (COLORS_PRESENCE.length-1))})
       dispatch(
         actions.enterRoom("rooms", {
           roomList: [],
@@ -76,8 +78,9 @@ function Room(){
      * @param {boolean | undefined} check - boolean | undefined
      */
 
-    const handleOnChange = (check: boolean | undefined,e: React.ChangeEvent<HTMLInputElement>) => {
-      e.preventDefault();
+    const handleOnChange = (check: boolean | undefined,e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLInputElement, MouseEvent>) => {
+
+      
       update({check: !check});
     }
 
@@ -93,22 +96,25 @@ function Room(){
           y: Math.round(event.clientY) 
         }
       })
-
-      const lista = (others.toArray().every(({presence})=>{
+      const listaC = (others.toArray().every(({presence})=>{
         if(presence == null){
           return null;
         }
         else{
+          
           return presence.check;
         }
       }));
-
       if(others.count + 1 === players){
-        if (mypresence.check && lista){
+        if (mypresence.check && listaC){
+          console.log('xd');
           setVisible(true);
         }
       }
+      
     }
+  
+    
       
     return(
 
@@ -118,22 +124,30 @@ function Room(){
             }}
             onPointerLeave={() => {
               update({cursor: null});
-            }}>
+            }} style={{borderWidth:'thin',borderColor:'#bcd0cf',border:"double",borderRadius: '125px',margin: '55px', padding:'70px', textAlign: 'center'}}>
 
               <h1 className="text-center p-4"> Lobby Room</h1>
               <h2 className="text-center p-4"> Number of players in the room: {others.count+1}/{players}  </h2>
-              <Row className="d-flex justify-content-center p-4">
-                <div>
+              <Row  className="d-flex justify-content-center p-4">
+                <div >
                   {mypresence.username}
+                  
                   <Form>
                     <Form.Check
                     className="p-4"
                     key={"first"}
                     onFocus={(e) => update({ focusedId: e.target.id })}
                     onBlur={() => update({ focusedId: null })}
-                    onChange={(e) => handleOnChange(mypresence.check,e)}
+                    
                             id = "Ready?"
-                            label = "Are you ready?"/>
+                            label = "Are you ready?"
+                    onClick={(e) => handleOnChange(mypresence.check,e)}
+                    style={{outline:'1px solid black',backgroundColor: `rgb(${
+                      COLORS_PRESENCE[mypresence.color]
+                    }`}}
+                    color = {`rgb(${
+                      COLORS_PRESENCE[mypresence.color]
+                    }`}/>
                   </Form>
                 </div>
               </Row>
@@ -157,11 +171,11 @@ function Room(){
                             onChange = {(e) => handleOnChange(presence.check,e)}
                             disabled
                             style={{outline:'1px solid black',backgroundColor: `rgb(${
-                              COLORS_PRESENCE[connectionId % COLORS_PRESENCE.length]
+                              COLORS_PRESENCE[presence.color]
                             }`}}
                             checked = {presence.check}
                             color = {`rgb(${
-                              COLORS_PRESENCE[connectionId % COLORS_PRESENCE.length]
+                              COLORS_PRESENCE[presence.color]
                             }`}
                             id = {`switch-${connectionId}`}
                             label = "Are you ready?"/>
@@ -180,7 +194,7 @@ function Room(){
                     <Cursor
                     key={`cursor-${connectionId}`}
                     color={`rgb(${
-                        COLORS_PRESENCE[connectionId % COLORS_PRESENCE.length]
+                        COLORS_PRESENCE[presence.color]
                     }`}
                     x={presence.cursor.x}
                     y={presence.cursor.y}
@@ -188,9 +202,11 @@ function Room(){
                   )
                 })}
 
-              <Modal show={visible} onHide={() => setVisible(false)} backdrop="static" centered >
+              <Modal className="Normal_modal" show={visible} onHide={() => setVisible(false)} backdrop="static" centered >
+                <ModalHeader>
+                </ModalHeader>
                 <ModalBody>
-                  <Alert className="mx-auto" variant="primary">Go to the Game! </Alert>
+                  <h4 className="mx-auto"> Go to the Game! </h4>
                 </ModalBody>
                 <ModalFooter>
                   <Button variant="primary" onClick={() => navigate(`/Game/Gl${name}`)} >

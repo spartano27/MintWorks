@@ -153,10 +153,7 @@ export function CreateRoom() {
 
               </Row>
               <Row className="p-4">
-
-              
                     <h2 className="text-start p-4" > Rules </h2>
-
                     <Form.Group style={{marginLeft:'20px'}} className="p-4">
                         <Form.Label className="p-2">Number of players</Form.Label>
                         <Form.Control onChange={(e: { target: { value: string }}) => handlePlayers(e)} required as="select" placeholder="Enter Password">
