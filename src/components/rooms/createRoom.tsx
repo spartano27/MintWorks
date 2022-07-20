@@ -33,7 +33,6 @@ export function CreateRoom() {
 
     const onSwitchAction = () => {
         setIsSwitchOn(!isSwitchOn);
-        dispatch(changeDifficult(!isSwitchOn));
         
         setRoom({...room,
             difficult: !isSwitchOn});
@@ -73,14 +72,9 @@ export function CreateRoom() {
      * @param e - { target: { value: string; }; }
      */
     const handlePlayers = (e: { target: { value: string; }; }) =>{ 
-      const ePlayers = Number(e.target.value);
       setRoom({...room,
-          players: ePlayers});
-        for(let i = 0; i< ePlayers; i++){
-          setRoom({...room,
-            users:[...room.users,""] });
-        }
-      
+          players: Number(e.target.value)});
+        
     }
     
     
@@ -104,12 +98,14 @@ export function CreateRoom() {
         
         event.stopPropagation();
       }
-      else{
+      else{ 
+          
           dispatch(addRooms(room));
           dispatch(changeRoom(room));
           navigate(`/Room/${room.name}-${room.players}`);
           
       }
+      dispatch(changeDifficult(isSwitchOn));
       setValidated(true);
     };
 

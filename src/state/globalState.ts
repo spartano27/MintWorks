@@ -1,7 +1,8 @@
 import { Card, CardTypes, Room } from "../types";
 
 interface IGlobalState {
-    difficult: boolean
+    difficult: boolean;
+    color: number;
     username: string;
     room: Room;
     roomList: Room[];
@@ -15,6 +16,7 @@ export default IGlobalState;
 export const initialState: IGlobalState = {
     difficult: false,
     username: "",
+    color: 0,
     room:{
         author: "",
         name: "",

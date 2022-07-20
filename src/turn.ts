@@ -1,13 +1,18 @@
 import { LiveList, Lson, LiveObject } from "@liveblocks/client";
-  
-const handleChangeTurn = (actualCards: LiveList<Lson>, shopCards: LiveList<Lson>,playersList: LiveList<Lson>,shuffleList: LiveList<Lson> | null,turno: LiveObject<{ firstTurn: boolean; turn: number; visible: boolean; nuevaRonda: boolean; }> | null) => {
 
-    if(shopCards == null || actualCards == null || shuffleList == null || playersList == null || turno == null
+function handleChangeTurn(actualCards: LiveList<Lson>, shopCards: LiveList<Lson>,playersList: LiveList<Lson>,shuffleList: LiveList<Lson> | null,turno: LiveObject<{ firstTurn: boolean; turn: number; visible: boolean; nuevaRonda: boolean;}> | null, keyClock:LiveObject<{key:number}> | null) {
+
+
+    
+    if(keyClock == null || shopCards == null || actualCards == null || shuffleList == null || playersList == null || turno == null
         ){
         return null;
     }
-
-    shuffleList.delete(0);
+ 
+    if(shuffleList.length > 0){
+        shuffleList.delete(0);
+    }
+    keyClock.set("key",keyClock.get("key")+1);
 
     if(shuffleList.length === 0){
         turno.set("nuevaRonda",true); 

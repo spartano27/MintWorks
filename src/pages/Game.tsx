@@ -37,7 +37,13 @@ function GamePage() {
             "builder": new LiveObject({img: players < 4 ? "builder1.png" : "builder.png",occupied: 1, type: LocationTypes.core}),
             "supplier": new LiveObject({img: players < 4 ? "supplier1.png" : "supplier.png",occupied: 1, type: LocationTypes.core}),
             "wholesaler": new LiveObject({img: "wholesaler1.png",occupied: true, type: LocationTypes.deed}),
-            "lotto": new LiveObject({img: "lotto1.png",occupied: true,type: LocationTypes.deed})
+            "lotto": new LiveObject({img: "lotto1.png",occupied: true,type: LocationTypes.deed}),
+            "crow": new LiveObject({img: "crow.png",occupied: false, type: LocationTypes.advanced}),
+            "swap": new LiveObject({img: "swap.png",occupied: false, type: LocationTypes.advanced}),
+            "temp": new LiveObject({img: "temp.png",occupied: false, type: LocationTypes.advanced}),
+            "advancedCards": new LiveList(),
+            "recycler": new LiveObject({img: "recycler.png",occupied: false,type: LocationTypes.advanced}),
+            "keyClock": new LiveObject({key:0})
             
 
         });

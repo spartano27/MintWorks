@@ -11,7 +11,7 @@ import { CardTypes, Presence } from "../../types";
 
 function Builder() {
 
-    
+    const keyClock = useObject<{key:number}>("keyClock");
     const builder = useObject("builder");
     const self = useSelf();
     const shopCards = useList("ShopCards");
@@ -129,7 +129,7 @@ function Builder() {
             builder.set("img", players < 4 ? `builder1Used${builder.get("occupied")}.png` : `builderUsed${builder.get("occupied")}.png`);
             builder.set("occupied", Number(builder.get("occupied"))+1);
             setVisible(false);
-            handleChangeTurn(actualCards,shopCards,playersList,shuffleList,turno);   
+            handleChangeTurn(actualCards,shopCards,playersList,shuffleList,turno,keyClock);   
 
         }
     }

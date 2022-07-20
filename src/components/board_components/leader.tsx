@@ -12,6 +12,7 @@ import { Presence } from "../../types";
 
 function Leader() {
 
+    const keyClock = useObject<{key:number}>("keyClock");
     const leader = useObject("leader");
     const self = useSelf();
     const [,update] = useMyPresence<Presence>();
@@ -66,7 +67,7 @@ function Leader() {
         leader.set("occupied", true);
         update({first:true});
         setVisible(false);
-        handleChangeTurn(actualCards,shopCards,playersList,shuffleList,turno);
+        handleChangeTurn(actualCards,shopCards,playersList,shuffleList,turno,keyClock);
     }
 
         return(

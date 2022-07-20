@@ -12,6 +12,7 @@ import { Card, Presence } from "../../types";
 
 function Supplier(){
 
+    const keyClock = useObject<{key:number}>("keyClock");
     const [,setValorId] = useState("0");
     const supplier = useObject("supplier");
     const self = useSelf();
@@ -158,7 +159,7 @@ function Supplier(){
             supplier.set("img", players < 4 ? `supplier1Used${supplier.get("occupied")}.png` : `supplierUsed${supplier.get("occupied")}.png`);
             supplier.set("occupied", Number(supplier.get("occupied"))+1);
             setVisible(false);
-            handleChangeTurn(actualCards,shopCards,playersList,shuffleList,turno);   
+            handleChangeTurn(actualCards,shopCards,playersList,shuffleList,turno,keyClock);   
     
         }
     }

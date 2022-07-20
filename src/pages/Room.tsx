@@ -2,7 +2,7 @@ import React from 'react';
 import Room from '../components/rooms/room';
 import {RoomProvider} from "@liveblocks/react";
 import { useParams } from 'react-router-dom';
-import { LiveObject } from '@liveblocks/client';
+import { LiveList, LiveObject } from '@liveblocks/client';
 
 /**
  * The RoomPage function returns a RoomProvider component that has an initialStorage prop that is a
@@ -16,6 +16,8 @@ function RoomPage(){
         const {name} = useParams();
         const initialStorage = () => ({
                 "logo": new LiveObject({check: false}),
+                "check": new LiveList(),
+                "visible": new LiveObject({visible:false})
         });
 
         return (

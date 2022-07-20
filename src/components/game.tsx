@@ -7,7 +7,6 @@ import {useDispatch, useSelector} from "react-redux";
 import {CountdownCircleTimer} from "react-countdown-circle-timer";
 import {Button, Col, Container, ListGroup, Modal, ModalBody, ModalFooter, Row} from "react-bootstrap";
 import {Cursor} from "./cursor";
-import handleChangeTurn from "../turn";
 import ModalHeader from "react-bootstrap/esm/ModalHeader";
 import {Card, CardTypes, Presence} from "../types";
 import {useNavigate} from "react-router-dom";
@@ -18,6 +17,8 @@ import Neighborhood from "./neighborhood";
 const user = (state:RootState) => state.username;
 const rooms = (state:RootState) => state.roomList;
 const cardsList = (state:RootState) => state.cards;
+const colorP = (state:RootState) => state.color;
+const diff = (state:RootState) => state.difficult;
 /**
  * It takes an array of objects, and returns a new array of objects, with the same objects, but in a
  * different order.
@@ -48,13 +49,14 @@ function Game(){
     const self = useSelf<Presence>();
     const [mypresence,update] = useMyPresence<Presence>();
     const [eleccion,setElegir] = useState(false);
+    const color = useSelector(colorP);
     const username = useSelector(user);
     const roomList = useSelector(rooms);
+    const difficult = useSelector(diff);
     const cards = useSelector(cardsList);
     const {name} = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
-
     useEffect(() => {
         dispatch(
           actions.enterRoom("rooms", {
@@ -69,7 +71,7 @@ function Game(){
 
     useEffect(()=>{
         
-        update({username:username,mint:3, cards:[],stars:0,first: false});
+        update({username:username,mint:3, cards:[],stars:0,first: false,color:color});
         
       }, []);
 
@@ -89,6 +91,10 @@ function Game(){
     const supplier = useObject("supplier");
     const wholesaler = useObject("wholesaler");
     const lotto = useObject("lotto");
+    const swap = useObject("swap");
+    const recycler = useObject("recycler");
+    const temp = useObject("temp");
+    const crow = useObject("crow");
 
     /* eslint-disable @typescript-eslint/no-unused-vars */
 
@@ -337,7 +343,7 @@ function Game(){
     }
 
     if(winner == null || lotto == null || wholesaler == null || actualCards == null || shopCards == null || shuffleList == null || playersList == null || turno == null || self == null || self.presence == null
-        || leader ==null || builder == null || supplier == null || producer == null){
+        || leader ==null || builder == null || supplier == null || producer == null || swap == null || crow == null || temp == null || recycler == null){
         initialiceShop();
         return null;
     }
@@ -382,6 +388,14 @@ function Game(){
 
             leader.set("img","leader.png");
             leader.set("occupied",false);
+            swap.set("img","swap.png");
+            swap.set("occupied",false);
+            recycler.set("img","recycler.png");
+            recycler.set("occupied",false);
+            temp.set("img","temp.png");
+            temp.set("occupied",false);
+            crow.set("img","crow.png");
+            crow.set("occupied",false);
             producer.set("img",players === 4 || players === 1 ? "producer.png" : "producer1.png");
             producer.set("occupied",1);
             builder.set("img", players < 4 ? "builder1.png" : "builder.png");
@@ -503,6 +517,7 @@ function Game(){
            <div>
                <h1>The game will start:</h1>
                 <CountdownCircleTimer
+                    key={"inicio"}
                     isPlaying={true}  
                     duration={1}
                     colors={'#43716c'}
@@ -530,14 +545,10 @@ function Game(){
                 <Row className="mb-8">
                     <Col className="p-2 d-flex justify-content-start">
                         <Shop players={players}/>
-                        <Board/>
+                        <Board diff = {difficult}/>
                     </Col>
-                    <Button className="justify-content-end" variant="secondary" hidden={turno.get("turn") === self.connectionId ? false : true} style={{width:'50%', height:'50px'}}
-                    onClick={()=> handleChangeTurn(actualCards,shopCards,playersList,shuffleList,turno)}>
-                        Pass 
-                    </Button> 
                 </Row>
-                <Row style={{marginTop:'50px'}} className="p-2 d-flex align-content-end" >
+                <Row style={{marginTop:'50px',position:'absolute'}} className="p-2 d-flex align-content-end" >
                     <Neighborhood id={self.connectionId} username={mypresence.username} mints={mypresence.mint} cards={mypresence.cards} stars={mypresence.stars} />
                     {others.map(({connectionId,presence}) => {
 
@@ -556,13 +567,13 @@ function Game(){
                 </Row>
             </Container>
 
-            <Modal show={turno.get("visible")} onHide={() => turno.set("visible",false)} centered onExiting={() => MintsForAll()} >
+            <Modal className="Normal_modal" show={turno.get("visible")} onHide={() => turno.set("visible",false)} centered onExiting={() => MintsForAll()} >
                 <ModalBody>
                     its {usernameTurn} turn
                 </ModalBody>
             </Modal>
 
-            <Modal show={winner.get("visible")} onHide={() => turno.set("visible",false)} backdrop="static" centered onExiting={() => ExitGame()} >
+            <Modal className="Normal_modal" show={winner.get("visible")} onHide={() => turno.set("visible",false)} backdrop="static" centered onExiting={() => ExitGame()} >
                 <ModalBody>
                     {winner.get("username")} Wins !!! 
                 </ModalBody>
@@ -579,15 +590,15 @@ function Game(){
                             <Cursor
                             key={`cursor-${connectionId}`}
                             color={`rgb(${
-                                COLORS_PRESENCE[connectionId % COLORS_PRESENCE.length]
-                            }`}
+                                COLORS_PRESENCE[presence.color]
+                              }`}
                             x={presence.cursor.x}
                             y={presence.cursor.y}
                             name={presence.username}/>
                         )
             })}
 
-            <Modal backdrop="static" size="lg" show={eleccion} onHide={() => setElegir(false)} centered >
+            <Modal className="Normal_modal" backdrop="static" size="lg" show={eleccion} onHide={() => setElegir(false)} centered >
                 <ModalHeader> 
                     Co-Op Card
                 </ModalHeader>

@@ -43,10 +43,13 @@ const slice = createSlice({
     changeDifficult: (state,action) => {
       state.difficult = action.payload;
     },
+    changeColor: (state,action) => {
+      state.color = action.payload;
+    },
   },
 });
 
-export const {addRooms,removeRoom,modifyRoom,changeUsername,changeRoom,changeDifficult} = slice.actions;
+export const {addRooms,removeRoom,modifyRoom,changeUsername,changeRoom,changeDifficult,changeColor} = slice.actions;
 
 export function makeStore() {
   return configureStore({

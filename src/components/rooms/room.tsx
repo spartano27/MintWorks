@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import {Button, Form, Modal, Row, ModalFooter,ModalBody, Alert, ModalHeader } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
-import {useOthers, useObject, useMyPresence} from "@liveblocks/react";
+import {useOthers, useObject, useMyPresence, useList} from "@liveblocks/react";
 import {Cursor} from "../cursor";
 import {useDispatch, useSelector} from "react-redux";
 import {Logo, PresenceRoom, Room as RoomType} from "../../types";
-import { changeRoom, modifyRoom, RootState } from "../../store";
+import { changeColor, changeRoom, modifyRoom, RootState } from "../../store";
 import { actions } from "@liveblocks/redux";
 
 const user = (state:RootState) => state.username;
@@ -23,18 +23,20 @@ function Room(){
     const room = useSelector(thisRoom);
     const COLORS_PRESENCE = ["255, 69, 225", "255, 64, 64", "255, 166, 3","25, 164, 7","155, 166, 3","255, 266, 3","125, 266, 32"];
     const others = useOthers<PresenceRoom>();
-    const [visible,setVisible] = useState(false);
+    const visible = useObject("visible");
     const [mypresence,update] = useMyPresence<PresenceRoom>();
     const [lista,setLista] = useState(roomList);
-    const [listaCheck,setListaCheck] = useState(false); 
+    const [disable,setDisable] = useState(false);
+
     useEffect(()=>{
       setLista(roomList);
     },[roomList]);
-  
+
     useEffect(()=>{
       update({username:username});
       update({check:false});
       update({color: Math.floor(Math.random()* (COLORS_PRESENCE.length-1))})
+     
       dispatch(
         actions.enterRoom("rooms", {
           roomList: [],
@@ -42,13 +44,13 @@ function Room(){
         })
       );
       return () => {
-        lista.forEach((r,index) => {
+        roomList.forEach((r,index) => {
           if(r.name == room.name){
               r.users.forEach((user,i)=>{
                 if(username == user){
-                  const newRoomUsers = r.users.slice();
+                  const newRoomUsers = room.users.slice();
                   newRoomUsers.splice(i,1);
-                  const  newRoom = {author: room.author,publico: room.publico, password: room.password,difficult: room.difficult,name: room.name,users:[...newRoomUsers,""],players:room.players}
+                  const newRoom = {author: room.author,publico: room.publico, password: room.password,difficult: room.difficult,name: room.name,users:newRoomUsers,players:room.players}
                   dispatch(modifyRoom([index,newRoom]));
                   dispatch(changeRoom(newRoom));
                 }
@@ -61,8 +63,8 @@ function Room(){
     }, [dispatch]);
     
     const data = useObject<Logo>("logo");
-  
-    if (!data) {
+    const checkList = useList("check");
+    if (!data || checkList == null || visible == null) {
       return (
         <div>
           <div>
@@ -78,10 +80,18 @@ function Room(){
      * @param {boolean | undefined} check - boolean | undefined
      */
 
-    const handleOnChange = (check: boolean | undefined,e: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLInputElement, MouseEvent>) => {
-
-      
+    const handleOnChange = (check: boolean) => {
+      setDisable(true);
+      checkList.push(!check);
       update({check: !check});
+      
+      if(others.count+1 === players){
+        if(others.count +1 === checkList.length){
+          if(checkList.every((e)=> e)){
+             visible.set("visible",true);
+          }
+        }
+      }
     }
 
    /**
@@ -96,24 +106,12 @@ function Room(){
           y: Math.round(event.clientY) 
         }
       })
-      const listaC = (others.toArray().every(({presence})=>{
-        if(presence == null){
-          return null;
-        }
-        else{
-          
-          return presence.check;
-        }
-      }));
-      if(others.count + 1 === players){
-        if (mypresence.check && listaC){
-          console.log('xd');
-          setVisible(true);
-        }
-      }
-      
     }
   
+    const handleOnClick = () => {
+      dispatch(changeColor(mypresence.color));
+      navigate(`/Game/Gl${name}`);
+    }
     
       
     return(
@@ -134,6 +132,7 @@ function Room(){
                   
                   <Form>
                     <Form.Check
+                    disabled={disable}
                     className="p-4"
                     key={"first"}
                     onFocus={(e) => update({ focusedId: e.target.id })}
@@ -141,7 +140,7 @@ function Room(){
                     
                             id = "Ready?"
                             label = "Are you ready?"
-                    onClick={(e) => handleOnChange(mypresence.check,e)}
+                    onClick={(e) => handleOnChange(mypresence.check)}
                     style={{outline:'1px solid black',backgroundColor: `rgb(${
                       COLORS_PRESENCE[mypresence.color]
                     }`}}
@@ -168,7 +167,7 @@ function Room(){
                             key={`switch-${connectionId}`}
                             onFocus={(e) => update({ focusedId: e.target.id })}
                             onBlur={() => update({ focusedId: null })}
-                            onChange = {(e) => handleOnChange(presence.check,e)}
+                            onChange = {(e) => handleOnChange(presence.check)}
                             disabled
                             style={{outline:'1px solid black',backgroundColor: `rgb(${
                               COLORS_PRESENCE[presence.color]
@@ -202,14 +201,14 @@ function Room(){
                   )
                 })}
 
-              <Modal className="Normal_modal" show={visible} onHide={() => setVisible(false)} backdrop="static" centered >
+              <Modal className="Normal_modal" show={(visible.get("visible")) == true ? true : false} onHide={() =>  visible.set("visible",false)} backdrop="static" centered >
                 <ModalHeader>
                 </ModalHeader>
                 <ModalBody>
                   <h4 className="mx-auto"> Go to the Game! </h4>
                 </ModalBody>
                 <ModalFooter>
-                  <Button variant="primary" onClick={() => navigate(`/Game/Gl${name}`)} >
+                  <Button variant="primary" onClick={() => handleOnClick()} >
                     Play! 
                   </Button>
                 </ModalFooter>

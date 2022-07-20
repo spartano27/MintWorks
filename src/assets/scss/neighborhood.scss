@@ -1,15 +1,15 @@
 .square {
-    height: 200px;
-    width: 270px;
-    margin: 5px;
-    background-color: #bcd0cf;
-    border-color: blueviolet;
-  }
-  .squareSelected {
-    height: 200px;
-    width: 270px;
-    margin: 5px;
-    border-color: blueviolet;
-    border-width: 5px;
-    border-style: solid;
-    background-color: #bcd0cf; }
+  height: 200px;
+  width: 270px;
+  margin: 5px;
+  background-color: #bcd0cf;
+  border-color: blueviolet; }
+
+.squareSelected {
+  height: 200px;
+  width: 270px;
+  margin: 5px;
+  border-color: #e9debb;
+  border-width: 5px;
+  border-style: solid;
+  background-color: #bcd0cf; }

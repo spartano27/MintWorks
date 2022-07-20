@@ -10,7 +10,7 @@ import { Presence } from "../../types";
 
 function Producer() {
     
-    
+    const keyClock = useObject<{key:number}>("keyClock");
     const producer = useObject("producer");
     const self = useSelf();
     const players = Number(String(name).split("-")[1]);
@@ -81,7 +81,7 @@ function Producer() {
         producer.set("occupied", Number(producer.get("occupied"))+1);
         update({mint:Number(mypresence.mint)+1});
         setVisible(false);
-        handleChangeTurn(actualCards,shopCards,playersList,shuffleList,turno);
+        handleChangeTurn(actualCards,shopCards,playersList,shuffleList,turno,keyClock);
     }
 
     return(

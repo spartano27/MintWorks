@@ -1,20 +1,24 @@
-import { useMyPresence, useObject, useSelf } from "@liveblocks/react";
+import { useList, useMyPresence, useObject, useSelf } from "@liveblocks/react";
 import React from "react";
-import {ListGroup, Row} from "react-bootstrap";
+import {Button, ListGroup, Row} from "react-bootstrap";
 import '../assets/css/neighborhood.css';
 import Clock from "../components/clock";
+import handleChangeTurn from "../turn";
 import { Card, Presence } from "../types";
 import Mint from "./mint";
 import Stars from "./stars";
 
 /* A function that returns a div with a list of cards. */
 function Neighborhood(valor: { username: undefined | string; id: number; mints: number; stars: number; cards: (Card | undefined)[]; }){
-    
-    const turno = useObject("turno");
+    const keyClock = useObject<{key:number}>("keyClock");
+    const turno = useObject<{ firstTurn: boolean; turn: number; visible: boolean; nuevaRonda: boolean; }>("turno");
     const self = useSelf();
     const [mypresence,] = useMyPresence<Presence>();
-    
-    if(mypresence == null || self == null || turno == null){
+    const playersList = useList("listPLayer");
+    const shuffleList = useList("listShuffle");
+    const shopCards = useList("ShopCards");
+    const actualCards = useList("ActualCards");
+    if(mypresence == null || self == null || turno == null || actualCards == null || shopCards == null || shuffleList == null || playersList == null){
         return null
     }
 
@@ -23,42 +27,41 @@ function Neighborhood(valor: { username: undefined | string; id: number; mints: 
      * @returns A function.
      */
     const user = () => {
-        if(valor.username === undefined){
-            return ""
+        if(valor.username === ""){
+            return "Undefined"
         }
         else{
             return String(valor.username);
         }
     }
-    
+
     return(
 
+        <div>
+            <h4 className="text-center"> {user()} </h4>
         <div className={turno.get("turn") === valor.id ? "squareSelected": "square"}>
             <Row className="">
                 <div className="pl-4 pt-2">
-                    <Clock/>
+                    <Clock id = {valor.id}/>
                 </div>
 
-                <div className="pt-2 pl-2">
+                <div className="pt-2 pl-4">
                     <Mint  mints = {valor.mints}/>
                 </div>
 
-                <div className="pt-2 pl-2">
+                <div className="pt-3 pl-4">
                     <Stars stars = {valor.stars}/>
                 </div>
                 
-                <div className="pl-4 pt-4">
-                    {user()}
-                </div>
             </Row>
-            <ListGroup key={"neighborhood"} horizontal>
+            <ListGroup style={{overflowX:'auto', overflowY:'hidden'}} className="pt-4" key={"neighborhood"} horizontal>
             
                 {valor.cards.map((card)=>{
                         if(card == null){
                             return null;
                         }
                         return(
-                            <ListGroup.Item key={card.name} style={{width:'50px',height:'100px', padding: '0px'}}  variant="secondary">
+                            <ListGroup.Item key={card.name} style={{width:'50px',height:'100px', padding: '0px',marginLeft:'10px'}}  variant="secondary">
                                 
                                 <img alt="CardsNeigh" key={`neigh-${card.id}`} src = {require(`../images/cards_images/${card.active ? card.name.toUpperCase() : "REVERSO"}.PNG`)} style={{width:'50px',height:'100px', padding: '0px'}}/>
                             </ListGroup.Item>
@@ -66,9 +69,17 @@ function Neighborhood(valor: { username: undefined | string; id: number; mints: 
                         
                         
                 })}
+
+            
                 
             </ListGroup>
-        </div>  
+        </div>
+        <Button className="mx-auto d-block" variant="secondary" hidden={turno.get("turn") === valor.id ? false : true} 
+        style={{width:'50%', height:'50px'}}
+                    onClick={()=> handleChangeTurn(actualCards,shopCards,playersList,shuffleList,turno,keyClock)}>
+                    Pass 
+            </Button>   
+        </div>
     );
 }
 

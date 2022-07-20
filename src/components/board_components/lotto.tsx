@@ -13,6 +13,7 @@ import { Card, Presence } from "../../types";
 
 function Lotto() {
    
+    const keyClock = useObject<{key:number}>("keyClock");
     const lotto = useObject("lotto");
     const self = useSelf();
     const [mypresence,update] = useMyPresence<Presence>();
@@ -83,7 +84,7 @@ function Lotto() {
                         update({cards:totalCards});
                         update({mint:Number(mypresence.mint)-3});
                        
-                        handleChangeTurn(actualCards,shopCards,playersList,shuffleList,turno);
+                        handleChangeTurn(actualCards,shopCards,playersList,shuffleList,turno,keyClock);
                         
                         setVisible(false);
                         setVisible2(true);
@@ -106,7 +107,7 @@ function Lotto() {
                         shopCards.delete(2);
                         update({cards:totalCards});
                         update({mint:Number(mypresence.mint)-3});
-                        handleChangeTurn(actualCards,shopCards,playersList,shuffleList,turno);
+                        handleChangeTurn(actualCards,shopCards,playersList,shuffleList,turno,keyClock);
                         setVisible(false);
                         setVisible2(true);
                         
@@ -128,7 +129,7 @@ function Lotto() {
                         shopCards.delete(1);
                         update({cards:totalCards});
                         update({mint:Number(mypresence.mint)-3});
-                        handleChangeTurn(actualCards,shopCards,playersList,shuffleList,turno);
+                        handleChangeTurn(actualCards,shopCards,playersList,shuffleList,turno,keyClock);
                         setVisible(false);
                         setVisible2(true);
                         
@@ -150,7 +151,7 @@ function Lotto() {
                         shopCards.delete(0);
                         update({cards:totalCards});
                         update({mint:Number(mypresence.mint)-3});
-                        handleChangeTurn(actualCards,shopCards,playersList,shuffleList,turno);
+                        handleChangeTurn(actualCards,shopCards,playersList,shuffleList,turno,keyClock);
                         setVisible(false);
                         setVisible2(true);
                         

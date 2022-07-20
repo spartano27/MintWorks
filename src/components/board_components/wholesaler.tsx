@@ -12,7 +12,8 @@ import { Presence } from "../../types";
  */
 
 function Wholesaler() {
-    
+
+    const keyClock = useObject<{key:number}>("keyClock");    
     const wholesaler = useObject("wholesaler");
     const self = useSelf();
     const [mypresence,update] = useMyPresence<Presence>();
@@ -64,7 +65,7 @@ function Wholesaler() {
         wholesaler.set("occupied", true);
         update({mint:Number(mypresence.mint)+1});
         setVisible(false);
-        handleChangeTurn(actualCards,shopCards,playersList,shuffleList,turno);
+        handleChangeTurn(actualCards,shopCards,playersList,shuffleList,turno,keyClock);
     }
 
     return(

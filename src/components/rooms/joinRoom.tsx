@@ -5,7 +5,7 @@ import { Button, Card, Col, Container,Modal,ModalBody,ModalFooter,ModalTitle, Fo
 import ModalHeader from "react-bootstrap/esm/ModalHeader";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import {changeRoom, modifyRoom, RootState } from "../../store";
+import {changeDifficult, changeRoom, modifyRoom, RootState } from "../../store";
 import GButton from "../gButton";
 
 const user = (state:RootState) => state.username;
@@ -46,16 +46,11 @@ export function JoinRoom() {
      */
 
     const handleClick = (room: {author:string, password:string, publico: boolean,difficult:boolean, name: string, users: string[], players:number }, index: number) => {
-        let newRoomUsers : string[] = [];
-        room.users.forEach((user,i)=>{
-            if(user === ""){    
-                newRoomUsers = room.users.slice();
-                newRoomUsers.splice(i,1);
-            }
-        });
-        if(room.users.includes("")){
+       
+        if(room.users.length < room.players){
             if(room.publico){
-                const newRoom = {author: room.author,publico: room.publico, password: room.password,difficult: room.difficult,name: room.name,users:[...newRoomUsers,username],players:room.players}
+                const newRoom = {author: room.author,publico: room.publico, password: room.password,difficult: room.difficult,name: room.name,users:[...room.users,username],players:room.players}
+                dispatch(changeDifficult(room.difficult));
                 dispatch(modifyRoom([index,newRoom]));
                 dispatch(changeRoom(newRoom));
                 navigate(`/Room/${room.name}-${room.players}`);
@@ -80,16 +75,11 @@ export function JoinRoom() {
      * @param room - { name: string,users: string[], players:number }
      */
     const handleSubmit = (room: {author:string, password:string, publico: boolean,difficult:boolean, name: string, users: string[], players:number }, index: number) => {
-        let newRoomUsers : string[] = [];
-        room.users.forEach((user,i)=>{
-            if(user === ""){    
-                newRoomUsers = room.users.slice();
-                newRoomUsers.splice(i,1);
-            }
-        });
-        if(room.users.includes("")){
+       
+        if(room.users.length < room.players){
             if(EsValido){
-                const newRoom = {author: room.author,publico: room.publico, password: room.password,difficult: room.difficult,name: room.name,users:[...newRoomUsers,username],players:room.players}
+                const newRoom = {author: room.author,publico: room.publico, password: room.password,difficult: room.difficult,name: room.name,users:[...room.users,username],players:room.players}
+                dispatch(changeDifficult(room.difficult));
                 dispatch(modifyRoom([index,newRoom]));
                 dispatch(changeRoom(newRoom));
                 navigate(`/Room/${room.name}-${room.players}`);
