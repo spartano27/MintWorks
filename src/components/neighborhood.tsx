@@ -34,12 +34,13 @@ function Neighborhood(valor: { username: undefined | string; id: number; mints: 
             return String(valor.username);
         }
     }
-
+    console.log(turno.get("turn") === valor.id ? false : true);
     return(
 
         <div>
-            <h4 className="text-center"> {user()} </h4>
+            
         <div className={turno.get("turn") === valor.id ? "squareSelected": "square"}>
+            <h4 className="text-center"> {user()} </h4>
             <Row className="">
                 <div className="pl-4 pt-2">
                     <Clock id = {valor.id}/>
@@ -74,8 +75,8 @@ function Neighborhood(valor: { username: undefined | string; id: number; mints: 
                 
             </ListGroup>
         </div>
-        <Button className="mx-auto d-block" variant="secondary" hidden={turno.get("turn") === valor.id ? false : true} 
-        style={{width:'50%', height:'50px'}}
+        <Button type="button" className="mx-auto d-block" variant="secondary" 
+        style={{width:'50%', height:'50px',visibility: turno.get("turn") === valor.id ? 'visible' : 'hidden'}}
                     onClick={()=> handleChangeTurn(actualCards,shopCards,playersList,shuffleList,turno,keyClock)}>
                     Pass 
             </Button>   

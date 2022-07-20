@@ -90,6 +90,8 @@ function Game(){
     const builder = useObject("builder");
     const supplier = useObject("supplier");
     const wholesaler = useObject("wholesaler");
+    const listaSortDifficult = useList("advancedCards");
+    const listaDifficult = ["crow","temp","recycler","swap"];
     const lotto = useObject("lotto");
     const swap = useObject("swap");
     const recycler = useObject("recycler");
@@ -341,10 +343,23 @@ function Game(){
             }
         });
     }
+    const initialiceDiff = () => {
+
+        Shuffle(listaDifficult).forEach((e)=>{
+            
+            if(listaSortDifficult == null){
+                return null;
+            }
+            if(listaSortDifficult.length < 2){
+                listaSortDifficult.push(e);
+            }
+        });
+    }
 
     if(winner == null || lotto == null || wholesaler == null || actualCards == null || shopCards == null || shuffleList == null || playersList == null || turno == null || self == null || self.presence == null
-        || leader ==null || builder == null || supplier == null || producer == null || swap == null || crow == null || temp == null || recycler == null){
+        || leader ==null || builder == null || supplier == null || producer == null || swap == null || crow == null || temp == null || recycler == null || listaSortDifficult == null){
         initialiceShop();
+        initialiceDiff();
         return null;
     }
     
@@ -548,7 +563,7 @@ function Game(){
                         <Board diff = {difficult}/>
                     </Col>
                 </Row>
-                <Row style={{marginTop:'50px',position:'absolute'}} className="p-2 d-flex align-content-end" >
+                <Row style={{marginTop:'50px'}} className="p-2 d-flex align-content-end" >
                     <Neighborhood id={self.connectionId} username={mypresence.username} mints={mypresence.mint} cards={mypresence.cards} stars={mypresence.stars} />
                     {others.map(({connectionId,presence}) => {
 
@@ -633,5 +648,4 @@ function Game(){
 }
 
 export default Game;
-
 

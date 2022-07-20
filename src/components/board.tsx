@@ -11,26 +11,57 @@ import Crow from './board_components/crow';
 import Temp from './board_components/temp';
 import Recycler from './board_components/recycler';
 import Swap from './board_components/swap';
+import { useList } from '@liveblocks/react';
+import { ids } from 'webpack';
 
 /**
  * The Board function returns a Container component that contains three rows, each of which contains
  * two components.
  * @returns A React component.
  */
-
+ 
 function Board(valor:{diff:boolean}){
+    const listaSortDifficult = useList("advancedCards");
+    let firstAdvanced;
+    let SecondAdvanced;
+    if(listaSortDifficult == null){
+        return null;
+    }
 
-    const Crow = () => {
-        return (
-            <Crow/>
-        );
-    } 
+    if(listaSortDifficult.get(0) == "crow"){
+        firstAdvanced = <Crow />
+    }
+    if(listaSortDifficult.get(0) == "swap"){
+        firstAdvanced = <Swap />
+    }
+    if(listaSortDifficult.get(0) == "temp"){
+        firstAdvanced = <Temp />
+    }
+    if(listaSortDifficult.get(0) == "recycler"){
+        firstAdvanced = <Recycler />
+    }
+    
+    if(listaSortDifficult.get(1) == "crow"){
+        SecondAdvanced = <Crow />
+    }
+    if(listaSortDifficult.get(1) == "swap"){
+        SecondAdvanced = <Swap />
+    }
+    if(listaSortDifficult.get(1) == "temp"){
+        SecondAdvanced = <Temp />
+    }
+    if(listaSortDifficult.get(1) == "recycler"){
+        SecondAdvanced = <Recycler />
+    }
+
+
+
 
     if(valor.diff){
         
         return (
         
-            <Container >
+            <Container style={{marginTop:'50px',marginLeft:'50px'}}>
                 <Row className='justify-content-start'>
                     <Leader/>
                     <Producer/>                
@@ -46,17 +77,16 @@ function Board(valor:{diff:boolean}){
                     <Lotto />
                 </Row>
                 <Row className='justify-content-start'>
-                    <Crow />
-                    <Temp />
+                    {firstAdvanced}
+                    {SecondAdvanced}
                 </Row>
-            </Container>
-                    
+            </Container>       
         );
     }else{
         
         return (
         
-            <Container >
+            <Container style={{marginTop:'50px',marginLeft:'50px'}}>
                 <Row className='justify-content-start'>
                     <Leader/>
                     <Producer/>                
@@ -71,11 +101,7 @@ function Board(valor:{diff:boolean}){
                     <Wholesaler />
                     <Lotto />
                 </Row>
-
-                <Row className='justify-content-start'>
-                    <Crow />
-                    <Recycler />
-                </Row>
+                
             </Container>
                     
         );

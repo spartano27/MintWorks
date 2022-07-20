@@ -34,7 +34,7 @@ function Recycler() {
 
     const handleClick = () => {
         
-        recycler.set("img", "crowUsed");
+        recycler.set("img", "RecyclerUsed");
         recycler.set("occupied", true);
         update({mint:Number(mypresence.mint)+1});
         setVisible(false);
