@@ -168,7 +168,7 @@ function Supplier(){
         
         <div>
             <img alt="Supplier" style = {{width:210}} src = {require(`../../images/${supplier.get("img")}`)} onDragStart={(e) => DragHandler(e)} onClick={()=> handleClickSupplier() } />
-            <Modal size="lg" show={visible} onHide={() => setVisible(false)} centered >
+            <Modal className="Normal_modal" size="lg" show={visible} onHide={() => setVisible(false)} centered >
                 <ModalHeader> 
                     Use Supplier card?
                     <Button onClick={() => setVisible(false)}> Close </Button>

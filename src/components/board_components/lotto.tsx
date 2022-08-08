@@ -168,7 +168,7 @@ function Lotto() {
         
         <div>
             <img alt="Lotto" style = {{width:210}} src = {require(`../../images/${lotto.get("img")}`)} onDragStart={(e) => DragHandler(e)} onClick={()=> handleClickLotto() } />
-            <Modal  show={visible} onHide={() => setVisible(false)} centered >
+            <Modal className="Normal_modal"  show={visible} onHide={() => setVisible(false)} centered >
                 <ModalHeader> 
                     Use lotto card?
                 </ModalHeader>
@@ -180,13 +180,13 @@ function Lotto() {
                     <Button onClick={() => setVisible(false)}> No </Button>
                 </ModalFooter>
             </Modal>
-            <Modal  show={visible1} onHide={() => setVisible1(false)} centered >
+            <Modal   show={visible1} onHide={() => setVisible1(false)} centered >
                 <ModalHeader> 
                     There isnt enough Plan on the Plan Deck.
                     <Button onClick={() => setVisible1(false)}> Ok </Button>
                 </ModalHeader>
             </Modal>
-            <Modal  show={visible2} onHide={() => setVisible2(false)} centered >
+            <Modal className="Normal_modal"  show={visible2} onHide={() => setVisible2(false)} centered >
                 <ModalHeader> 
                     You get:
                     <Button onClick={() => setVisible2(false)}> Ok </Button>

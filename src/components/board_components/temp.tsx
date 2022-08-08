@@ -45,7 +45,7 @@ function Temp() {
 
             <div >
                 <img alt="Temp" style = {{width:210}} src = {require(`../../images/${temp.get("img")}`)} onDragStart={(e) => DragHandler(e)} onClick={()=> handleClickTemp() } />
-                <Modal show={visible} onHide={() => setVisible(false)} centered >
+                <Modal className="Normal_modal" show={visible} onHide={() => setVisible(false)} centered >
                     <ModalHeader> 
                         Use Producer card?
                     </ModalHeader>

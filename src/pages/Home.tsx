@@ -2,6 +2,7 @@ import { RoomProvider } from '@liveblocks/react';
 import React from 'react';
 import Carrusel from '../components/carrusel';
 import PlayButton from '../components/playButton';
+import Footer from '../footer';
 
 /**
  * It's a function that returns a RoomProvider component, which is a component that has a child
@@ -20,6 +21,7 @@ function HomeP(){
           <div className='mt-5'>
             <Carrusel/> 
           </div>
+          <Footer/>
       </RoomProvider>
     );
 }

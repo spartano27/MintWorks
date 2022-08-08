@@ -138,7 +138,7 @@ function Builder() {
 
         <div>
             <img alt="builder" style = {{width:210}} src = {require(`../../images/${builder.get("img")}`)} onDragStart={(e) => DragHandler(e)} onClick={()=> handleClickBuilder() } />
-            <Modal size="lg" show={visible} onHide={() => setVisible(false)} centered >
+            <Modal className="Normal_modal" size="lg" show={visible} onHide={() => setVisible(false)} centered >
                 <ModalHeader> 
                     Use Buldier card?
                     <Button onClick={() => setVisible(false)}> Close </Button>

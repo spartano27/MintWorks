@@ -74,7 +74,7 @@ function Leader() {
 
             <div>
                 <img alt="Leader" style = {{width:210}} src = {require(`../../images/${leader.get("img")}`)} onDragStart={(e) => DragHandler(e)} onClick={()=> handleClickLeader() } />
-                <Modal  show={visible} onHide={() => setVisible(false)} centered >
+                <Modal className="Normal_modal"  show={visible} onHide={() => setVisible(false)} centered >
                     <ModalHeader> 
                         Use leaderShip card?
                     </ModalHeader>

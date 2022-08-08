@@ -1,5 +1,5 @@
 import React from 'react';
-import { useObject, useSelf, useMyPresence, useList } from "@liveblocks/react";
+import { useObject, useSelf, useMyPresence, useList, useOthers } from "@liveblocks/react";
 import { useState } from "react";
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from "react-bootstrap";
 import handleChangeTurn from "../../turn";
@@ -11,6 +11,7 @@ function Crow() {
     const keyClock = useObject<{key:number}>("keyClock");
     const crow = useObject("crow");
     const self = useSelf();
+    const others = useOthers();
     const players = Number(String(name).split("-")[1]);
     const [mypresence,update] = useMyPresence<Presence>();
     const [visible,setVisible] = useState(false);
@@ -29,28 +30,48 @@ function Crow() {
     }
 
     const handleClickCrow = () => {
+        if(turno.get("turn") === self.connectionId ){
+
+            if(crow.get("occupied")){
+                return;
+            }
+            else{
+                setVisible(true)
+            }
+        } 
         
     }
 
     const handleClick = () => {
+
+        if(mypresence.mint >= 1){
+
+            crow.set("img", "crowUsed");
+            crow.set("occupied", true);
+            update({mint:Number(mypresence.mint)+2});
+            others.map(({presence})=>{
+                if(presence == null){
+                    return null;
+                }
+                presence.mint = Number(presence.mint) + 1
+            })
+            setVisible(false);
+            handleChangeTurn(actualCards,shopCards,playersList,shuffleList,turno,keyClock);
+        }   
         
-        crow.set("img", "crowUsed");
-        crow.set("occupied", true);
-        update({mint:Number(mypresence.mint)+1});
-        setVisible(false);
-        handleChangeTurn(actualCards,shopCards,playersList,shuffleList,turno,keyClock);
+        
     }
 
         return(
 
             <div >
                 <img alt="Crow" style = {{width:210}} src = {require(`../../images/${crow.get("img")}`)} onDragStart={(e) => DragHandler(e)} onClick={()=> handleClickCrow() } />
-                <Modal show={visible} onHide={() => setVisible(false)} centered >
+                <Modal className="Normal_modal" show={visible} onHide={() => setVisible(false)} centered >
                     <ModalHeader> 
-                        Use Producer card?
+                        Use Crowdfunder card?
                     </ModalHeader>
                     <ModalBody>
-                        You will get 2 mints.
+                        You will get 3 mints and each players will get 1 mint.
                     </ModalBody>
                     <ModalFooter>
                         <Button onClick={()=>handleClick()}> Yes</Button>

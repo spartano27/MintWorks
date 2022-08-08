@@ -34,7 +34,7 @@ function Neighborhood(valor: { username: undefined | string; id: number; mints: 
             return String(valor.username);
         }
     }
-    console.log(turno.get("turn") === valor.id ? false : true);
+
     return(
 
         <div>

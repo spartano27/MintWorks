@@ -88,7 +88,7 @@ function Producer() {
 
         <div>
         <img alt="Producer" style = {{width:210}} src = {require(`../../images/${producer.get("img")}`)} onDragStart={(e) => DragHandler(e)} onClick={()=> handleClickProducer() } />
-            <Modal show={visible} onHide={() => setVisible(false)} centered >
+            <Modal className="Normal_modal" show={visible} onHide={() => setVisible(false)} centered >
                 <ModalHeader> 
                     Use Producer card?
                 </ModalHeader>

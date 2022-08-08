@@ -1,5 +1,6 @@
 import React from 'react';
 import GButton from '../components/gButton';
+import Footer from '../footer';
 
 /**
  * It returns a div that contains an image and a div that contains three buttons.
@@ -17,6 +18,7 @@ function Lobby(){
                 <GButton title='Search a Game' link='/Buscar'/> 
                 <GButton title='Create a Game' link='/Crear'/> 
             </div>
+            <Footer/>
         </div>
     );
 }
