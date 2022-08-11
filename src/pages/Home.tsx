@@ -15,13 +15,14 @@ function HomeP(){
     return (
       <RoomProvider 
       id={'home'}>
-
-          <img alt='LogoHome' className="d-block mx-auto w-50" src={require("../images/logoMint.png")}/>
-          <PlayButton />
-          <div className='mt-5'>
-            <Carrusel/> 
+          <div style={{overflow:'hidden'}}>
+            <img alt='LogoHome' className="d-block mx-auto w-50" src={require("../images/logoMint.png")}/>
+            <PlayButton />
+            <div className='mt-5'>
+              <Carrusel/> 
+            </div>
+            <Footer/>
           </div>
-          <Footer/>
       </RoomProvider>
     );
 }

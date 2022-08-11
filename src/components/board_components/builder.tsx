@@ -19,6 +19,7 @@ function Builder() {
     const players = Number(String(name).split("-")[1]);
     const [mypresence,update] = useMyPresence<Presence>();
     const [visible,setVisible] = useState(false);
+    const [visible1,setVisible1] = useState(false);
     const playersList = useList("listPLayer");
     const wholesaler = useObject("wholesaler");
     const lotto = useObject("lotto");
@@ -130,14 +131,16 @@ function Builder() {
             builder.set("occupied", Number(builder.get("occupied"))+1);
             setVisible(false);
             handleChangeTurn(actualCards,shopCards,playersList,shuffleList,turno,keyClock);   
-
+            
+        }else{
+            setVisible1(true);
         }
     }
 
     return(
 
         <div>
-            <img alt="builder" style = {{width:210}} src = {require(`../../images/${builder.get("img")}`)} onDragStart={(e) => DragHandler(e)} onClick={()=> handleClickBuilder() } />
+            <img alt="builder" style = {(Number(builder.get("occupied")) > 2) || (players == 4 && Number(builder.get("occupied")) > 3) ? {width:210} : {width:210,borderColor:'#eaa856',borderWidth:'5px',borderStyle:'solid'}} src = {require(`../../images/${builder.get("img")}`)} onDragStart={(e) => DragHandler(e)} onClick={()=> handleClickBuilder() } />
             <Modal className="Normal_modal" size="lg" show={visible} onHide={() => setVisible(false)} centered >
                 <ModalHeader> 
                     Use Buldier card?
@@ -151,6 +154,12 @@ function Builder() {
                             {mypresence.cards.map((card)=> {
                                 if(card == null){
                                     return null;
+                                }
+                                
+                                if(mypresence.cards.length === 0){
+                                    return (
+                                        <a> You dont have any card to build</a>
+                                    )
                                 }
                                 if(!card.active){
 
@@ -180,6 +189,13 @@ function Builder() {
                         </ListGroup>
                     </div>
                 </ModalBody>
+            </Modal>
+
+            <Modal className="Normal_modal" show={visible1} onHide={() => setVisible1(false)} centered >
+                <ModalHeader> 
+                    You dont have enough mints.
+                    <Button onClick={() => setVisible1(false)}> Ok </Button>
+                </ModalHeader>
             </Modal>
         </div>
 

@@ -11,7 +11,7 @@ function Lobby(){
 
     return(
 
-        <div>
+        <div style={{overflow:'hidden'}}>
             <img alt='LogoLobby' className="d-block mx-auto w-50" src={require("../images/logoMint.png")}/>
             <div className='container'>
                 <GButton title='Solo Game' link='/IndividualGame'/> 

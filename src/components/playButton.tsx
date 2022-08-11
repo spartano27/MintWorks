@@ -63,7 +63,7 @@ function PlayButton() {
                         <Form.Control  type="text"  name="username" placeholder="Enter Username" onChange={e => PushName(e)}/> 
                         <Link to={link.value} >  
                             <Button type="submit" style={{background:'transparent', border:0}}>
-                                <img alt='MintPlay' style={{width:'80px'}} src={require("../images/MENTA-BOTÓN.PNG")}/> 
+                                <img alt='MintPlay' style={{width:'80px',padding:'0.5rem', margin:'0'}} src={require("../images/MENTA-BOTÓN.PNG")}/> 
                             </Button>
                         </Link>
                     </Form.Group>

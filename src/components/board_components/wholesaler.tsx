@@ -71,7 +71,7 @@ function Wholesaler() {
     return(
         
         <div>
-            <img alt="Wholesaler" style = {{width:210}} src = {require(`../../images/${wholesaler.get("img")}`)} onDragStart={(e) => DragHandler(e)} onClick={()=> handleClickWholesoler() } />
+            <img alt="Wholesaler" style = {wholesaler.get("occupied") ? {width:210} : {width:210,borderColor:'#eaa856',borderWidth:'5px',borderStyle:'solid'}} src = {require(`../../images/${wholesaler.get("img")}`)} onDragStart={(e) => DragHandler(e)} onClick={()=> handleClickWholesoler() } />
             <Modal className="Normal_modal"  show={visible} onHide={() => setVisible(false)} centered >
                 <ModalHeader> 
                     Use Wholesoler card?

@@ -36,7 +36,7 @@ function Room(){
       update({username:username});
       update({check:false});
       update({color: Math.floor(Math.random()* (COLORS_PRESENCE.length-1))})
-     
+    
       dispatch(
         actions.enterRoom("rooms", {
           roomList: [],
@@ -61,7 +61,14 @@ function Room(){
         dispatch(actions.leaveRoom("rooms"));
       };
     }, [dispatch]);
+
+    useEffect(() => {
     
+    window.onbeforeunload = function(e) {
+        return "Are you sure?";
+    };
+     
+    });
     const data = useObject<Logo>("logo");
     const checkList = useList("check");
     if (!data || checkList == null || visible == null) {

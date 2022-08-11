@@ -15,7 +15,7 @@ function Leader() {
     const keyClock = useObject<{key:number}>("keyClock");
     const leader = useObject("leader");
     const self = useSelf();
-    const [,update] = useMyPresence<Presence>();
+    const [mypresence,update] = useMyPresence<Presence>();
     const [visible,setVisible] = useState(false);
     const playersList = useList("listPLayer");
     const shuffleList = useList("listShuffle");
@@ -66,6 +66,7 @@ function Leader() {
         leader.set("img", "leaderUsed.png");
         leader.set("occupied", true);
         update({first:true});
+        update({mint:mypresence.mint-1});
         setVisible(false);
         handleChangeTurn(actualCards,shopCards,playersList,shuffleList,turno,keyClock);
     }
@@ -73,7 +74,7 @@ function Leader() {
         return(
 
             <div>
-                <img alt="Leader" style = {{width:210}} src = {require(`../../images/${leader.get("img")}`)} onDragStart={(e) => DragHandler(e)} onClick={()=> handleClickLeader() } />
+                <img alt="Leader" style = {leader.get("occupied") ? {width:210} : {width:210,borderColor:'#eaa856',borderWidth:'5px',borderStyle:'solid'}} src = {require(`../../images/${leader.get("img")}`)} onDragStart={(e) => DragHandler(e)} onClick={()=> handleClickLeader() } />
                 <Modal className="Normal_modal"  show={visible} onHide={() => setVisible(false)} centered >
                     <ModalHeader> 
                         Use leaderShip card?

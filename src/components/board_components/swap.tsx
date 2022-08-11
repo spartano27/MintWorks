@@ -16,6 +16,7 @@ function Swap() {
     const [visible,setVisible] = useState(false);
     const [visible1,setVisible1] = useState(false);
     const [visible2,setVisible2] = useState(false);
+    const [visible3,setVisible3] = useState(false);
     const playersList = useList("listPLayer");
     const shuffleList = useList("listShuffle");
     const shopCards = useList<Card>("ShopCards");
@@ -52,7 +53,7 @@ function Swap() {
             if(actualCards.length === 3){
                     
                 if (shopCards.get(0) !== undefined && shopCards.get(1) !== undefined && shopCards.get(2) !== undefined && shopCards.get(3) !== undefined){
-                    swap.set("img", "swapUsed");
+                    swap.set("img", "swapUsed.png");
                     swap.set("occupied", true);
                     const cartaLista = shopCards.get(3);
                     const nuevaCards = mypresence.cards.slice();
@@ -78,7 +79,7 @@ function Swap() {
             if(shopCards.get(0) !== undefined && shopCards.get(1) !== undefined && actualCards.length === 2){
                 
                 if (shopCards.get(2) !== undefined){
-                    swap.set("img", "swapUsed");
+                    swap.set("img", "swapUsed.png");
                     swap.set("occupied", true);
                     const cartaLista = shopCards.get(2);
                     const nuevaCards = mypresence.cards.slice();
@@ -102,7 +103,7 @@ function Swap() {
                 
                 if (shopCards.get(1) !== undefined){
 
-                    swap.set("img", "swapUsed");
+                    swap.set("img", "swapUsed.png");
                     swap.set("occupied", true);
                     const cartaLista = shopCards.get(1);
                     const nuevaCards = mypresence.cards.slice();
@@ -126,7 +127,7 @@ function Swap() {
             if(actualCards.length === 0){
                 
                 if (shopCards.get(0) !== undefined){
-                    swap.set("img", "swapUsed");
+                    swap.set("img", "swapUsed.png");
                     swap.set("occupied", true);
                     const cartaLista = shopCards.get(0);
                     const nuevaCards = mypresence.cards.slice();
@@ -146,9 +147,10 @@ function Swap() {
             }
 
             
-            update({mint:Number(mypresence.mint)+1});
             setVisible(false);
             handleChangeTurn(actualCards,shopCards,playersList,shuffleList,turno,keyClock);
+        }else{
+            setVisible3(true);
         }
         
         
@@ -158,7 +160,7 @@ function Swap() {
         return(
 
             <div >
-                <img alt="Swap" style = {{width:210}} src = {require(`../../images/${swap.get("img")}`)} onDragStart={(e) => DragHandler(e)} onClick={()=> handleClickSwap() } />
+                <img alt="Swap" style = {swap.get("occupied") ? {width:210} : {width:210,borderColor:'#eaa856',borderWidth:'5px',borderStyle:'solid'}} src = {require(`../../images/${swap.get("img")}`)} onDragStart={(e) => DragHandler(e)} onClick={()=> handleClickSwap() } />
                 <Modal className="Normal_modal" show={visible} onHide={() => setVisible(false)} centered >
                     <ModalHeader> 
                         Use Swap Meet card?
@@ -171,6 +173,12 @@ function Swap() {
                             {mypresence.cards.map((card,index)=> {
                                 if(card == null){
                                     return null;
+                                }
+
+                                if(mypresence.cards.length === 0){
+                                    return (
+                                        <a> You dont have any card </a>
+                                    )
                                 }
                                     return(
 
@@ -194,12 +202,20 @@ function Swap() {
                     </ModalBody>
                    
                 </Modal>
-                <Modal   show={visible1} onHide={() => setVisible1(false)} centered >
+                <Modal className="Normal_modal"  show={visible1} onHide={() => setVisible1(false)} centered >
                 <ModalHeader> 
                     There isnt enough Plan on the Plan Deck.
                     <Button onClick={() => setVisible1(false)}> Ok </Button>
                 </ModalHeader>
             </Modal>
+
+            <Modal className="Normal_modal"  show={visible3} onHide={() => setVisible3(false)} centered >
+                <ModalHeader> 
+                    You dont have enough mints.
+                    <Button onClick={() => setVisible1(false)}> Ok </Button>
+                </ModalHeader>
+            </Modal>
+
             <Modal className="Normal_modal"  show={visible2} onHide={() => setVisible2(false)} centered >
                 <ModalHeader> 
                     You get:

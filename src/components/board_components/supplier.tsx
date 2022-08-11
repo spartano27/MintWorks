@@ -19,6 +19,7 @@ function Supplier(){
     const players = Number(String(name).split("-")[1]);
     const [mypresence,update] = useMyPresence<Presence>();
     const [visible,setVisible] = useState(false);
+    const [visible1,setVisible1] = useState(false);
     const playersList = useList("listPLayer");
     const actualCards = useList<Card>("ActualCards");
     const shuffleList = useList("listShuffle");
@@ -156,18 +157,20 @@ function Supplier(){
 
             }  
 
-            supplier.set("img", players < 4 ? `supplier1Used${supplier.get("occupied")}.png` : `supplierUsed${supplier.get("occupied")}.png`);
+            supplier.set("img", players < 4 ? `supplierUsed${supplier.get("occupied")}.png` : `supplier1Used${supplier.get("occupied")}.png`);
             supplier.set("occupied", Number(supplier.get("occupied"))+1);
             setVisible(false);
             handleChangeTurn(actualCards,shopCards,playersList,shuffleList,turno,keyClock);   
     
+        }else{
+            setVisible1(true);
         }
     }
 
     return(
         
         <div>
-            <img alt="Supplier" style = {{width:210}} src = {require(`../../images/${supplier.get("img")}`)} onDragStart={(e) => DragHandler(e)} onClick={()=> handleClickSupplier() } />
+            <img alt="Supplier" style = {(Number(supplier.get("occupied")) > 2) || (players == 4 && Number(supplier.get("occupied")) > 3) ? {width:210} : {width:210,borderColor:'#eaa856',borderWidth:'5px',borderStyle:'solid'}} src = {require(`../../images/${supplier.get("img")}`)} onDragStart={(e) => DragHandler(e)} onClick={()=> handleClickSupplier() } />
             <Modal className="Normal_modal" size="lg" show={visible} onHide={() => setVisible(false)} centered >
                 <ModalHeader> 
                     Use Supplier card?
@@ -179,6 +182,13 @@ function Supplier(){
                     <ListGroup key={"shop"} horizontal className="h-25 justify-content-center" style={{paddingTop:'24px'}} >
 
                     {actualCards.map((card)=> {
+
+                        if(actualCards.length === 0){
+                            return(
+                                <a> There arent cards to buy</a>
+                            )
+                        }
+
                         return(
 
                             <div key={card.name}>
@@ -203,6 +213,13 @@ function Supplier(){
                     </ListGroup>
                             </div>
                 </ModalBody>
+            </Modal>
+
+            <Modal className="Normal_modal"  show={visible1} onHide={() => setVisible1(false)} centered >
+                <ModalHeader> 
+                    You dont have enough mints.
+                    <Button onClick={() => setVisible1(false)}> Ok </Button>
+                </ModalHeader>
             </Modal>
         </div>
         

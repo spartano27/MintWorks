@@ -44,9 +44,9 @@ function Crow() {
 
     const handleClick = () => {
 
-        if(mypresence.mint >= 1){
+        
 
-            crow.set("img", "crowUsed");
+            crow.set("img", "crowUsed.png");
             crow.set("occupied", true);
             update({mint:Number(mypresence.mint)+2});
             others.map(({presence})=>{
@@ -57,7 +57,7 @@ function Crow() {
             })
             setVisible(false);
             handleChangeTurn(actualCards,shopCards,playersList,shuffleList,turno,keyClock);
-        }   
+          
         
         
     }
@@ -65,7 +65,7 @@ function Crow() {
         return(
 
             <div >
-                <img alt="Crow" style = {{width:210}} src = {require(`../../images/${crow.get("img")}`)} onDragStart={(e) => DragHandler(e)} onClick={()=> handleClickCrow() } />
+                <img alt="Crow" style = {crow.get("occupied") ? {width:210} : {width:210,borderColor:'#eaa856',borderWidth:'5px',borderStyle:'solid'}} src = {require(`../../images/${crow.get("img")}`)} onDragStart={(e) => DragHandler(e)} onClick={()=> handleClickCrow() } />
                 <Modal className="Normal_modal" show={visible} onHide={() => setVisible(false)} centered >
                     <ModalHeader> 
                         Use Crowdfunder card?

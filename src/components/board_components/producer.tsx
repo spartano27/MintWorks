@@ -10,6 +10,7 @@ import { Presence } from "../../types";
 
 function Producer() {
     
+    const [styleCard,setStyleCard] = useState(true);
     const keyClock = useObject<{key:number}>("keyClock");
     const producer = useObject("producer");
     const self = useSelf();
@@ -80,6 +81,13 @@ function Producer() {
         producer.set("img", players === 4 || players === 1 ? `producerUsed${producer.get("occupied")}.png` : `producer1Used${producer.get("occupied")}.png`);
         producer.set("occupied", Number(producer.get("occupied"))+1);
         update({mint:Number(mypresence.mint)+1});
+
+        if(players === 2 || players === 3){
+            setStyleCard(Number(producer.get("occupied")) > 2);
+        }else{
+            setStyleCard(Number(producer.get("occupied")) > 3);
+        }
+
         setVisible(false);
         handleChangeTurn(actualCards,shopCards,playersList,shuffleList,turno,keyClock);
     }
@@ -87,7 +95,7 @@ function Producer() {
     return(
 
         <div>
-        <img alt="Producer" style = {{width:210}} src = {require(`../../images/${producer.get("img")}`)} onDragStart={(e) => DragHandler(e)} onClick={()=> handleClickProducer() } />
+        <img alt="Producer" style = {(Number(producer.get("occupied")) > 2) || ((players === 1 || players === 4) && Number(producer.get("occupied")) > 3) ? {width:210} : {width:210,borderColor:'#eaa856',borderWidth:'5px',borderStyle:'solid'}} src = {require(`../../images/${producer.get("img")}`)} onDragStart={(e) => DragHandler(e)} onClick={()=> handleClickProducer() } />
             <Modal className="Normal_modal" show={visible} onHide={() => setVisible(false)} centered >
                 <ModalHeader> 
                     Use Producer card?

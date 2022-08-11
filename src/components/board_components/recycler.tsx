@@ -44,19 +44,17 @@ function Recycler() {
         if (card == null){
             return null;
         }
-        if(mypresence.mint>=1){
-
             const cost = card.value + card.stars;
             const nuevaCards = mypresence.cards.slice();
             nuevaCards.splice(index,1);
             update({cards:nuevaCards});
             update({mint:Number(mypresence.mint)+cost});
-            recycler.set("img", "RecyclerUsed");
+            recycler.set("img", "recyclerUsed.png");
             recycler.set("occupied", true);
     
             setVisible(false);
             handleChangeTurn(actualCards,shopCards,playersList,shuffleList,turno,keyClock);
-        }
+        
        
         
     }
@@ -64,7 +62,7 @@ function Recycler() {
         return(
 
             <div >
-                <img alt="Recyler" style = {{width:210}} src = {require(`../../images/${recycler.get("img")}`)} onDragStart={(e) => DragHandler(e)} onClick={()=> handleClickRecycler() } />
+                <img alt="Recyler" style = {recycler.get("occupied") ? {width:210} : {width:210,borderColor:'#eaa856',borderWidth:'5px',borderStyle:'solid'}} src = {require(`../../images/${recycler.get("img")}`)} onDragStart={(e) => DragHandler(e)} onClick={()=> handleClickRecycler() } />
                 <Modal className="Normal_modal" show={visible} onHide={() => setVisible(false)} centered >
                     <ModalHeader> 
                         Use Recycler card?
@@ -77,6 +75,11 @@ function Recycler() {
                             {mypresence.cards.map((card,index)=> {
                                 if(card == null){
                                     return null;
+                                }
+                                if(mypresence.cards.length === 0){
+                                    return (
+                                        <a> You dont have any card</a>
+                                    )
                                 }
                                     return(
 

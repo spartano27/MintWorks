@@ -27,6 +27,7 @@ function Board(valor:{diff:boolean}){
     if(listaSortDifficult == null){
         return null;
     }
+   
 
     if(listaSortDifficult.get(0) == "crow"){
         firstAdvanced = <Crow />

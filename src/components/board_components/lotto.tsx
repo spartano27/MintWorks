@@ -20,6 +20,7 @@ function Lotto() {
     const [visible,setVisible] = useState(false);
     const [visible1,setVisible1] = useState(false);
     const [visible2,setVisible2] = useState(false);
+    const [visible3,setVisible3] = useState(false);
     const playersList = useList("listPLayer");
     const shuffleList = useList("listShuffle");
     const shopCards = useList<Card>("ShopCards");
@@ -160,6 +161,8 @@ function Lotto() {
                         setVisible1(true);
                     }
                 }
+        }else{
+            setVisible3(true);
         }
     }
 
@@ -167,7 +170,7 @@ function Lotto() {
     return(
         
         <div>
-            <img alt="Lotto" style = {{width:210}} src = {require(`../../images/${lotto.get("img")}`)} onDragStart={(e) => DragHandler(e)} onClick={()=> handleClickLotto() } />
+            <img alt="Lotto" style = {lotto.get("occupied") ? {width:210} : {width:210,borderColor:'#eaa856',borderWidth:'5px',borderStyle:'solid'}} src = {require(`../../images/${lotto.get("img")}`)} onDragStart={(e) => DragHandler(e)} onClick={()=> handleClickLotto() } />
             <Modal className="Normal_modal"  show={visible} onHide={() => setVisible(false)} centered >
                 <ModalHeader> 
                     Use lotto card?
@@ -180,12 +183,21 @@ function Lotto() {
                     <Button onClick={() => setVisible(false)}> No </Button>
                 </ModalFooter>
             </Modal>
-            <Modal   show={visible1} onHide={() => setVisible1(false)} centered >
+
+            <Modal className="Normal_modal"   show={visible1} onHide={() => setVisible1(false)} centered >
                 <ModalHeader> 
                     There isnt enough Plan on the Plan Deck.
                     <Button onClick={() => setVisible1(false)}> Ok </Button>
                 </ModalHeader>
             </Modal>
+
+            <Modal className="Normal_modal"   show={visible3} onHide={() => setVisible3(false)} centered >
+                <ModalHeader> 
+                    You dont have enough mints.
+                    <Button onClick={() => setVisible3(false)}> Ok </Button>
+                </ModalHeader>
+            </Modal>
+
             <Modal className="Normal_modal"  show={visible2} onHide={() => setVisible2(false)} centered >
                 <ModalHeader> 
                     You get:

@@ -57,6 +57,7 @@ function Game(){
     const {name} = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    
     useEffect(() => {
         dispatch(
           actions.enterRoom("rooms", {
@@ -74,6 +75,14 @@ function Game(){
         update({username:username,mint:3, cards:[],stars:0,first: false,color:color});
         
       }, []);
+
+    useEffect(() => {
+    
+    window.onbeforeunload = function(e) {
+        return "Are you sure?";
+    };
+     
+    });
 
     const [mintOnGalley,setMint] = useState(0);
     const players = Number(String(name).split("-")[1]);
