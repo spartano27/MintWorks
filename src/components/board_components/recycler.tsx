@@ -72,15 +72,14 @@ function Recycler() {
                         <div className="p-4">
 
                         <ListGroup key={"shop"} horizontal className="h-25 justify-content-center" style={{paddingTop:'24px'}} >
+                            {mypresence.cards.length === 0 ? "You dont have any card on your neighborhood" : ""}
                             {mypresence.cards.map((card,index)=> {
+                                
                                 if(card == null){
+                                    console.log("aaa");
                                     return null;
                                 }
-                                if(mypresence.cards.length === 0){
-                                    return (
-                                        <a> You dont have any card</a>
-                                    )
-                                }
+                    
                                     return(
 
                                         <div key={card.id}>

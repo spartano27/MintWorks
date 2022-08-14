@@ -592,6 +592,7 @@ function Temp() {
                     <ModalBody>
                         choose an occupied location space to use.
                         <ListGroup key={"swap"} horizontal className="h-25 justify-content-center" style={{paddingTop:'24px'}} >
+                        {lista.length === 0 ? "there arent occupied location space" : ""}
                         {lista.map((item,index)=> {
                             if(item == null){
                                 return null;
@@ -697,15 +698,12 @@ function Temp() {
                     <div className="p-4">
 
                         <ListGroup key={"shop"} horizontal className="h-25 justify-content-center" style={{paddingTop:'24px'}} >
+                            {mypresence.cards.length === 0 ? "You dont have any card on your neighborhood" : ""}
                             {mypresence.cards.map((card)=> {
                                 if(card == null){
                                     return null;
                                 }
-                                if(mypresence.cards.length === 0){
-                                    return (
-                                        <a> You dont have any card to build</a>
-                                    )
-                                }
+                               
                                 if(!card.active){
 
                                     return(
@@ -866,16 +864,13 @@ function Temp() {
                         <div className="p-4">
 
                         <ListGroup key={"shop"} horizontal className="h-25 justify-content-center" style={{paddingTop:'24px'}} >
+                            {mypresence.cards.length === 0 ? "You dont have any card on your neighborhood" : ""}
                             {mypresence.cards.map((card,index)=> {
                                 if(card == null){
                                     return null;
                                 }
                                 
-                                 if(mypresence.cards.length === 0){
-                                    return (
-                                        <a> You dont have any card</a>
-                                    )
-                                }
+                                 
                                     return(
 
                                         <div key={card.id}>

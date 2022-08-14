@@ -30,7 +30,7 @@ export default function App() {
         <Route path="Privacy" element={<Privacy />}/>
         <Route path="Termsof" element={<TermsOfService />}/>
         <Route path="Game/:name" element={<GamePage />}/>
-        <Route path="IndividualGame" element={<IndividualGame />}/>
+        <Route path="IndividualGame/:name" element={<IndividualGame />}/>
         <Route path="Buscar" element={<Buscar />}/>
         <Route path="Crear" element={<Crear />}/>
         <Route path="Room/:name" element={<RoomPage />} />

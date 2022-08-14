@@ -151,6 +151,7 @@ function Builder() {
                     <div className="p-4">
 
                         <ListGroup key={"shop"} horizontal className="h-25 justify-content-center" style={{paddingTop:'24px'}} >
+                            {mypresence.cards.length === 0 ? "You dont have any card on your neighborhood" : ""}
                             {mypresence.cards.map((card)=> {
                                 if(card == null){
                                     return null;

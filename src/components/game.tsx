@@ -568,7 +568,7 @@ function Game(){
             <Container style={{width: '100%'}}>
                 <Row className="mb-8">
                     <Col className="p-2 d-flex justify-content-start">
-                        <Shop players={players}/>
+                        <Shop />
                         <Board diff = {difficult}/>
                     </Col>
                 </Row>

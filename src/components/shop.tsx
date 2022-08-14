@@ -8,7 +8,7 @@ import { Card, Presence } from "../types";
  * @param valor - {players: number}
  * @returns A list of cards that are being displayed in the shop.
  */
-function Shop(valor:{players: number}) {
+function Shop() {
     
     const [,setValorId] = useState("0");
     const [,update] = useMyPresence<Presence>();
@@ -21,6 +21,7 @@ function Shop(valor:{players: number}) {
     }
     
     return (    
+      
 
       <div className="p-4">
         <ListGroup key={"shop"} horizontal className="h-25 justify-content-center" style={{paddingTop:'24px'}} >

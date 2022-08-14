@@ -6,19 +6,19 @@ import {useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {CountdownCircleTimer} from "react-countdown-circle-timer";
 import {Button, Col, Container, ListGroup, Modal, ModalBody, ModalFooter, Row} from "react-bootstrap";
-import {Cursor} from "./cursor";
 import ModalHeader from "react-bootstrap/esm/ModalHeader";
 import {Card, CardTypes, Presence} from "../types";
 import {useNavigate} from "react-router-dom";
 import {removeRoom, RootState} from "../store";
 import {actions} from "@liveblocks/redux";
 import Neighborhood from "./neighborhood";
+import IA from "./board_components/ia";
 
 const user = (state:RootState) => state.username;
 const rooms = (state:RootState) => state.roomList;
 const cardsList = (state:RootState) => state.cards;
 const colorP = (state:RootState) => state.color;
-const diff = (state:RootState) => state.difficult;
+
 /**
  * It takes an array of objects, and returns a new array of objects, with the same objects, but in a
  * different order.
@@ -43,8 +43,7 @@ function Shuffle(array: Json[]){
 /* A game. */
 
 function SoloGame(){
-    
-    const COLORS_PRESENCE = ["255, 69, 225", "255, 64, 64", "255, 166, 3"];
+
     const others = useOthers<Presence>();
     const self = useSelf<Presence>();
     const [mypresence,update] = useMyPresence<Presence>();
@@ -52,11 +51,11 @@ function SoloGame(){
     const color = useSelector(colorP);
     const username = useSelector(user);
     const roomList = useSelector(rooms);
-    const difficult = useSelector(diff);
     const cards = useSelector(cardsList);
     const {name} = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    
     useEffect(() => {
         dispatch(
           actions.enterRoom("rooms", {
@@ -77,12 +76,14 @@ function SoloGame(){
 
     const [mintOnGalley,setMint] = useState(0);
     const players = Number(String(name).split("-")[1]);
+    const difficult = Number(String(name).split("-")[2]) === 1 ? true : false;
     const roomName = (String(name).split("-")[0]).split("Gl")[1];
     const [countdown,setCountdown] = useState(true);
     const playersList = useList("listPLayer");
     const shuffleList = useList("listShuffle");
     const shopCards = useList("ShopCards");
     const actualCards = useList("ActualCards");
+    const IAValors = useObject("IA");
     const turno = useObject<{ firstTurn: boolean; turn: number; visible: boolean; nuevaRonda: boolean; }>("turno");
     const winner = useObject<{ username: string; visible: boolean}>("winner");
     const leader = useObject("leader");
@@ -92,6 +93,8 @@ function SoloGame(){
     const wholesaler = useObject("wholesaler");
     const listaSortDifficult = useList("advancedCards");
     const listaDifficult = ["crow","temp","recycler","swap"];
+    const listaSortIas = useList("Ias");
+    const listaIas = ["justin","mort","rachael","sonic"];
     const lotto = useObject("lotto");
     const swap = useObject("swap");
     const recycler = useObject("recycler");
@@ -337,7 +340,7 @@ function SoloGame(){
         Shuffle(cards).forEach((e)=>{
             if(shopCards.length < 21){
                 shopCards.push(e);
-                if(actualCards.length < 3){
+                if(actualCards.length < 2){
                     actualCards.push(e);
                 }
             }
@@ -350,8 +353,21 @@ function SoloGame(){
             if(listaSortDifficult == null){
                 return null;
             }
-            if(listaSortDifficult.length < 2){
+            if(listaSortDifficult.length < 1){
                 listaSortDifficult.push(e);
+            }
+        });
+    }
+
+    const initialiceIas = () => {
+
+        Shuffle(listaIas).forEach((e)=>{
+            
+            if(listaSortIas == null){
+                return null;
+            }
+            if(listaSortIas.length < 1){
+                listaSortIas.push(e);
             }
         });
     }
@@ -360,10 +376,11 @@ function SoloGame(){
         || leader ==null || builder == null || supplier == null || producer == null || swap == null || crow == null || temp == null || recycler == null || listaSortDifficult == null){
         initialiceShop();
         initialiceDiff();
+        initialiceIas();
         return null;
     }
     
-    let usernameTurn = turno.get("turn") === self.connectionId ? mypresence.username : "";
+    const usernameTurn = turno.get("turn") === self.connectionId ? mypresence.username : "";
 
     /**
      * The function handleOn takes an event of type React.PointerEvent<HTMLDivElement> and returns
@@ -520,12 +537,6 @@ function SoloGame(){
         setTimeout(()=>{ turno.set("visible",false);},2000);
     
     }
-    
-   if(others.count +1 < players && winner.get("username") === ""){
-       return (
-           <h1> waiting </h1>
-       )
-   }
 
    if(countdown){
        return(
@@ -559,26 +570,16 @@ function SoloGame(){
             <Container style={{width: '100%'}}>
                 <Row className="mb-8">
                     <Col className="p-2 d-flex justify-content-start">
-                        <Shop players={players}/>
+                        <Shop />
                         <Board diff = {difficult}/>
                     </Col>
                 </Row>
                 <Row style={{marginTop:'50px'}} className="p-2 d-flex align-content-end" >
                     <Neighborhood id={self.connectionId} username={mypresence.username} mints={mypresence.mint} cards={mypresence.cards} stars={mypresence.stars} />
-                    {others.map(({connectionId,presence}) => {
-
-                        if(presence == null){
-                            return null;
-                        }
-                        if(usernameTurn === ""){
-                            usernameTurn = turno.get("turn") === connectionId ? presence.username : "";
-                        }
-                        return(
-                            <div key={connectionId}>
-                                <Neighborhood id={connectionId} username={presence.username} mints={presence.mint} cards={presence.cards} stars={presence.stars} />
-                            </div>
-                        )
-                    })}
+                    <div className="mx-auto">
+                        <IA/>
+                    </div>
+                    
                 </Row>
             </Container>
 
@@ -596,22 +597,6 @@ function SoloGame(){
                     <Button variant="primary" onClick={() => {navigate('/')}}>OK</Button> 
                 </ModalFooter>
             </Modal>
-
-            {others.map(({connectionId, presence}) => {
-                        if (presence == null || presence.cursor == null) {
-                            return null;
-                        }
-                        return (
-                            <Cursor
-                            key={`cursor-${connectionId}`}
-                            color={`rgb(${
-                                COLORS_PRESENCE[presence.color]
-                              }`}
-                            x={presence.cursor.x}
-                            y={presence.cursor.y}
-                            name={presence.username}/>
-                        )
-            })}
 
             <Modal className="Normal_modal" backdrop="static" size="lg" show={eleccion} onHide={() => setElegir(false)} centered >
                 <ModalHeader> 

@@ -9,7 +9,7 @@ function Sonic(){
     return(
 
         <div>
-            <img  src = {require("../../images/ias_images/SONIC.PNG")} style={{width:'250px'}} 
+            <img  src = {require("../../images/ias_images/SONIC.PNG")} style={{width:'125px'}} 
             onDragStart={(e) => DragHandler(e)}/>
         </div>
 

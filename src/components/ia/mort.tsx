@@ -9,7 +9,7 @@ function Mort(){
     return(
 
         <div>
-            <img  src = {require("../../images/ias_images/MORT.PNG")} style={{width:'250px'}}
+            <img  src = {require("../../images/ias_images/MORT.PNG")} style={{width:'75px'}}
             onDragStart={(e) => DragHandler(e)} />   
         </div>
 
