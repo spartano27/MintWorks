@@ -21,7 +21,7 @@ function IndividualGame() {
             "ShopCards": new LiveList<Card>(),
             "turno": new LiveObject({firstTurn:true, turn:0, visible:false, nuevaRonda: false}),
             "ActualCards": new LiveList<Card>(),
-            "IA": new LiveObject({stars:0,mint:3,cards:[]}),
+            "IA": new LiveObject({name: "",stars:0,mint:3,cards:[],lastAction: "",first:false}),
             "winner": new LiveObject({username:"", visible:false}),
             "leader": new LiveObject({img: "leader.png",occupied: false, type: LocationTypes.core}),
             "producer": new LiveObject({img: players === 4 || players === 1 ? "producer.png" : "producer1.png",occupied: 1, type: LocationTypes.core}),

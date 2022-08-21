@@ -3,8 +3,7 @@ import { enhancer } from "@liveblocks/redux";
 import {configureStore, createSlice } from "@reduxjs/toolkit";
 import { initialState } from "./state/globalState";
 
-//pk_live_qWBJrta6dfM5FdwAlCjK-ejY
-//pk_test_rGCwfxKjuMTNJOLSxeiLTtV3
+
 export const client = createClient({
     publicApiKey: "pk_test_6lrj7sCqINeSrTkImX2Vc_9y",
     

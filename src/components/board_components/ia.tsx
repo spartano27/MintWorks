@@ -1,7 +1,6 @@
 import { useList, useObject } from "@liveblocks/react";
 import React from "react";
 import { Row, ListGroup, Button, Col } from "react-bootstrap";
-import handleChangeTurn from "../../turn";
 import { Card } from "../../types";
 import Clock from "../clock";
 import Justin from '../ia/justin';
@@ -14,7 +13,7 @@ import Stars from "../stars";
 
 function IA() {
     const listaSortIas = useList("Ias");
-    const IAValors = useObject<{mint:number,stars:number,cards:Card[]}>("IA");
+    const IAValors = useObject<{name:string,mint:number,stars:number,cards:Card[]}>("IA");
     let ia;
     const turno = useObject<{ firstTurn: boolean; turn: number; visible: boolean; nuevaRonda: boolean; }>("turno");
     /**
@@ -27,23 +26,27 @@ function IA() {
     
 
     if(listaSortIas.get(0) === "justin"){
+        
         ia = <Justin/>
     }
     if(listaSortIas.get(0) === "rachael"){
+       
         ia = <Rachael/>
     }
     if(listaSortIas.get(0) === "mort"){
+       
         ia = <Mort/>
     }
     if(listaSortIas.get(0) === "sonic"){
+      
         ia = <Sonic/>
     }
-
+    
         return(
 
             <div>
             
-        <div className={turno.get("turn") === 27 ? "squareSelectedIA": "squareIA"}>
+        <div className={"squareIA"}>
             
             <Row style={{marginLeft:'150px'}}>
                
@@ -59,16 +62,19 @@ function IA() {
                 
             </Row>
             <Row>
-                <div className="pl-4 pt-2">
+           
+            <div className="pl-4 pt-2">
                         {ia}
                 </div>
-
-                <ListGroup style={{marginTop:'50px',overflowX:'auto', overflowY:'hidden'}} className="pt-4" key={"neighborhood"} horizontal>
+               
+               
+                <ListGroup style={{marginTop:'50px',maxWidth:'200px',maxHeight:'130px',overflowX:'auto', overflowY:'hidden'}} className="pl-4 pt-2"  key={"neighborhood"} horizontal>
                 
                 {IAValors.get("cards").map((card)=>{
                             if(card == null){
                                 return null;
                             }
+                            
                             return(
                                 <ListGroup.Item key={card.name} style={{width:'50px',height:'100px', padding: '0px',marginLeft:'10px'}}  variant="secondary">
                                     
@@ -83,6 +89,8 @@ function IA() {
                     
                 </ListGroup>
 
+           
+                
             </Row>
             
         </div> 

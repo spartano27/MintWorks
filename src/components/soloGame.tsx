@@ -75,15 +75,16 @@ function SoloGame(){
       }, []);
 
     const [mintOnGalley,setMint] = useState(0);
+    const [minTokens,setMintTokens] = useState(30);
     const players = Number(String(name).split("-")[1]);
     const difficult = Number(String(name).split("-")[2]) === 1 ? true : false;
     const roomName = (String(name).split("-")[0]).split("Gl")[1];
     const [countdown,setCountdown] = useState(true);
     const playersList = useList("listPLayer");
     const shuffleList = useList("listShuffle");
-    const shopCards = useList("ShopCards");
-    const actualCards = useList("ActualCards");
-    const IAValors = useObject("IA");
+    const shopCards = useList<Card>("ShopCards");
+    const actualCards = useList<Card>("ActualCards");
+    const IAValors = useObject<{name:string,mint:number,stars:number,cards:Card[],lastAction:string,first:boolean}>("IA");
     const turno = useObject<{ firstTurn: boolean; turn: number; visible: boolean; nuevaRonda: boolean; }>("turno");
     const winner = useObject<{ username: string; visible: boolean}>("winner");
     const leader = useObject("leader");
@@ -94,7 +95,7 @@ function SoloGame(){
     const listaSortDifficult = useList("advancedCards");
     const listaDifficult = ["crow","temp","recycler","swap"];
     const listaSortIas = useList("Ias");
-    const listaIas = ["justin","mort","rachael","sonic"];
+    const listaIas = ["sonic","rachael","mort","justin"];
     const lotto = useObject("lotto");
     const swap = useObject("swap");
     const recycler = useObject("recycler");
@@ -102,38 +103,28 @@ function SoloGame(){
     const crow = useObject("crow");
 
     /* eslint-disable @typescript-eslint/no-unused-vars */
-
-    const Assembler = () => {
+    
+    const Assembler = (IA: boolean) => {
         return [0,1];
     }
 
-    const Bridge = () => {
+    const Bridge = (IA: boolean) => {
         return [0,0];
     }
 
-    const Coop = () => {
-       setElegir(true);
+    const Coop = (IA: boolean) => {
+        if(IA){
+            update({mint:Number(mypresence.mint)+1});
+        }else{
+            if(IAValors == null){
+                return [0,0];
+            }
+            IAValors.set("mint",IAValors.get("mint")+1);
+        }
+       
        return [1,1];
     }
 
-    /**
-     * If the connectionId of the presence object is equal to the connectionId of the player who
-     * clicked the button, then add 1 to the mint property of the presence object.
-     * @param {number} EleccionconnectionId - number =&gt; The connectionId of the person who was
-     * chosen.
-     */
-
-    const CoopElegido = (EleccionconnectionId: number) => {
-        others.toArray().forEach(({connectionId,presence})=>{
-            if(presence == null){
-                return null;
-            }
-            if(connectionId === EleccionconnectionId){
-                presence.mint = Number(presence.mint) +1;
-            }
-        })
-        setElegir(false);  
-    }
     
     /**
      * If the card is null, return [0,0], otherwise if the card is active, add 1 to retorno, and return
@@ -141,35 +132,55 @@ function SoloGame(){
      * @returns An array with two elements.
      */
 
-    const Corporate = () => {
+    const Corporate = (IA: boolean) => {
+
         let retorno = 0;
-        mypresence.cards.forEach((card)=>{
-            if(card == null){
+        if(IA){
+            if(IAValors == null){
                 return [0,0];
             }
-            if(card.active){
-                retorno = retorno + 1;
-            }
-            
-        });
+
+            IAValors.get("cards").forEach((card)=>{
+                if(card == null){
+                    return [0,0];
+                }
+                if(card.active){
+                    retorno = retorno + 1;
+                }
+                
+            });
+        }else{
+
+            mypresence.cards.forEach((card)=>{
+                if(card == null){
+                    return [0,0];
+                }
+                if(card.active){
+                    retorno = retorno + 1;
+                }
+                
+            });
+
+        }
+        
         return [retorno,0];
         
     }
 
-    const Crane = () => {
+    const Crane = (IA: boolean) => {
         return [0,1];
     }
 
-    const Factory = () => {
+    const Factory = (IA: boolean) => {
         return [1,3];
     }
 
-    const Gallery = () => {
+    const Gallery = (IA: boolean) => {
         setMint(mintOnGalley+1);
         return [0,mintOnGalley];
     }
 
-    const Gardens = () => {
+    const Gardens = (IA: boolean) => {
         return [0,3];
     }
 
@@ -187,22 +198,39 @@ function SoloGame(){
      * @returns [0,stars]
      */
 
-    const Landfill = () => {
+    const Landfill = (IA: boolean) => {
         let stars = 3;
-        mypresence.cards.forEach((card)=>{
-            if(card == null){
+        if(IA){
+            if(IAValors == null){
                 return [0,0];
             }
-            if(card.active && card.type === CardTypes.culture){
-                if(card.stars > 0){
-                    stars = stars -1;
+            IAValors.get("cards").forEach((card)=>{
+                if(card == null){
+                    return [0,0];
                 }
-            } 
-        });
+                if(card.active && card.type === CardTypes.culture){
+                    if(card.stars > 0){
+                        stars = stars -1;
+                    }
+                } 
+            });
+        }else{
+            mypresence.cards.forEach((card)=>{
+                if(card == null){
+                    return [0,0];
+                }
+                if(card.active && card.type === CardTypes.culture){
+                    if(card.stars > 0){
+                        stars = stars -1;
+                    }
+                } 
+            });
+        }
+       
         return [0,stars];
     }
 
-    const Lotto = () => {
+    const Lotto = (IA: boolean) => {
         if (lotto == null){
             return [0,2];
         }
@@ -213,7 +241,7 @@ function SoloGame(){
         }
     }
 
-    const Mine = () => {
+    const Mine = (IA: boolean) => {
         return [1,1];
     }
 
@@ -225,27 +253,54 @@ function SoloGame(){
      * @returns an array of two numbers.
      */
 
-    const Museum = () => {
+    const Museum = (IA: boolean) => {
         let stars = 0;
-        mypresence.cards.forEach((card)=>{
-            if(card == null){
+        if(IA){
+            if(IAValors == null){
                 return [0,0];
             }
-            if(card.active && card.type === CardTypes.culture){
-                
-                if(card.name === "Bridge"){
-                    stars = stars + 2; 
+            IAValors.get("cards").forEach((card)=>{
+                if(card == null){
+                    return [0,0];
+                }
+                if(card.active && card.type === CardTypes.culture){
+                    
+                    if(card.name === "Bridge"){
+                        stars = stars + 2; 
+                    } 
+                    else{
+                        stars = stars + 1;
+                    }
+                }
+                if(card.active && card.name === "Landfill"){
+                    if(stars > 0){
+                        stars = stars -1;
+                    }
                 } 
-                else{
-                    stars = stars + 1;
+            });
+        }else{
+
+            mypresence.cards.forEach((card)=>{
+                if(card == null){
+                    return [0,0];
                 }
-            }
-            if(card.active && card.name === "Landfill"){
-                if(stars > 0){
-                    stars = stars -1;
+                if(card.active && card.type === CardTypes.culture){
+                    
+                    if(card.name === "Bridge"){
+                        stars = stars + 2; 
+                    } 
+                    else{
+                        stars = stars + 1;
+                    }
                 }
-            } 
-        });
+                if(card.active && card.name === "Landfill"){
+                    if(stars > 0){
+                        stars = stars -1;
+                    }
+                } 
+            });
+        }
+        
         
         return [0,stars];
     }
@@ -255,32 +310,48 @@ function SoloGame(){
      * @returns An array of two numbers.
      */
 
-    const Obelisk = () => {
+    const Obelisk = (IA: boolean) => {
         let stars = 0;
-        mypresence.cards.forEach((card)=>{
-            if(card == null){
+        if(IA){
+            if(IAValors == null){
                 return [0,0];
             }
-            if(card.active){
-                stars = stars + 1 ;
-            } 
-        });
+            IAValors.get("cards").forEach((card)=>{
+                if(card == null){
+                    return [0,0];
+                }
+                if(card.active){
+                    stars = stars + 1 ;
+                } 
+            });
+        }else{
+
+            mypresence.cards.forEach((card)=>{
+                if(card == null){
+                    return [0,0];
+                }
+                if(card.active){
+                    stars = stars + 1 ;
+                } 
+            });
+        }
+        
         return [0,stars];
     }
 
-    const Plant = () => {
+    const Plant = (IA: boolean) => {
         return [2,2];
     }
 
-    const Statue = () => {
+    const Statue = (IA: boolean) => {
         return [0,2];
     }
 
-    const Stripmine = () => {
+    const Stripmine = (IA: boolean) => {
         return [3,0];
     }
 
-    const Truck = () => {
+    const Truck = (IA: boolean) => {
         return [0,1];
     }
 
@@ -292,7 +363,7 @@ function SoloGame(){
      * mints, and the second number is the number of stars.
      * @returns An array with two values.
      */
-    const Vault = () => {
+    const Vault = (IA: boolean) => {
         let stars = 1;
         mypresence.cards.forEach((card)=>{
             if(card == null){
@@ -305,7 +376,7 @@ function SoloGame(){
         return [0,stars];
     }
 
-    const Wholesaler = () => {
+    const Wholesaler = (IA: boolean) => {
         if (wholesaler == null){
             return [0,1];
         }
@@ -317,11 +388,11 @@ function SoloGame(){
       
     }
 
-    const Windmill = () => {
+    const Windmill = (IA: boolean) => {
         return [0,1];
     }
 
-    const Workshop = () => {
+    const Workshop = (IA: boolean) => {
         return [1,2];
     }
 
@@ -337,7 +408,7 @@ function SoloGame(){
             return null;
         }
 
-        Shuffle(cards).forEach((e)=>{
+        Shuffle(cards).forEach((e:any)=>{
             if(shopCards.length < 21){
                 shopCards.push(e);
                 if(actualCards.length < 2){
@@ -359,6 +430,15 @@ function SoloGame(){
         });
     }
 
+
+    if(winner == null || lotto == null || wholesaler == null || actualCards == null || shopCards == null || shuffleList == null || playersList == null || turno == null || self == null || self.presence == null
+        || leader ==null || builder == null || supplier == null || producer == null || swap == null || crow == null || temp == null || recycler == null || listaSortDifficult == null || IAValors == null){
+        initialiceShop();
+        initialiceDiff();
+        
+        return null;
+    }
+    
     const initialiceIas = () => {
 
         Shuffle(listaIas).forEach((e)=>{
@@ -366,21 +446,30 @@ function SoloGame(){
             if(listaSortIas == null){
                 return null;
             }
+            console.log(e);
             if(listaSortIas.length < 1){
+                IAValors.set("name",String(e));
                 listaSortIas.push(e);
+
+                if(e == "sonic"){
+                    IAValors.set("mint",5)
+                }
+
+                if(e == "justin"){
+                    IAValors.set("mint",3)
+                }
+
+                if(e == "rachael"){
+                    IAValors.set("mint",5)
+                }
+
+                if(e == "mort"){
+                    IAValors.set("mint",999)
+                }
             }
         });
     }
-
-    if(winner == null || lotto == null || wholesaler == null || actualCards == null || shopCards == null || shuffleList == null || playersList == null || turno == null || self == null || self.presence == null
-        || leader ==null || builder == null || supplier == null || producer == null || swap == null || crow == null || temp == null || recycler == null || listaSortDifficult == null){
-        initialiceShop();
-        initialiceDiff();
-        initialiceIas();
-        return null;
-    }
-    
-    const usernameTurn = turno.get("turn") === self.connectionId ? mypresence.username : "";
+   
 
     /**
      * The function handleOn takes an event of type React.PointerEvent<HTMLDivElement> and returns
@@ -401,23 +490,2127 @@ function SoloGame(){
      * if turno.get("nuevaRonda") is true then a new round begins and the function MintsForAll do all
      * the stuff necesary when a new round begins.
      */
-    const MintsForAll = () => {
+    const handleCompraIA = (card: Card) => {
+        
+            let discount = 0;
+            let builderEffect = false;
+    
+            IAValors.get("cards").forEach((carta)=>{
+                if(carta == null){
+                    return null
+                }
+                
+                if(carta.name === "Truck"){
+                    if(card.value === 1 && carta.active){
+                        discount = 0;
+                    }
+                    else{
+                        discount = 1;
+                    }
+                }
+    
+                if(carta.name === "Assembler" && carta.active){
+                    builderEffect = true;
+                    if(card.name === "Wholesaler"){
+                        wholesaler.set("img", "wholesaler.png");
+                        wholesaler.set("occupied", false);
+                    }
+                    if(card.name === "Lotto"){
+                        lotto.set("img", "lotto.png");
+                        lotto.set("occupied", false);
+                    }
+                }
+            })
+                
+                const cardOwner = {id: card.id,name: card.name, value: card.value, active: builderEffect ? true : false, stars: card.stars, type: card.type}
+                const totalCards = [...IAValors.get("cards"),cardOwner];
+                
+                for (let i = 0; i< shopCards.length; i++){
+                    const carta = shopCards.get(i);
+                    for (const property in carta){
+                         if (property === "id"){
+                            if(carta[property] === card.id){
+                                shopCards.delete(i);
+                            }
+                         }
+                    }
+    
+                    const actualCarta = actualCards.get(i);
+    
+                    for (const property in actualCarta){
+                        if (property === "id"){
+                           if(actualCarta[property] === card.id){
+                            actualCards.delete(i);
+                           }
+                        }
+                   }
+        
+                    
+                    
+    
+                }  
+                IAValors.set("cards",totalCards);
+                IAValors.set("mint",IAValors.get("mint")-cardOwner.value+discount);
+                supplier.set("img", players < 4 ? `supplier1Used${supplier.get("occupied")}.png` : `supplierUsed${supplier.get("occupied")}.png`);
+                supplier.set("occupied", Number(supplier.get("occupied"))+1);
+                
+                
+            
+        
+    }
 
+    const handleBuildIA = (card: { id: string; value: number; name: string; active:boolean; stars: number; type:CardTypes}) => {
+        
+            let discount = 0;
+    
+            if(mypresence == null){
+                return null;
+            }
+    
+            IAValors.get("cards").forEach((carta)=>{
+                if(carta == null){
+                    return null;
+                }
+                if(carta.name === "Crane" && carta.active){
+                        discount = 1;
+                }
+            })
+    
+                
+                const cardOwner = {id: card.id,name: card.name, value: card.value, active: true, stars: card.stars, type: card.type}
+                
+                if(card.name === "Wholesaler"){
+                    wholesaler.set("img", "wholesaler.png");
+                    wholesaler.set("occupied", false);
+                }
+    
+                if(card.name === "Lotto"){
+                    lotto.set("img", "lotto.png");
+                    lotto.set("occupied", false);
+                }
+    
+                for (let i = 0; i< IAValors.get("cards").length; i++){
+                    const carta = IAValors.get("cards")[i];
+                    for (const property in carta){
+                         if (property === "id"){
+                            if(carta[property] === card.id){
+                                IAValors.get("cards").splice(i,1);
+                            }
+                        }
+                    }
+                }  
+    
+                const totalCards = [...IAValors.get("cards"),cardOwner];
+                IAValors.set("cards",totalCards);
+                IAValors.set("mint",IAValors.get("mint")-2+discount);
+                
+                IAValors.set("stars",IAValors.get("stars")+card.stars);
+                
+                builder.set("img", players < 4 ? `builder1Used${builder.get("occupied")}.png` : `builderUsed${builder.get("occupied")}.png`);
+                builder.set("occupied", Number(builder.get("occupied"))+1);
+                   
+                
+            
+        
+    }
+   const handleLottoIA = () => {
+
+            if(shopCards == null || mypresence == null){
+                return null;
+            }
+                
+                   
+                    if(shopCards.get(0) !== undefined && shopCards.get(1) !== undefined && actualCards.length === 2){
+                        
+                        if (shopCards.get(2) !== undefined){
+                            lotto.set("img", "lottoUsed.png");
+                            lotto.set("occupied", "true");
+                            const cartaLista = shopCards.get(2);
+                            if(cartaLista == undefined){
+                                return null;
+                            }
+                            const totalCards = [...IAValors.get("cards"),cartaLista];
+                            shopCards.delete(2);
+                            IAValors.set("cards",totalCards);
+                            IAValors.set("mint",IAValors.get("mint")-3);
+                        
+                            
+                        }
+                     
+                    }
+                    if(shopCards.get(0) !== undefined && actualCards.length === 1){
+                        
+                        if (shopCards.get(1) !== undefined){
+    
+                            lotto.set("img", "lottoUsed.png");
+                            lotto.set("occupied", "true");
+                            const cartaLista = shopCards.get(1);
+                            if(cartaLista == undefined){
+                                return null;
+                            }
+                            const totalCards = [...IAValors.get("cards"),cartaLista];
+                            shopCards.delete(1);
+                            IAValors.set("cards",totalCards);
+                            IAValors.set("mint",IAValors.get("mint")-3);
+                           
+                            
+                        }
+                        
+                      
+                    }
+    
+                    if(actualCards.length === 0){
+                        
+                        if (shopCards.get(0) !== undefined){
+                            lotto.set("img", "lottoUsed.png");
+                            lotto.set("occupied", "true");
+                            const cartaLista = shopCards.get(0);
+                            if(cartaLista == undefined){
+                                return null;
+                            }
+                            const totalCards = [...IAValors.get("cards"),cartaLista];
+                            shopCards.delete(0);
+                            IAValors.set("cards",totalCards);
+                            IAValors.set("mint",IAValors.get("mint")-3);
+                           
+                            
+                            
+                        }
+                    }
+            
+        
+    }
+
+    const handleDifficultIA = (card: { value: any; stars: any; },index: number) => {
+        console.log("huh?");
+        console.log(listaSortDifficult.get(0));
+
+        if(difficult){
+            console.log(difficult)
+            if(listaSortDifficult.get(0) == "crow"){
+                if(IAValors.get("mint") >= 1){
+                    crow.set("img", "crowUsed.png");
+                    crow.set("occupied", true);
+                    IAValors.set("mint",IAValors.get("mint")+2);
+                    update({mint:Number(mypresence.mint)+1});
+                }else{
+                    IAValors.set("lastAction","pass");
+                }
+                
+            }else if(listaSortDifficult.get(0) == "recycler"){
+                if(IAValors.get("mint") >= 1){
+                    if (card == null){
+                        return null;
+                    }
+                        const cost = card.value + card.stars;
+                        const nuevaCards = IAValors.get("cards").slice();
+                        nuevaCards.splice(index,1);
+                        IAValors.set("cards",nuevaCards);
+                        IAValors.set("mint",IAValors.get("mint")+cost);
+                        recycler.set("img", "recyclerUsed.png");
+                        recycler.set("occupied", true);
+                
+                }else{
+                    IAValors.set("lastAction","pass");
+                }
+    
+            }else if(listaSortDifficult.get(0) == "swap"){
+                if(IAValors.get("mint") >= 2){
+    
+                    if(shopCards.get(0) !== undefined && shopCards.get(1) !== undefined && actualCards.length === 2){
+                    
+                        if (shopCards.get(2) !== undefined){
+                            swap.set("img", "swapUsed.png");
+                            swap.set("occupied", true);
+                            const cartaLista = shopCards.get(2);
+                            if(cartaLista == undefined){
+                                return null;
+                            }
+                            const nuevaCards = IAValors.get("cards").slice();
+                            nuevaCards.splice(index,1);
+                            const totalCards = [...nuevaCards,cartaLista];
+                            shopCards.delete(2);
+                            IAValors.set("cards",totalCards);
+                            IAValors.set("mint",IAValors.get("mint")-2);
+                            
+                        }
+                        
+                    }
+                    if(shopCards.get(0) !== undefined && actualCards.length === 1){
+                        
+                        if (shopCards.get(1) !== undefined){
+        
+                            swap.set("img", "swapUsed.png");
+                            swap.set("occupied", true);
+                            const cartaLista = shopCards.get(1);
+                            if(cartaLista == undefined){
+                                return null;
+                            }
+                            const nuevaCards = IAValors.get("cards").slice();
+                            nuevaCards.splice(index,1);
+                            const totalCards = [...nuevaCards,cartaLista];
+                            shopCards.delete(1);
+                            IAValors.set("cards",totalCards);
+                            IAValors.set("mint",IAValors.get("mint")-2);
+                            
+                        }
+                    }
+        
+                    if(actualCards.length === 0){
+                        
+                        if (shopCards.get(0) !== undefined){
+                            swap.set("img", "swapUsed.png");
+                            swap.set("occupied", true);
+                            const cartaLista = shopCards.get(0);
+                            if(cartaLista == undefined){
+                                return null;
+                            }
+                            const nuevaCards = IAValors.get("cards").slice();
+                            nuevaCards.splice(index,1);
+                            const totalCards = [...nuevaCards,cartaLista];
+                            shopCards.delete(0);
+                            IAValors.set("cards",totalCards);
+                            IAValors.set("mint",IAValors.get("mint")-2);
+                                 
+                        }
+                    }
+                    
+                }else{
+                    IAValors.set("lastAction","pass");
+                }
+    
+            }else if(listaSortDifficult.get(0) == "temp"){
+        
+                    IAValors.set("lastAction","pass");        
+            }else{
+                IAValors.set("lastAction","pass"); 
+            }
+        }else{
+            IAValors.set("lastAction","pass"); 
+        }
+        
+    }
+
+    
+    const SonicActions = () => {
+
+        const activo : Card[] = [];
+        IAValors.get("cards").forEach((card) => {
+                    
+            if(!card.active){
+                activo.push(card);
+            }
+        });
+
+        switch(IAValors.get("lastAction")){
+            
+            case "":
+
+                if(Number(producer.get("occupied")) > 3 || IAValors.get("mint") == 0){
+                    if((wholesaler.get("occupied")) || IAValors.get("mint") == 0){
+                        if(IAValors.get("mint") >= 2 && Number(builder.get("occupied")) <= 2 && activo.length != 0){
+                            handleBuildIA(activo[0]);
+                            IAValors.set("lastAction","builder");
+                        }else{
+                            if(Number(supplier.get("occupied")) <= 2 && activo.length === 0){
+                                
+                                let valorMasAlto = actualCards.get(0);
+                                if(valorMasAlto == undefined){
+                                    return null;
+                                }
+                                if(IAValors.get("mint") < valorMasAlto.value){
+                                    valorMasAlto = actualCards.get(1);
+                                }
+                                actualCards.forEach((card)=>{
+                                    if(valorMasAlto == undefined){
+                                        return null;
+                                    }
+                                    if(IAValors.get("mint") >= card.value){
+                                        if(card.value > valorMasAlto.value){
+                                            valorMasAlto = card;
+                                        }else if(card.value == valorMasAlto.value){
+                                            if(card.type == CardTypes.culture && (valorMasAlto.type == CardTypes.deed || valorMasAlto.type == CardTypes.utility || valorMasAlto.type == CardTypes.production)){
+                                                valorMasAlto = card;
+                                            }
+                                            if(card.type == CardTypes.production && (valorMasAlto.type == CardTypes.deed || valorMasAlto.type == CardTypes.utility)){
+                                                valorMasAlto = card;
+                                            }
+                                            if(card.type == CardTypes.utility && valorMasAlto.type == CardTypes.deed){
+                                                valorMasAlto = card;
+                                            }
+                                        }
+                                    }
+                                    
+
+                                })
+                                if(valorMasAlto == undefined){
+                                    return null;
+                                }
+                                
+                                if(IAValors.get("mint") >= valorMasAlto.value){
+                                    handleCompraIA(valorMasAlto);
+                                    IAValors.set("lastAction","supplier");
+                                }else{
+                                    if(leader.get("occupied") || IAValors.get("mint") == 0){
+                                        if(!lotto.get("occupied") &&  IAValors.get("mint") >= 3){
+                                            handleLottoIA()
+                                            IAValors.set("lastAction","lotto");
+                                        }else{
+                                            if(listaSortDifficult.length != 0 && (!crow.get("occupied") || !swap.get("occupied") || !recycler.get("occupied") || !temp.get("occupied"))){
+                                                handleDifficultIA(IAValors.get("cards")[0],0);
+                                                IAValors.set("lastAction","diff");
+                                            }else{
+                                                IAValors.set("lastAction","pass");
+                                            }
+                                            
+                                        }
+                                    }else{
+                                        leader.set("img", "leaderUsed.png");
+                                        leader.set("occupied", true);
+                                        IAValors.set("mint",IAValors.get("mint")-1);
+                                        IAValors.set("first",true);
+                                        IAValors.set("lastAction","leader");
+                                    }
+                                }
+            
+                            }else{
+                                if(leader.get("occupied") || IAValors.get("mint") == 0){
+                                    if(!lotto.get("occupied") &&  IAValors.get("mint") >= 3){
+                                        handleLottoIA()
+                                        IAValors.set("lastAction","lotto");
+                                    }else{
+                                        if(listaSortDifficult.length != 0 && !crow.get("occupied") || !swap.get("occupied") || !recycler.get("occupied") || !temp.get("occupied")){
+                                            handleDifficultIA(IAValors.get("cards")[0],0);
+                                            IAValors.set("lastAction","diff");
+                                        }else{
+                                            IAValors.set("lastAction","pass");
+                                        }
+                                    }
+                                }else{
+                                    leader.set("img", "leaderUsed.png");
+                                    leader.set("occupied", true);
+                                    IAValors.set("first",true);
+                                    IAValors.set("mint",IAValors.get("mint")-1);
+                                    IAValors.set("lastAction","leader");
+                                }
+                            }
+                        }
+
+                    }else{
+                        wholesaler.set("img", "wholesalerUsed.png");
+                        wholesaler.set("occupied", true);
+                        IAValors.set("lastAction","wholesaler");
+                        IAValors.set("mint",IAValors.get("mint")+1);
+                    }
+                }
+                else{
+                    producer.set("img", players === 4 || players === 1 ? `producerUsed${producer.get("occupied")}.png` : `producer1Used${producer.get("occupied")}.png`);
+                    producer.set("occupied", Number(producer.get("occupied"))+1);
+                    IAValors.set("lastAction","producer");
+                    IAValors.set("mint",IAValors.get("mint")+1);
+                }
+                break;
+
+            case "producer":
+              
+                    if((wholesaler.get("occupied")) || IAValors.get("mint") == 0){
+                        if(IAValors.get("mint") >= 2 && Number(builder.get("occupied")) <= 2 && activo.length != 0){
+                            handleBuildIA(activo[0]);
+                            IAValors.set("lastAction","builder");
+                        }else{
+                            if(Number(supplier.get("occupied")) <= 2 && activo.length === 0){
+                   
+                                let valorMasAlto = actualCards.get(0);
+                                if(valorMasAlto == undefined){
+                                    return null;
+                                }
+                                if(IAValors.get("mint") < valorMasAlto.value){
+                                    valorMasAlto = actualCards.get(1);
+                                }
+                                actualCards.forEach((card)=>{
+                                    if(valorMasAlto == undefined){
+                                        return null;
+                                    }
+                                    if(IAValors.get("mint") >= card.value){
+                                        if(card.value > valorMasAlto.value){
+                                            valorMasAlto = card;
+                                        }else if(card.value == valorMasAlto.value){
+                                            if(card.type == CardTypes.culture && (valorMasAlto.type == CardTypes.deed || valorMasAlto.type == CardTypes.utility || valorMasAlto.type == CardTypes.production)){
+                                                valorMasAlto = card;
+                                            }
+                                            if(card.type == CardTypes.production && (valorMasAlto.type == CardTypes.deed || valorMasAlto.type == CardTypes.utility)){
+                                                valorMasAlto = card;
+                                            }
+                                            if(card.type == CardTypes.utility && valorMasAlto.type == CardTypes.deed){
+                                                valorMasAlto = card;
+                                            }
+                                        }
+                                    }
+                                    
+
+                                })
+                                if(valorMasAlto == undefined){
+                                    return null;
+                                }
+                                
+                                if(IAValors.get("mint") >= valorMasAlto.value){
+                                    handleCompraIA(valorMasAlto);
+                                    IAValors.set("lastAction","supplier");
+                                }else{
+                                    if(leader.get("occupied") || IAValors.get("mint") == 0){
+                                        if(!lotto.get("occupied") &&  IAValors.get("mint") >= 3){
+                                            handleLottoIA()
+                                            IAValors.set("lastAction","lotto");
+                                        }else{
+                                            if(listaSortDifficult.length != 0 && !crow.get("occupied") || !swap.get("occupied") || !recycler.get("occupied") || !temp.get("occupied")){
+                                                handleDifficultIA(IAValors.get("cards")[0],0);
+                                                IAValors.set("lastAction","diff");
+                                            }else{
+                                                IAValors.set("lastAction","pass");
+                                            }
+                                        }
+                                    }else{
+                                        leader.set("img", "leaderUsed.png");
+                                        leader.set("occupied", true);
+                                        IAValors.set("first",true);
+                                        IAValors.set("mint",IAValors.get("mint")-1);
+                                        IAValors.set("lastAction","leader");
+                                    }
+                                }
+            
+                            }else{
+                                if(leader.get("occupied") || IAValors.get("mint") == 0){
+                                    if(!lotto.get("occupied") &&  IAValors.get("mint") >= 3){
+                                        handleLottoIA()
+                                        IAValors.set("lastAction","lotto");
+                                    }else{
+                                        if(listaSortDifficult.length != 0 && !crow.get("occupied") || !swap.get("occupied") || !recycler.get("occupied") || !temp.get("occupied")){
+                                            handleDifficultIA(IAValors.get("cards")[0],0);
+                                            IAValors.set("lastAction","diff");
+                                        }else{
+                                            IAValors.set("lastAction","pass");
+                                        }
+                                    }
+                                }else{
+                                    leader.set("img", "leaderUsed.png");
+                                    leader.set("occupied", true);
+                                    IAValors.set("first",true);
+                                    IAValors.set("mint",IAValors.get("mint")-1);
+                                    IAValors.set("lastAction","leader");
+                                }
+                            }
+                        }
+
+                    }else{
+                        wholesaler.set("img", "wholesalerUsed.png");
+                        wholesaler.set("occupied", true);
+                        IAValors.set("lastAction","wholesaler");
+                        IAValors.set("mint",IAValors.get("mint")+1);
+                    }
+                
+               
+                break;
+            case "wholesaler":
+                
+                    if(IAValors.get("mint") >= 2 && Number(builder.get("occupied")) <= 2 && activo.length != 0){
+                        handleBuildIA(activo[0]);
+                        IAValors.set("lastAction","builder");
+                    }else{
+                        if(Number(supplier.get("occupied")) <= 2 && activo.length === 0){
+               
+                            let valorMasAlto = actualCards.get(0);
+                                if(valorMasAlto == undefined){
+                                    return null;
+                                }
+                                if(IAValors.get("mint") < valorMasAlto.value){
+                                    valorMasAlto = actualCards.get(1);
+                                }
+                                actualCards.forEach((card)=>{
+                                    if(valorMasAlto == undefined){
+                                        return null;
+                                    }
+                                    if(IAValors.get("mint") >= card.value){
+                                        if(card.value > valorMasAlto.value){
+                                            valorMasAlto = card;
+                                        }else if(card.value == valorMasAlto.value){
+                                            if(card.type == CardTypes.culture && (valorMasAlto.type == CardTypes.deed || valorMasAlto.type == CardTypes.utility || valorMasAlto.type == CardTypes.production)){
+                                                valorMasAlto = card;
+                                            }
+                                            if(card.type == CardTypes.production && (valorMasAlto.type == CardTypes.deed || valorMasAlto.type == CardTypes.utility)){
+                                                valorMasAlto = card;
+                                            }
+                                            if(card.type == CardTypes.utility && valorMasAlto.type == CardTypes.deed){
+                                                valorMasAlto = card;
+                                            }
+                                        }
+                                    }
+                                    
+
+                                })
+                                if(valorMasAlto == undefined){
+                                    return null;
+                                }
+                                
+                                if(IAValors.get("mint") >= valorMasAlto.value){
+                                    handleCompraIA(valorMasAlto);
+                                    IAValors.set("lastAction","supplier");
+                            }else{
+                                if(leader.get("occupied") || IAValors.get("mint") == 0){
+                                    if(!lotto.get("occupied") &&  IAValors.get("mint") >= 3){
+                                        handleLottoIA()
+                                        IAValors.set("lastAction","lotto");
+                                    }else{
+                                        if(listaSortDifficult.length != 0 && !crow.get("occupied") || !swap.get("occupied") || !recycler.get("occupied") || !temp.get("occupied")){
+                                            handleDifficultIA(IAValors.get("cards")[0],0);
+                                            IAValors.set("lastAction","diff");
+                                        }else{
+                                            IAValors.set("lastAction","pass");
+                                        }
+                                    }
+                                }else{
+                                    leader.set("img", "leaderUsed.png");
+                                    leader.set("occupied", true);
+                                    IAValors.set("first",true);
+                                    IAValors.set("mint",IAValors.get("mint")-1);
+                                    IAValors.set("lastAction","leader");
+                                }
+                            }
+        
+                        }else{
+                            if(leader.get("occupied") || IAValors.get("mint") == 0){
+                                if(!lotto.get("occupied") &&  IAValors.get("mint") >= 3){
+                                    handleLottoIA()
+                                    IAValors.set("lastAction","lotto");
+                                }else{
+                                    if(listaSortDifficult.length != 0 && !crow.get("occupied") || !swap.get("occupied") || !recycler.get("occupied") || !temp.get("occupied")){
+                                        handleDifficultIA(IAValors.get("cards")[0],0);
+                                        IAValors.set("lastAction","diff");
+                                    }else{
+                                        IAValors.set("lastAction","pass");
+                                    }
+                                }
+                            }else{
+                                leader.set("img", "leaderUsed.png");
+                                leader.set("occupied", true);
+                                IAValors.set("first",true);
+                                IAValors.set("mint",IAValors.get("mint")-1);
+                                IAValors.set("lastAction","leader");
+                            }
+                        }
+                    }
+
+                
+                break;
+            case "builder":
+                
+                if(Number(supplier.get("occupied")) <= 2 && activo.length === 0){
+                   
+                    let valorMasAlto = actualCards.get(0);
+                                if(valorMasAlto == undefined){
+                                    return null;
+                                }
+                                if(IAValors.get("mint") < valorMasAlto.value){
+                                    valorMasAlto = actualCards.get(1);
+                                }
+                                actualCards.forEach((card)=>{
+                                    if(valorMasAlto == undefined){
+                                        return null;
+                                    }
+                                    if(IAValors.get("mint") >= card.value){
+                                        if(card.value > valorMasAlto.value){
+                                            valorMasAlto = card;
+                                        }else if(card.value == valorMasAlto.value){
+                                            if(card.type == CardTypes.culture && (valorMasAlto.type == CardTypes.deed || valorMasAlto.type == CardTypes.utility || valorMasAlto.type == CardTypes.production)){
+                                                valorMasAlto = card;
+                                            }
+                                            if(card.type == CardTypes.production && (valorMasAlto.type == CardTypes.deed || valorMasAlto.type == CardTypes.utility)){
+                                                valorMasAlto = card;
+                                            }
+                                            if(card.type == CardTypes.utility && valorMasAlto.type == CardTypes.deed){
+                                                valorMasAlto = card;
+                                            }
+                                        }
+                                    }
+                                    
+
+                                })
+                                if(valorMasAlto == undefined){
+                                    return null;
+                                }
+                                
+                                if(IAValors.get("mint") >= valorMasAlto.value){
+                                    handleCompraIA(valorMasAlto);
+                                    IAValors.set("lastAction","supplier");
+                    }else{
+                        if(leader.get("occupied") || IAValors.get("mint") == 0){
+                            if(!lotto.get("occupied") &&  IAValors.get("mint") >= 3){
+                                handleLottoIA()
+                                IAValors.set("lastAction","lotto");
+                            }else{
+                                IAValors.set("lastAction","pass");
+                            }
+                        }else{
+                            leader.set("img", "leaderUsed.png");
+                            leader.set("occupied", true);
+                            IAValors.set("first",true);
+                            IAValors.set("mint",IAValors.get("mint")-1);
+                            IAValors.set("lastAction","leader");
+                        }
+                    }
+
+                }else{
+                
+                    if(leader.get("occupied") || IAValors.get("mint") == 0){
+                        if(!lotto.get("occupied") &&  IAValors.get("mint") >= 3){
+                            handleLottoIA()
+                            IAValors.set("lastAction","lotto");
+                        }else{
+                            if(listaSortDifficult.length != 0 && !crow.get("occupied") || !swap.get("occupied") || !recycler.get("occupied") || !temp.get("occupied")){
+                                handleDifficultIA(IAValors.get("cards")[0],0);
+                                IAValors.set("lastAction","diff");
+                            }else{
+                                IAValors.set("lastAction","pass");
+                            }
+                        }
+                    }else{
+                        leader.set("img", "leaderUsed.png");
+                        leader.set("occupied", true);
+                        IAValors.set("first",true);
+                        IAValors.set("mint",IAValors.get("mint")-1);
+                        IAValors.set("lastAction","leader");
+                    }
+                }
+                break;
+
+            case "supplier":
+
+                if(leader.get("occupied") || IAValors.get("mint") == 0){
+                    if(!lotto.get("occupied") &&  IAValors.get("mint") >= 3){
+                        handleLottoIA()
+                        IAValors.set("lastAction","lotto");
+                    }else{
+                        if(listaSortDifficult.length != 0 && !crow.get("occupied") || !swap.get("occupied") || !recycler.get("occupied") || !temp.get("occupied")){
+                            handleDifficultIA(IAValors.get("cards")[0],0);
+                            IAValors.set("lastAction","diff");
+                        }else{
+                            IAValors.set("lastAction","pass");
+                        }
+                    }
+                }else{
+                    leader.set("img", "leaderUsed.png");
+                    leader.set("occupied", true);
+                    IAValors.set("first",true);
+                    IAValors.set("mint",IAValors.get("mint")-1);
+                    IAValors.set("lastAction","leader");
+                }
+                break;
+
+            case "leader":
+                if(!lotto.get("occupied") &&  IAValors.get("mint") >= 3){
+                    handleLottoIA()
+                    IAValors.set("lastAction","lotto");
+                }else{
+                    if(listaSortDifficult.length != 0 && !crow.get("occupied") || !swap.get("occupied") || !recycler.get("occupied") || !temp.get("occupied")){
+                        handleDifficultIA(IAValors.get("cards")[0],0);
+                        IAValors.set("lastAction","diff");
+                    }else{
+                        IAValors.set("lastAction","pass");
+                    }
+                }
+                break;
+            case "lotto": 
+                if(listaSortDifficult.length != 0 && !crow.get("occupied") || !swap.get("occupied") || !recycler.get("occupied") || !temp.get("occupied")){
+                    handleDifficultIA(IAValors.get("cards")[0],0);
+                    IAValors.set("lastAction","diff");
+                }else{
+                    IAValors.set("lastAction","pass");
+                }
+                break;
+            case "diff":
+                IAValors.set("lastAction","pass");
+                break;
+            
+        }
+    }
+
+
+    const MortActions = () => {
+
+        const activo : Card[] = [];
+        IAValors.get("cards").forEach((card) => {
+                    
+            if(!card.active){
+                activo.push(card);
+            }
+        });
+
+        switch(IAValors.get("lastAction")){
+            
+            case "":
+
+                if(Number(producer.get("occupied")) > 3 || IAValors.get("mint") == 0){
+                    if((wholesaler.get("occupied")) || IAValors.get("mint") == 0){
+                        if(IAValors.get("mint") >= 2 && Number(builder.get("occupied")) <= 2 && activo.length != 0){
+                            handleBuildIA(activo[0]);
+                            IAValors.set("lastAction","builder");
+                        }else{
+                            if(Number(supplier.get("occupied")) <= 2){
+                                
+
+                                let valorMasAlto = actualCards.get(0);
+                                if(valorMasAlto == undefined){
+                                    return null;
+                                }
+                                if(IAValors.get("mint") < valorMasAlto.value || valorMasAlto.type == CardTypes.production){
+                                    valorMasAlto = actualCards.get(1);
+                                }
+                                actualCards.forEach((card)=>{
+                                    if(valorMasAlto == undefined){
+                                        return null;
+                                    }
+                                    if(IAValors.get("mint") >= card.value && card.type != CardTypes.production){
+                                        if(card.value > valorMasAlto.value){
+                                            valorMasAlto = card;
+                                        }else if(card.value == valorMasAlto.value){
+                                            if(card.type == CardTypes.utility && (valorMasAlto.type == CardTypes.deed || valorMasAlto.type == CardTypes.culture)){
+                                                valorMasAlto = card;
+                                            }
+                                            if(card.type == CardTypes.deed && valorMasAlto.type == CardTypes.culture){
+                                                valorMasAlto = card;
+                                            }
+                                        }
+                                    }
+                                    
+
+                                })
+                                if(valorMasAlto == undefined){
+                                    return null;
+                                }
+                                
+                                if(IAValors.get("mint") >= valorMasAlto.value){
+                                    handleCompraIA(valorMasAlto);
+                                    IAValors.set("lastAction","supplier");
+                                }else{
+                                    if(leader.get("occupied") || IAValors.get("mint") == 0){
+                                        if(!lotto.get("occupied") &&  IAValors.get("mint") >= 3){
+                                            handleLottoIA()
+                                            IAValors.set("lastAction","lotto");
+                                        }else{
+                                            if(listaSortDifficult.length != 0 && !crow.get("occupied") || !swap.get("occupied") || !recycler.get("occupied") || !temp.get("occupied")){
+                                                handleDifficultIA(IAValors.get("cards")[0],0);
+                                                IAValors.set("lastAction","diff");
+                                            }else{
+                                                IAValors.set("lastAction","pass");
+                                            }
+                                            
+                                        }
+                                    }else{
+                                        leader.set("img", "leaderUsed.png");
+                                        leader.set("occupied", true);
+                                        IAValors.set("mint",IAValors.get("mint")-1);
+                                        IAValors.set("first",true);
+                                        IAValors.set("lastAction","leader");
+                                    }
+                                }
+            
+                            }else{
+                                if(leader.get("occupied") || IAValors.get("mint") == 0){
+                                    if(!lotto.get("occupied") &&  IAValors.get("mint") >= 3){
+                                        handleLottoIA()
+                                        IAValors.set("lastAction","lotto");
+                                    }else{
+                                        if(listaSortDifficult.length != 0 && !crow.get("occupied") || !swap.get("occupied") || !recycler.get("occupied") || !temp.get("occupied")){
+                                            handleDifficultIA(IAValors.get("cards")[0],0);
+                                            IAValors.set("lastAction","diff");
+                                        }else{
+                                            IAValors.set("lastAction","pass");
+                                        }
+                                    }
+                                }else{
+                                    leader.set("img", "leaderUsed.png");
+                                    leader.set("occupied", true);
+                                    IAValors.set("first",true);
+                                    IAValors.set("mint",IAValors.get("mint")-1);
+                                    IAValors.set("lastAction","leader");
+                                }
+                            }
+                        }
+
+                    }else{
+                        wholesaler.set("img", "wholesalerUsed.png");
+                        wholesaler.set("occupied", true);
+                        IAValors.set("lastAction","wholesaler");
+                        IAValors.set("mint",IAValors.get("mint")+1);
+                    }
+                }
+                else{
+                    producer.set("img", players === 4 || players === 1 ? `producerUsed${producer.get("occupied")}.png` : `producer1Used${producer.get("occupied")}.png`);
+                    producer.set("occupied", Number(producer.get("occupied"))+1);
+                    IAValors.set("lastAction","producer");
+                    IAValors.set("mint",IAValors.get("mint")+1);
+                }
+                break;
+
+            case "producer":
+              
+                    if((wholesaler.get("occupied")) || IAValors.get("mint") == 0){
+                        if(IAValors.get("mint") >= 2 && Number(builder.get("occupied")) <= 2 && activo.length != 0){
+                            handleBuildIA(activo[0]);
+                            IAValors.set("lastAction","builder");
+                        }else{
+                            if(Number(supplier.get("occupied")) <= 2){
+                   
+                                let valorMasAlto = actualCards.get(0);
+                                if(valorMasAlto == undefined){
+                                    return null;
+                                }
+                                if(IAValors.get("mint") < valorMasAlto.value || valorMasAlto.type == CardTypes.production){
+                                    valorMasAlto = actualCards.get(1);
+                                }
+                                actualCards.forEach((card)=>{
+                                    if(valorMasAlto == undefined){
+                                        return null;
+                                    }
+                                    if(IAValors.get("mint") >= card.value && card.type != CardTypes.production){
+                                        if(card.value > valorMasAlto.value){
+                                            valorMasAlto = card;
+                                        }else if(card.value == valorMasAlto.value){
+                                            if(card.type == CardTypes.utility && (valorMasAlto.type == CardTypes.deed || valorMasAlto.type == CardTypes.culture)){
+                                                valorMasAlto = card;
+                                            }
+                                            if(card.type == CardTypes.deed && valorMasAlto.type == CardTypes.culture){
+                                                valorMasAlto = card;
+                                            }
+                                        }
+                                    }
+                                    
+
+                                })
+                                if(valorMasAlto == undefined){
+                                    return null;
+                                }
+                                
+                                if(IAValors.get("mint") >= valorMasAlto.value){
+                                    handleCompraIA(valorMasAlto);
+                                    IAValors.set("lastAction","supplier");
+                                }else{
+                                    if(leader.get("occupied") || IAValors.get("mint") == 0){
+                                        if(!lotto.get("occupied") &&  IAValors.get("mint") >= 3){
+                                            handleLottoIA()
+                                            IAValors.set("lastAction","lotto");
+                                        }else{
+                                            if(listaSortDifficult.length != 0 && !crow.get("occupied") || !swap.get("occupied") || !recycler.get("occupied") || !temp.get("occupied")){
+                                                handleDifficultIA(IAValors.get("cards")[0],0);
+                                                IAValors.set("lastAction","diff");
+                                            }else{
+                                                IAValors.set("lastAction","pass");
+                                            }
+                                        }
+                                    }else{
+                                        leader.set("img", "leaderUsed.png");
+                                        leader.set("occupied", true);
+                                        IAValors.set("first",true);
+                                        IAValors.set("mint",IAValors.get("mint")-1);
+                                        IAValors.set("lastAction","leader");
+                                    }
+                                }
+            
+                            }else{
+                                if(leader.get("occupied") || IAValors.get("mint") == 0){
+                                    if(!lotto.get("occupied") &&  IAValors.get("mint") >= 3){
+                                        handleLottoIA()
+                                        IAValors.set("lastAction","lotto");
+                                    }else{
+                                        if(listaSortDifficult.length != 0 && !crow.get("occupied") || !swap.get("occupied") || !recycler.get("occupied") || !temp.get("occupied")){
+                                            handleDifficultIA(IAValors.get("cards")[0],0);
+                                            IAValors.set("lastAction","diff");
+                                        }else{
+                                            IAValors.set("lastAction","pass");
+                                        }
+                                    }
+                                }else{
+                                    leader.set("img", "leaderUsed.png");
+                                    leader.set("occupied", true);
+                                    IAValors.set("first",true);
+                                    IAValors.set("mint",IAValors.get("mint")-1);
+                                    IAValors.set("lastAction","leader");
+                                }
+                            }
+                        }
+
+                    }else{
+                        wholesaler.set("img", "wholesalerUsed.png");
+                        wholesaler.set("occupied", true);
+                        IAValors.set("lastAction","wholesaler");
+                        IAValors.set("mint",IAValors.get("mint")+1);
+                    }
+                
+               
+                break;
+            case "wholesaler":
+                
+                    if(IAValors.get("mint") >= 2 && Number(builder.get("occupied")) <= 2 && activo.length != 0){
+                        handleBuildIA(activo[0]);
+                        IAValors.set("lastAction","builder");
+                    }else{
+                        if(Number(supplier.get("occupied")) <= 2){
+               
+                            let valorMasAlto = actualCards.get(0);
+                            if(valorMasAlto == undefined){
+                                return null;
+                            }
+                            if(IAValors.get("mint") < valorMasAlto.value || valorMasAlto.type == CardTypes.production){
+                                valorMasAlto = actualCards.get(1);
+                            }
+                            actualCards.forEach((card)=>{
+                                if(valorMasAlto == undefined){
+                                    return null;
+                                }
+                                if(IAValors.get("mint") >= card.value && card.type != CardTypes.production){
+                                    if(card.value > valorMasAlto.value){
+                                        valorMasAlto = card;
+                                    }else if(card.value == valorMasAlto.value){
+                                        if(card.type == CardTypes.utility && (valorMasAlto.type == CardTypes.deed || valorMasAlto.type == CardTypes.culture)){
+                                            valorMasAlto = card;
+                                        }
+                                        if(card.type == CardTypes.deed && valorMasAlto.type == CardTypes.culture){
+                                            valorMasAlto = card;
+                                        }
+                                    }
+                                }
+                                
+
+                            })
+                            if(valorMasAlto == undefined){
+                                return null;
+                            }
+                            
+                            if(IAValors.get("mint") >= valorMasAlto.value){
+                                handleCompraIA(valorMasAlto);
+                                IAValors.set("lastAction","supplier");
+                            }else{
+                                if(leader.get("occupied") || IAValors.get("mint") == 0){
+                                    if(!lotto.get("occupied") &&  IAValors.get("mint") >= 3){
+                                        handleLottoIA()
+                                        IAValors.set("lastAction","lotto");
+                                    }else{
+                                        if(listaSortDifficult.length != 0 && !crow.get("occupied") || !swap.get("occupied") || !recycler.get("occupied") || !temp.get("occupied")){
+                                            handleDifficultIA(IAValors.get("cards")[0],0);
+                                            IAValors.set("lastAction","diff");
+                                        }else{
+                                            IAValors.set("lastAction","pass");
+                                        }
+                                    }
+                                }else{
+                                    leader.set("img", "leaderUsed.png");
+                                    leader.set("occupied", true);
+                                    IAValors.set("first",true);
+                                    IAValors.set("mint",IAValors.get("mint")-1);
+                                    IAValors.set("lastAction","leader");
+                                }
+                            }
+        
+                        }else{
+                            if(leader.get("occupied") || IAValors.get("mint") == 0){
+                                if(!lotto.get("occupied") &&  IAValors.get("mint") >= 3){
+                                    handleLottoIA()
+                                    IAValors.set("lastAction","lotto");
+                                }else{
+                                    if(listaSortDifficult.length != 0 && !crow.get("occupied") || !swap.get("occupied") || !recycler.get("occupied") || !temp.get("occupied")){
+                                        handleDifficultIA(IAValors.get("cards")[0],0);
+                                        IAValors.set("lastAction","diff");
+                                    }else{
+                                        IAValors.set("lastAction","pass");
+                                    }
+                                }
+                            }else{
+                                leader.set("img", "leaderUsed.png");
+                                leader.set("occupied", true);
+                                IAValors.set("first",true);
+                                IAValors.set("mint",IAValors.get("mint")-1);
+                                IAValors.set("lastAction","leader");
+                            }
+                        }
+                    }
+
+                
+                break;
+            case "builder":
+                
+                if(Number(supplier.get("occupied")) <= 2){
+                   
+                    let valorMasAlto = actualCards.get(0);
+                    if(valorMasAlto == undefined){
+                        return null;
+                    }
+                    if(IAValors.get("mint") < valorMasAlto.value || valorMasAlto.type == CardTypes.production){
+                        valorMasAlto = actualCards.get(1);
+                    }
+                    actualCards.forEach((card)=>{
+                        if(valorMasAlto == undefined){
+                            return null;
+                        }
+                        if(IAValors.get("mint") >= card.value && card.type != CardTypes.production){
+                            if(card.value > valorMasAlto.value){
+                                valorMasAlto = card;
+                            }else if(card.value == valorMasAlto.value){
+                                if(card.type == CardTypes.utility && (valorMasAlto.type == CardTypes.deed || valorMasAlto.type == CardTypes.culture)){
+                                    valorMasAlto = card;
+                                }
+                                if(card.type == CardTypes.deed && valorMasAlto.type == CardTypes.culture){
+                                    valorMasAlto = card;
+                                }
+                            }
+                        }
+                        
+
+                    })
+                    if(valorMasAlto == undefined){
+                        return null;
+                    }
+                    
+                    if(IAValors.get("mint") >= valorMasAlto.value){
+                        handleCompraIA(valorMasAlto);
+                        IAValors.set("lastAction","supplier");
+                    }else{
+                        if(leader.get("occupied") || IAValors.get("mint") == 0){
+                            if(!lotto.get("occupied") &&  IAValors.get("mint") >= 3){
+                                handleLottoIA()
+                                IAValors.set("lastAction","lotto");
+                            }else{
+                                IAValors.set("lastAction","pass");
+                            }
+                        }else{
+                            leader.set("img", "leaderUsed.png");
+                            leader.set("occupied", true);
+                            IAValors.set("first",true);
+                            IAValors.set("mint",IAValors.get("mint")-1);
+                            IAValors.set("lastAction","leader");
+                        }
+                    }
+
+                }else{
+                
+                    if(leader.get("occupied") || IAValors.get("mint") == 0){
+                        if(!lotto.get("occupied") &&  IAValors.get("mint") >= 3){
+                            handleLottoIA()
+                            IAValors.set("lastAction","lotto");
+                        }else{
+                            if(listaSortDifficult.length != 0 && !crow.get("occupied") || !swap.get("occupied") || !recycler.get("occupied") || !temp.get("occupied")){
+                                handleDifficultIA(IAValors.get("cards")[0],0);
+                                IAValors.set("lastAction","diff");
+                            }else{
+                                IAValors.set("lastAction","pass");
+                            }
+                        }
+                    }else{
+                        leader.set("img", "leaderUsed.png");
+                        leader.set("occupied", true);
+                        IAValors.set("first",true);
+                        IAValors.set("mint",IAValors.get("mint")-1);
+                        IAValors.set("lastAction","leader");
+                    }
+                }
+                break;
+
+            case "supplier":
+
+                if(leader.get("occupied") || IAValors.get("mint") == 0){
+                    if(!lotto.get("occupied") &&  IAValors.get("mint") >= 3){
+                        handleLottoIA()
+                        IAValors.set("lastAction","lotto");
+                    }else{
+                        if(listaSortDifficult.length != 0 && !crow.get("occupied") || !swap.get("occupied") || !recycler.get("occupied") || !temp.get("occupied")){
+                            handleDifficultIA(IAValors.get("cards")[0],0);
+                            IAValors.set("lastAction","diff");
+                        }else{
+                            IAValors.set("lastAction","pass");
+                        }
+                    }
+                }else{
+                    leader.set("img", "leaderUsed.png");
+                    leader.set("occupied", true);
+                    IAValors.set("first",true);
+                    IAValors.set("mint",IAValors.get("mint")-1);
+                    IAValors.set("lastAction","leader");
+                }
+                break;
+
+            case "leader":
+                if(!lotto.get("occupied") &&  IAValors.get("mint") >= 3){
+                    handleLottoIA()
+                    IAValors.set("lastAction","lotto");
+                }else{
+                    if(listaSortDifficult.length != 0 && !crow.get("occupied") || !swap.get("occupied") || !recycler.get("occupied") || !temp.get("occupied")){
+                        handleDifficultIA(IAValors.get("cards")[0],0);
+                        IAValors.set("lastAction","diff");
+                    }else{
+                        IAValors.set("lastAction","pass");
+                    }
+                }
+                break;
+            case "lotto": 
+                if(listaSortDifficult.length != 0 && !crow.get("occupied") || !swap.get("occupied") || !recycler.get("occupied") || !temp.get("occupied")){
+                    handleDifficultIA(IAValors.get("cards")[0],0);
+                    IAValors.set("lastAction","diff");
+                }else{
+                    IAValors.set("lastAction","pass");
+                }
+                break;
+            case "diff":
+                IAValors.set("lastAction","pass");
+                break;
+            
+        }
+    }
+
+
+    const RachaelActions = () => {
+
+        const activo : Card[] = [];
+        IAValors.get("cards").forEach((card) => {
+                    
+            if(!card.active){
+                activo.push(card);
+            }
+        });
+
+        switch(IAValors.get("lastAction")){
+            
+            case "":
+
+                if(Number(producer.get("occupied")) > 3 || IAValors.get("mint") == 0){
+                    if((wholesaler.get("occupied")) || IAValors.get("mint") == 0){
+                        if(IAValors.get("mint") >= 2 && Number(builder.get("occupied")) <= 2 && activo.length != 0){
+                            handleBuildIA(activo[0]);
+                            IAValors.set("lastAction","builder");
+                        }else{
+                            if(Number(supplier.get("occupied")) <= 2 && activo.length === 0){
+                                
+                                let valorMasAlto = actualCards.get(0);
+                                if(valorMasAlto == undefined){
+                                    return null;
+                                }
+                                if(IAValors.get("mint") < valorMasAlto.value){
+                                    valorMasAlto = actualCards.get(1);
+                                }
+                                actualCards.forEach((card)=>{
+                                    if(valorMasAlto == undefined){
+                                        return null;
+                                    }
+                                    if(IAValors.get("mint") >= card.value){
+                                        if(card.value > valorMasAlto.value){
+                                            valorMasAlto = card;
+                                        }else if(card.value == valorMasAlto.value){
+                                            if(card.type == CardTypes.production && (valorMasAlto.type == CardTypes.deed || valorMasAlto.type == CardTypes.utility || valorMasAlto.type == CardTypes.culture)){
+                                                valorMasAlto = card;
+                                            }
+                                            if(card.type == CardTypes.culture && (valorMasAlto.type == CardTypes.deed || valorMasAlto.type == CardTypes.utility)){
+                                                valorMasAlto = card;
+                                            }
+                                            if(card.type == CardTypes.utility && valorMasAlto.type == CardTypes.deed){
+                                                valorMasAlto = card;
+                                            }
+                                        }
+                                    }
+                                    
+
+                                })
+                                if(valorMasAlto == undefined){
+                                    return null;
+                                }
+                                
+                                if(IAValors.get("mint") >= valorMasAlto.value){
+                                    setMintTokens(minTokens-valorMasAlto.value);
+                                    handleCompraIA(valorMasAlto);
+                                    IAValors.set("lastAction","supplier");
+                                }else{
+                                    if(leader.get("occupied") || IAValors.get("mint") == 0){
+                                        if(!lotto.get("occupied") &&  IAValors.get("mint") >= 3){
+                                            handleLottoIA()
+                                            IAValors.set("lastAction","lotto");
+                                        }else{
+                                            if(listaSortDifficult.length != 0 && !crow.get("occupied") || !swap.get("occupied") || !recycler.get("occupied") || !temp.get("occupied")){
+                                                handleDifficultIA(IAValors.get("cards")[0],0);
+                                                IAValors.set("lastAction","diff");
+                                            }else{
+                                                IAValors.set("lastAction","pass");
+                                            }
+                                            
+                                        }
+                                    }else{
+                                        leader.set("img", "leaderUsed.png");
+                                        leader.set("occupied", true);
+                                        IAValors.set("mint",IAValors.get("mint")-1);
+                                        IAValors.set("first",true);
+                                        IAValors.set("lastAction","leader");
+                                    }
+                                }
+            
+                            }else{
+                                if(leader.get("occupied") || IAValors.get("mint") == 0){
+                                    if(!lotto.get("occupied") &&  IAValors.get("mint") >= 3){
+                                        handleLottoIA()
+                                        IAValors.set("lastAction","lotto");
+                                    }else{
+                                        if(listaSortDifficult.length != 0 && !crow.get("occupied") || !swap.get("occupied") || !recycler.get("occupied") || !temp.get("occupied")){
+                                            handleDifficultIA(IAValors.get("cards")[0],0);
+                                            IAValors.set("lastAction","diff");
+                                        }else{
+                                            IAValors.set("lastAction","pass");
+                                        }
+                                    }
+                                }else{
+                                    leader.set("img", "leaderUsed.png");
+                                    leader.set("occupied", true);
+                                    IAValors.set("first",true);
+                                    IAValors.set("mint",IAValors.get("mint")-1);
+                                    IAValors.set("lastAction","leader");
+                                }
+                            }
+                        }
+
+                    }else{
+                        wholesaler.set("img", "wholesalerUsed.png");
+                        wholesaler.set("occupied", true);
+                        IAValors.set("lastAction","wholesaler");
+                        IAValors.set("mint",IAValors.get("mint")+1);
+                    }
+                }
+                else{
+                    producer.set("img", players === 4 || players === 1 ? `producerUsed${producer.get("occupied")}.png` : `producer1Used${producer.get("occupied")}.png`);
+                    producer.set("occupied", Number(producer.get("occupied"))+1);
+                    IAValors.set("lastAction","producer");
+                    IAValors.set("mint",IAValors.get("mint")+1);
+                }
+                break;
+
+            case "producer":
+              
+                    if((wholesaler.get("occupied")) || IAValors.get("mint") == 0){
+                        if(IAValors.get("mint") >= 2 && Number(builder.get("occupied")) <= 2 && activo.length != 0){
+                            handleBuildIA(activo[0]);
+                            IAValors.set("lastAction","builder");
+                        }else{
+                            if(Number(supplier.get("occupied")) <= 2 && activo.length === 0){
+                   
+                                let valorMasAlto = actualCards.get(0);
+                                if(valorMasAlto == undefined){
+                                    return null;
+                                }
+                                if(IAValors.get("mint") < valorMasAlto.value){
+                                    valorMasAlto = actualCards.get(1);
+                                }
+                                actualCards.forEach((card)=>{
+                                    if(valorMasAlto == undefined){
+                                        return null;
+                                    }
+                                    if(IAValors.get("mint") >= card.value){
+                                        if(card.value > valorMasAlto.value){
+                                            valorMasAlto = card;
+                                        }else if(card.value == valorMasAlto.value){
+                                            if(card.type == CardTypes.production && (valorMasAlto.type == CardTypes.deed || valorMasAlto.type == CardTypes.utility || valorMasAlto.type == CardTypes.culture)){
+                                                valorMasAlto = card;
+                                            }
+                                            if(card.type == CardTypes.culture && (valorMasAlto.type == CardTypes.deed || valorMasAlto.type == CardTypes.utility)){
+                                                valorMasAlto = card;
+                                            }
+                                            if(card.type == CardTypes.utility && valorMasAlto.type == CardTypes.deed){
+                                                valorMasAlto = card;
+                                            }
+                                        }
+                                    }
+                                    
+
+                                })
+                                if(valorMasAlto == undefined){
+                                    return null;
+                                }
+                                
+                                if(IAValors.get("mint") >= valorMasAlto.value){
+                                    setMintTokens(minTokens-valorMasAlto.value);
+                                    handleCompraIA(valorMasAlto);
+                                    IAValors.set("lastAction","supplier");
+                                }else{
+                                    if(leader.get("occupied") || IAValors.get("mint") == 0){
+                                        if(!lotto.get("occupied") &&  IAValors.get("mint") >= 3){
+                                            handleLottoIA()
+                                            IAValors.set("lastAction","lotto");
+                                        }else{
+                                            if(listaSortDifficult.length != 0 && !crow.get("occupied") || !swap.get("occupied") || !recycler.get("occupied") || !temp.get("occupied")){
+                                                handleDifficultIA(IAValors.get("cards")[0],0);
+                                                IAValors.set("lastAction","diff");
+                                            }else{
+                                                IAValors.set("lastAction","pass");
+                                            }
+                                        }
+                                    }else{
+                                        leader.set("img", "leaderUsed.png");
+                                        leader.set("occupied", true);
+                                        IAValors.set("first",true);
+                                        IAValors.set("mint",IAValors.get("mint")-1);
+                                        IAValors.set("lastAction","leader");
+                                    }
+                                }
+            
+                            }else{
+                                if(leader.get("occupied") || IAValors.get("mint") == 0){
+                                    if(!lotto.get("occupied") &&  IAValors.get("mint") >= 3){
+                                        handleLottoIA()
+                                        IAValors.set("lastAction","lotto");
+                                    }else{
+                                        if(listaSortDifficult.length != 0 && !crow.get("occupied") || !swap.get("occupied") || !recycler.get("occupied") || !temp.get("occupied")){
+                                            handleDifficultIA(IAValors.get("cards")[0],0);
+                                            IAValors.set("lastAction","diff");
+                                        }else{
+                                            IAValors.set("lastAction","pass");
+                                        }
+                                    }
+                                }else{
+                                    leader.set("img", "leaderUsed.png");
+                                    leader.set("occupied", true);
+                                    IAValors.set("first",true);
+                                    IAValors.set("mint",IAValors.get("mint")-1);
+                                    IAValors.set("lastAction","leader");
+                                }
+                            }
+                        }
+
+                    }else{
+                        wholesaler.set("img", "wholesalerUsed.png");
+                        wholesaler.set("occupied", true);
+                        IAValors.set("lastAction","wholesaler");
+                        IAValors.set("mint",IAValors.get("mint")+1);
+                    }
+                
+               
+                break;
+            case "wholesaler":
+                
+                    if(IAValors.get("mint") >= 2 && Number(builder.get("occupied")) <= 2 && activo.length != 0){
+                        handleBuildIA(activo[0]);
+                        IAValors.set("lastAction","builder");
+                    }else{
+                        if(Number(supplier.get("occupied")) <= 2 && activo.length === 0){
+               
+                            let valorMasAlto = actualCards.get(0);
+                            if(valorMasAlto == undefined){
+                                return null;
+                            }
+                            if(IAValors.get("mint") < valorMasAlto.value){
+                                valorMasAlto = actualCards.get(1);
+                            }
+                            actualCards.forEach((card)=>{
+                                if(valorMasAlto == undefined){
+                                    return null;
+                                }
+                                if(IAValors.get("mint") >= card.value){
+                                    if(card.value > valorMasAlto.value){
+                                        valorMasAlto = card;
+                                    }else if(card.value == valorMasAlto.value){
+                                        if(card.type == CardTypes.production && (valorMasAlto.type == CardTypes.deed || valorMasAlto.type == CardTypes.utility || valorMasAlto.type == CardTypes.culture)){
+                                            valorMasAlto = card;
+                                        }
+                                        if(card.type == CardTypes.culture && (valorMasAlto.type == CardTypes.deed || valorMasAlto.type == CardTypes.utility)){
+                                            valorMasAlto = card;
+                                        }
+                                        if(card.type == CardTypes.utility && valorMasAlto.type == CardTypes.deed){
+                                            valorMasAlto = card;
+                                        }
+                                    }
+                                }
+                                
+
+                            })
+                            if(valorMasAlto == undefined){
+                                return null;
+                            }
+                            
+                            if(IAValors.get("mint") >= valorMasAlto.value){
+                                setMintTokens(minTokens-valorMasAlto.value);
+                                handleCompraIA(valorMasAlto);
+                                IAValors.set("lastAction","supplier");
+                            }else{
+                                if(leader.get("occupied") || IAValors.get("mint") == 0){
+                                    if(!lotto.get("occupied") &&  IAValors.get("mint") >= 3){
+                                        handleLottoIA()
+                                        IAValors.set("lastAction","lotto");
+                                    }else{
+                                        if(listaSortDifficult.length != 0 && !crow.get("occupied") || !swap.get("occupied") || !recycler.get("occupied") || !temp.get("occupied")){
+                                            handleDifficultIA(IAValors.get("cards")[0],0);
+                                            IAValors.set("lastAction","diff");
+                                        }else{
+                                            IAValors.set("lastAction","pass");
+                                        }
+                                    }
+                                }else{
+                                    leader.set("img", "leaderUsed.png");
+                                    leader.set("occupied", true);
+                                    IAValors.set("first",true);
+                                    IAValors.set("mint",IAValors.get("mint")-1);
+                                    IAValors.set("lastAction","leader");
+                                }
+                            }
+        
+                        }else{
+                            if(leader.get("occupied") || IAValors.get("mint") == 0){
+                                if(!lotto.get("occupied") &&  IAValors.get("mint") >= 3){
+                                    handleLottoIA()
+                                    IAValors.set("lastAction","lotto");
+                                }else{
+                                    if(listaSortDifficult.length != 0 && !crow.get("occupied") || !swap.get("occupied") || !recycler.get("occupied") || !temp.get("occupied")){
+                                        handleDifficultIA(IAValors.get("cards")[0],0);
+                                        IAValors.set("lastAction","diff");
+                                    }else{
+                                        IAValors.set("lastAction","pass");
+                                    }
+                                }
+                            }else{
+                                leader.set("img", "leaderUsed.png");
+                                leader.set("occupied", true);
+                                IAValors.set("first",true);
+                                IAValors.set("mint",IAValors.get("mint")-1);
+                                IAValors.set("lastAction","leader");
+                            }
+                        }
+                    }
+
+                
+                break;
+            case "builder":
+                
+                if(Number(supplier.get("occupied")) <= 2 && activo.length === 0){
+                   
+                    let valorMasAlto = actualCards.get(0);
+                    if(valorMasAlto == undefined){
+                        return null;
+                    }
+                    if(IAValors.get("mint") < valorMasAlto.value){
+                        valorMasAlto = actualCards.get(1);
+                    }
+                    actualCards.forEach((card)=>{
+                        if(valorMasAlto == undefined){
+                            return null;
+                        }
+                        if(IAValors.get("mint") >= card.value){
+                            if(card.value > valorMasAlto.value){
+                                valorMasAlto = card;
+                            }else if(card.value == valorMasAlto.value){
+                                if(card.type == CardTypes.production && (valorMasAlto.type == CardTypes.deed || valorMasAlto.type == CardTypes.utility || valorMasAlto.type == CardTypes.culture)){
+                                    valorMasAlto = card;
+                                }
+                                if(card.type == CardTypes.culture && (valorMasAlto.type == CardTypes.deed || valorMasAlto.type == CardTypes.utility)){
+                                    valorMasAlto = card;
+                                }
+                                if(card.type == CardTypes.utility && valorMasAlto.type == CardTypes.deed){
+                                    valorMasAlto = card;
+                                }
+                            }
+                        }
+                        
+
+                    })
+                    if(valorMasAlto == undefined){
+                        return null;
+                    }
+                    
+                    if(IAValors.get("mint") >= valorMasAlto.value){
+                        setMintTokens(minTokens-valorMasAlto.value);
+                        handleCompraIA(valorMasAlto);
+                        IAValors.set("lastAction","supplier");
+                    }else{
+                        if(leader.get("occupied") || IAValors.get("mint") == 0){
+                            if(!lotto.get("occupied") &&  IAValors.get("mint") >= 3){
+                                handleLottoIA()
+                                IAValors.set("lastAction","lotto");
+                            }else{
+                                IAValors.set("lastAction","pass");
+                            }
+                        }else{
+                            leader.set("img", "leaderUsed.png");
+                            leader.set("occupied", true);
+                            IAValors.set("first",true);
+                            IAValors.set("mint",IAValors.get("mint")-1);
+                            IAValors.set("lastAction","leader");
+                        }
+                    }
+
+                }else{
+                
+                    if(leader.get("occupied") || IAValors.get("mint") == 0){
+                        if(!lotto.get("occupied") &&  IAValors.get("mint") >= 3){
+                            handleLottoIA()
+                            IAValors.set("lastAction","lotto");
+                        }else{
+                            if(listaSortDifficult.length != 0 && !crow.get("occupied") || !swap.get("occupied") || !recycler.get("occupied") || !temp.get("occupied")){
+                                handleDifficultIA(IAValors.get("cards")[0],0);
+                                IAValors.set("lastAction","diff");
+                            }else{
+                                IAValors.set("lastAction","pass");
+                            }
+                        }
+                    }else{
+                        leader.set("img", "leaderUsed.png");
+                        leader.set("occupied", true);
+                        IAValors.set("first",true);
+                        IAValors.set("mint",IAValors.get("mint")-1);
+                        IAValors.set("lastAction","leader");
+                    }
+                }
+                break;
+
+            case "supplier":
+
+                if(leader.get("occupied") || IAValors.get("mint") == 0){
+                    if(!lotto.get("occupied") &&  IAValors.get("mint") >= 3){
+                        handleLottoIA()
+                        IAValors.set("lastAction","lotto");
+                    }else{
+                        if(listaSortDifficult.length != 0 && !crow.get("occupied") || !swap.get("occupied") || !recycler.get("occupied") || !temp.get("occupied")){
+                            handleDifficultIA(IAValors.get("cards")[0],0);
+                            IAValors.set("lastAction","diff");
+                        }else{
+                            IAValors.set("lastAction","pass");
+                        }
+                    }
+                }else{
+                    leader.set("img", "leaderUsed.png");
+                    leader.set("occupied", true);
+                    IAValors.set("first",true);
+                    IAValors.set("mint",IAValors.get("mint")-1);
+                    IAValors.set("lastAction","leader");
+                }
+                break;
+
+            case "leader":
+                if(!lotto.get("occupied") &&  IAValors.get("mint") >= 3){
+                    handleLottoIA()
+                    IAValors.set("lastAction","lotto");
+                }else{
+                    if(listaSortDifficult.length != 0 && !crow.get("occupied") || !swap.get("occupied") || !recycler.get("occupied") || !temp.get("occupied")){
+                        handleDifficultIA(IAValors.get("cards")[0],0);
+                        IAValors.set("lastAction","diff");
+                    }else{
+                        IAValors.set("lastAction","pass");
+                    }
+                }
+                break;
+            case "lotto": 
+                if(listaSortDifficult.length != 0 && !crow.get("occupied") || !swap.get("occupied") || !recycler.get("occupied") || !temp.get("occupied")){
+                    handleDifficultIA(IAValors.get("cards")[0],0);
+                    IAValors.set("lastAction","diff");
+                }else{
+                    IAValors.set("lastAction","pass");
+                }
+                break;
+            case "diff":
+                IAValors.set("lastAction","pass");
+                break;
+            
+        }
+    }
+
+
+    const JustinActions = () => {
+
+        const activo : Card[] = [];
+        IAValors.get("cards").forEach((card) => {
+                    
+            if(!card.active){
+                activo.push(card);
+            }
+        });
+
+        switch(IAValors.get("lastAction")){
+            
+            case "":
+
+                if(Number(producer.get("occupied")) > 3 || IAValors.get("mint") == 0){
+                    if((wholesaler.get("occupied")) || IAValors.get("mint") == 0){
+                        if(IAValors.get("mint") >= 2 && Number(builder.get("occupied")) <= 2 && activo.length != 0){
+                            handleBuildIA(activo[0]);
+                            builder.set("img", players < 4 ? `builder1Used${builder.get("occupied")}.png` : `builderUsed${builder.get("occupied")}.png`);
+                            builder.set("occupied", Number(builder.get("occupied"))+1);
+                            IAValors.set("lastAction","builder");
+                        }else{
+                            if(Number(supplier.get("occupied")) <= 2 && activo.length === 0){
+                                
+                                let valorMasAlto = actualCards.get(0);
+                                if(valorMasAlto == undefined){
+                                    return null;
+                                }
+                                if(IAValors.get("mint") < valorMasAlto.value){
+                                    valorMasAlto = actualCards.get(1);
+                                }
+                                actualCards.forEach((card)=>{
+                                    if(valorMasAlto == undefined){
+                                        return null;
+                                    }
+                                    if(IAValors.get("mint") >= card.value){
+                                        if(card.value < valorMasAlto.value){
+                                            valorMasAlto = card;
+                                        }else if(card.value == valorMasAlto.value){
+                                            if(card.type == CardTypes.utility && (valorMasAlto.type == CardTypes.deed || valorMasAlto.type == CardTypes.culture || valorMasAlto.type == CardTypes.production)){
+                                                valorMasAlto = card;
+                                            }
+                                            if(card.type == CardTypes.deed && (valorMasAlto.type == CardTypes.production || valorMasAlto.type == CardTypes.culture)){
+                                                valorMasAlto = card;
+                                            }
+                                            if(card.type == CardTypes.production && valorMasAlto.type == CardTypes.culture){
+                                                valorMasAlto = card;
+                                            }
+                                        }
+                                    }
+                                    
+
+                                })
+                                if(valorMasAlto == undefined){
+                                    return null;
+                                }
+                                
+                                if(IAValors.get("mint") >= valorMasAlto.value){
+                                    handleCompraIA(valorMasAlto);
+                                    supplier.set("img", players < 4 ? `supplier1Used${supplier.get("occupied")}.png` : `supplierUsed${supplier.get("occupied")}.png`);
+                                    supplier.set("occupied", Number(supplier.get("occupied"))+1);
+                                    IAValors.set("lastAction","supplier");
+
+                                }else{
+                                    if(leader.get("occupied") || IAValors.get("mint") == 0){
+                                        if(!lotto.get("occupied") &&  IAValors.get("mint") >= 3){
+                                            handleLottoIA()
+                                            IAValors.set("lastAction","lotto");
+                                        }else{
+                                            if(listaSortDifficult.length != 0 && !crow.get("occupied") || !swap.get("occupied") || !recycler.get("occupied") || !temp.get("occupied")){
+                                                handleDifficultIA(IAValors.get("cards")[0],0);
+                                                IAValors.set("lastAction","diff");
+                                            }else{
+                                                IAValors.set("lastAction","pass");
+                                            }
+                                            
+                                        }
+                                    }else{
+                                        leader.set("img", "leaderUsed.png");
+                                        leader.set("occupied", true);
+                                        IAValors.set("mint",IAValors.get("mint")-1);
+                                        IAValors.set("first",true);
+                                        IAValors.set("lastAction","leader");
+                                    }
+                                }
+            
+                            }else{
+                                if(leader.get("occupied") || IAValors.get("mint") == 0){
+                                    if(!lotto.get("occupied") &&  IAValors.get("mint") >= 3){
+                                        handleLottoIA()
+                                        IAValors.set("lastAction","lotto");
+                                    }else{
+                                        if(listaSortDifficult.length != 0 && !crow.get("occupied") || !swap.get("occupied") || !recycler.get("occupied") || !temp.get("occupied")){
+                                            handleDifficultIA(IAValors.get("cards")[0],0);
+                                            IAValors.set("lastAction","diff");
+                                        }else{
+                                            IAValors.set("lastAction","pass");
+                                        }
+                                    }
+                                }else{
+                                    leader.set("img", "leaderUsed.png");
+                                    leader.set("occupied", true);
+                                    IAValors.set("first",true);
+                                    IAValors.set("mint",IAValors.get("mint")-1);
+                                    IAValors.set("lastAction","leader");
+                                }
+                            }
+                        }
+
+                    }else{
+                        wholesaler.set("img", "wholesalerUsed.png");
+                        wholesaler.set("occupied", true);
+                        IAValors.set("lastAction","wholesaler");
+                        IAValors.set("mint",IAValors.get("mint")+1);
+                    }
+                }
+                else{
+                    producer.set("img", players === 4 || players === 1 ? `producerUsed${producer.get("occupied")}.png` : `producer1Used${producer.get("occupied")}.png`);
+                    producer.set("occupied", Number(producer.get("occupied"))+3);
+                    IAValors.set("lastAction","producer");
+                    IAValors.set("mint",IAValors.get("mint")+1);
+                }
+                break;
+
+            case "producer":
+              
+                    if((wholesaler.get("occupied")) || IAValors.get("mint") == 0){
+                        if(IAValors.get("mint") >= 2 && Number(builder.get("occupied")) <= 2 && activo.length != 0){
+                            handleBuildIA(activo[0]);
+                            builder.set("img", players < 4 ? `builder1Used${builder.get("occupied")}.png` : `builderUsed${builder.get("occupied")}.png`);
+                            builder.set("occupied", Number(builder.get("occupied"))+1);
+                            IAValors.set("lastAction","builder");
+                        }else{
+                            if(Number(supplier.get("occupied")) <= 2 && activo.length === 0){
+                   
+                                let valorMasAlto = actualCards.get(0);
+                                if(valorMasAlto == undefined){
+                                    return null;
+                                }
+                                if(IAValors.get("mint") < valorMasAlto.value){
+                                    valorMasAlto = actualCards.get(1);
+                                }
+                                actualCards.forEach((card)=>{
+                                    if(valorMasAlto == undefined){
+                                        return null;
+                                    }
+                                    if(IAValors.get("mint") >= card.value){
+                                        if(card.value < valorMasAlto.value){
+                                            valorMasAlto = card;
+                                        }else if(card.value == valorMasAlto.value){
+                                            if(card.type == CardTypes.utility && (valorMasAlto.type == CardTypes.deed || valorMasAlto.type == CardTypes.culture || valorMasAlto.type == CardTypes.production)){
+                                                valorMasAlto = card;
+                                            }
+                                            if(card.type == CardTypes.deed && (valorMasAlto.type == CardTypes.production || valorMasAlto.type == CardTypes.culture)){
+                                                valorMasAlto = card;
+                                            }
+                                            if(card.type == CardTypes.production && valorMasAlto.type == CardTypes.culture){
+                                                valorMasAlto = card;
+                                            }
+                                        }
+                                    }
+                                    
+
+                                })
+                                if(valorMasAlto == undefined){
+                                    return null;
+                                }
+                                
+                                if(IAValors.get("mint") >= valorMasAlto.value){
+                                    handleCompraIA(valorMasAlto);
+                                    supplier.set("img", players < 4 ? `supplier1Used${supplier.get("occupied")}.png` : `supplierUsed${supplier.get("occupied")}.png`);
+                                    supplier.set("occupied", Number(supplier.get("occupied"))+1);
+                                    IAValors.set("lastAction","supplier");
+                                }else{
+                                    if(leader.get("occupied") || IAValors.get("mint") == 0){
+                                        if(!lotto.get("occupied") &&  IAValors.get("mint") >= 3){
+                                            handleLottoIA()
+                                            IAValors.set("lastAction","lotto");
+                                        }else{
+                                            if(listaSortDifficult.length != 0 && !crow.get("occupied") || !swap.get("occupied") || !recycler.get("occupied") || !temp.get("occupied")){
+                                                handleDifficultIA(IAValors.get("cards")[0],0);
+                                                IAValors.set("lastAction","diff");
+                                            }else{
+                                                IAValors.set("lastAction","pass");
+                                            }
+                                        }
+                                    }else{
+                                        leader.set("img", "leaderUsed.png");
+                                        leader.set("occupied", true);
+                                        IAValors.set("first",true);
+                                        IAValors.set("mint",IAValors.get("mint")-1);
+                                        IAValors.set("lastAction","leader");
+                                    }
+                                }
+            
+                            }else{
+                                if(leader.get("occupied") || IAValors.get("mint") == 0){
+                                    if(!lotto.get("occupied") &&  IAValors.get("mint") >= 3){
+                                        handleLottoIA()
+                                        IAValors.set("lastAction","lotto");
+                                    }else{
+                                        if(listaSortDifficult.length != 0 && !crow.get("occupied") || !swap.get("occupied") || !recycler.get("occupied") || !temp.get("occupied")){
+                                            handleDifficultIA(IAValors.get("cards")[0],0);
+                                            IAValors.set("lastAction","diff");
+                                        }else{
+                                            IAValors.set("lastAction","pass");
+                                        }
+                                    }
+                                }else{
+                                    leader.set("img", "leaderUsed.png");
+                                    leader.set("occupied", true);
+                                    IAValors.set("first",true);
+                                    IAValors.set("mint",IAValors.get("mint")-1);
+                                    IAValors.set("lastAction","leader");
+                                }
+                            }
+                        }
+
+                    }else{
+                        wholesaler.set("img", "wholesalerUsed.png");
+                        wholesaler.set("occupied", true);
+                        IAValors.set("lastAction","wholesaler");
+                        IAValors.set("mint",IAValors.get("mint")+1);
+                    }
+                
+               
+                break;
+            case "wholesaler":
+                
+                    if(IAValors.get("mint") >= 2 && Number(builder.get("occupied")) <= 2 && activo.length != 0){
+                        handleBuildIA(activo[0]);
+                        builder.set("img", players < 4 ? `builder1Used${builder.get("occupied")}.png` : `builderUsed${builder.get("occupied")}.png`);
+                        builder.set("occupied", Number(builder.get("occupied"))+1);
+                        IAValors.set("lastAction","builder");
+                    }else{
+                        if(Number(supplier.get("occupied")) <= 2 && activo.length === 0){
+               
+                            let valorMasAlto = actualCards.get(0);
+                                if(valorMasAlto == undefined){
+                                    return null;
+                                }
+                                if(IAValors.get("mint") < valorMasAlto.value){
+                                    valorMasAlto = actualCards.get(1);
+                                }
+                                actualCards.forEach((card)=>{
+                                    if(valorMasAlto == undefined){
+                                        return null;
+                                    }
+                                    if(IAValors.get("mint") >= card.value){
+                                        if(card.value < valorMasAlto.value){
+                                            valorMasAlto = card;
+                                        }else if(card.value == valorMasAlto.value){
+                                            if(card.type == CardTypes.utility && (valorMasAlto.type == CardTypes.deed || valorMasAlto.type == CardTypes.culture || valorMasAlto.type == CardTypes.production)){
+                                                valorMasAlto = card;
+                                            }
+                                            if(card.type == CardTypes.deed && (valorMasAlto.type == CardTypes.production || valorMasAlto.type == CardTypes.culture)){
+                                                valorMasAlto = card;
+                                            }
+                                            if(card.type == CardTypes.production && valorMasAlto.type == CardTypes.culture){
+                                                valorMasAlto = card;
+                                            }
+                                        }
+                                    }
+                                    
+
+                                })
+                                if(valorMasAlto == undefined){
+                                    return null;
+                                }
+                                
+                                if(IAValors.get("mint") >= valorMasAlto.value){
+                                    handleCompraIA(valorMasAlto);
+                                    supplier.set("img", players < 4 ? `supplier1Used${supplier.get("occupied")}.png` : `supplierUsed${supplier.get("occupied")}.png`);
+                                    supplier.set("occupied", Number(supplier.get("occupied"))+1);
+                                    IAValors.set("lastAction","supplier");
+                            }else{
+                                if(leader.get("occupied") || IAValors.get("mint") == 0){
+                                    if(!lotto.get("occupied") &&  IAValors.get("mint") >= 3){
+                                        handleLottoIA()
+                                        IAValors.set("lastAction","lotto");
+                                    }else{
+                                        if(listaSortDifficult.length != 0 && !crow.get("occupied") || !swap.get("occupied") || !recycler.get("occupied") || !temp.get("occupied")){
+                                            handleDifficultIA(IAValors.get("cards")[0],0);
+                                            IAValors.set("lastAction","diff");
+                                        }else{
+                                            IAValors.set("lastAction","pass");
+                                        }
+                                    }
+                                }else{
+                                    leader.set("img", "leaderUsed.png");
+                                    leader.set("occupied", true);
+                                    IAValors.set("first",true);
+                                    IAValors.set("mint",IAValors.get("mint")-1);
+                                    IAValors.set("lastAction","leader");
+                                }
+                            }
+        
+                        }else{
+                            if(leader.get("occupied") || IAValors.get("mint") == 0){
+                                if(!lotto.get("occupied") &&  IAValors.get("mint") >= 3){
+                                    handleLottoIA()
+                                    IAValors.set("lastAction","lotto");
+                                }else{
+                                    if(listaSortDifficult.length != 0 && !crow.get("occupied") || !swap.get("occupied") || !recycler.get("occupied") || !temp.get("occupied")){
+                                        handleDifficultIA(IAValors.get("cards")[0],0);
+                                        IAValors.set("lastAction","diff");
+                                    }else{
+                                        IAValors.set("lastAction","pass");
+                                    }
+                                }
+                            }else{
+                                leader.set("img", "leaderUsed.png");
+                                leader.set("occupied", true);
+                                IAValors.set("first",true);
+                                IAValors.set("mint",IAValors.get("mint")-1);
+                                IAValors.set("lastAction","leader");
+                            }
+                        }
+                    }
+
+                
+                break;
+            case "builder":
+                
+                if(Number(supplier.get("occupied")) <= 2 && activo.length === 0){
+                   
+                    let valorMasAlto = actualCards.get(0);
+                                if(valorMasAlto == undefined){
+                                    return null;
+                                }
+                                if(IAValors.get("mint") < valorMasAlto.value){
+                                    valorMasAlto = actualCards.get(1);
+                                }
+                                actualCards.forEach((card)=>{
+                                    if(valorMasAlto == undefined){
+                                        return null;
+                                    }
+                                    if(IAValors.get("mint") >= card.value){
+                                        if(card.value < valorMasAlto.value){
+                                            valorMasAlto = card;
+                                        }else if(card.value == valorMasAlto.value){
+                                            if(card.type == CardTypes.utility && (valorMasAlto.type == CardTypes.deed || valorMasAlto.type == CardTypes.culture || valorMasAlto.type == CardTypes.production)){
+                                                valorMasAlto = card;
+                                            }
+                                            if(card.type == CardTypes.deed && (valorMasAlto.type == CardTypes.production || valorMasAlto.type == CardTypes.culture)){
+                                                valorMasAlto = card;
+                                            }
+                                            if(card.type == CardTypes.production && valorMasAlto.type == CardTypes.culture){
+                                                valorMasAlto = card;
+                                            }
+                                        }
+                                    }
+                                    
+
+                                })
+                                if(valorMasAlto == undefined){
+                                    return null;
+                                }
+                                
+                                if(IAValors.get("mint") >= valorMasAlto.value){
+                                    handleCompraIA(valorMasAlto);
+                                    supplier.set("img", players < 4 ? `supplier1Used${supplier.get("occupied")}.png` : `supplierUsed${supplier.get("occupied")}.png`);
+                                    supplier.set("occupied", Number(supplier.get("occupied"))+1);
+                                    IAValors.set("lastAction","supplier");
+                    }else{
+                        if(leader.get("occupied") || IAValors.get("mint") == 0){
+                            if(!lotto.get("occupied") &&  IAValors.get("mint") >= 3){
+                                handleLottoIA()
+                                IAValors.set("lastAction","lotto");
+                            }else{
+                                IAValors.set("lastAction","pass");
+                            }
+                        }else{
+                            leader.set("img", "leaderUsed.png");
+                            leader.set("occupied", true);
+                            IAValors.set("first",true);
+                            IAValors.set("mint",IAValors.get("mint")-1);
+                            IAValors.set("lastAction","leader");
+                        }
+                    }
+
+                }else{
+                
+                    if(leader.get("occupied") || IAValors.get("mint") == 0){
+                        if(!lotto.get("occupied") &&  IAValors.get("mint") >= 3){
+                            handleLottoIA()
+                            IAValors.set("lastAction","lotto");
+                        }else{
+                            if(listaSortDifficult.length != 0 && !crow.get("occupied") || !swap.get("occupied") || !recycler.get("occupied") || !temp.get("occupied")){
+                                handleDifficultIA(IAValors.get("cards")[0],0);
+                                IAValors.set("lastAction","diff");
+                            }else{
+                                IAValors.set("lastAction","pass");
+                            }
+                        }
+                    }else{
+                        leader.set("img", "leaderUsed.png");
+                        leader.set("occupied", true);
+                        IAValors.set("first",true);
+                        IAValors.set("mint",IAValors.get("mint")-1);
+                        IAValors.set("lastAction","leader");
+                    }
+                }
+                break;
+
+            case "supplier":
+
+                if(leader.get("occupied") || IAValors.get("mint") == 0){
+                    if(!lotto.get("occupied") &&  IAValors.get("mint") >= 3){
+                        handleLottoIA()
+                        IAValors.set("lastAction","lotto");
+                    }else{
+                        if(listaSortDifficult.length != 0 && !crow.get("occupied") || !swap.get("occupied") || !recycler.get("occupied") || !temp.get("occupied")){
+                            handleDifficultIA(IAValors.get("cards")[0],0);
+                            IAValors.set("lastAction","diff");
+                        }else{
+                            IAValors.set("lastAction","pass");
+                        }
+                    }
+                }else{
+                    leader.set("img", "leaderUsed.png");
+                    leader.set("occupied", true);
+                    IAValors.set("first",true);
+                    IAValors.set("mint",IAValors.get("mint")-1);
+                    IAValors.set("lastAction","leader");
+                }
+                break;
+
+            case "leader":
+                if(!lotto.get("occupied") &&  IAValors.get("mint") >= 3){
+                    handleLottoIA()
+                    IAValors.set("lastAction","lotto");
+                }else{
+                    if(listaSortDifficult.length != 0 && !crow.get("occupied") || !swap.get("occupied") || !recycler.get("occupied") || !temp.get("occupied")){
+                        handleDifficultIA(IAValors.get("cards")[0],0);
+                        IAValors.set("lastAction","diff");
+                    }else{
+                        IAValors.set("lastAction","pass");
+                    }
+                }
+                break;
+            case "lotto": 
+                if(listaSortDifficult.length != 0 && !crow.get("occupied") || !swap.get("occupied") || !recycler.get("occupied") || !temp.get("occupied")){
+                    handleDifficultIA(IAValors.get("cards")[0],0);
+                    IAValors.set("lastAction","diff");
+                }else{
+                    IAValors.set("lastAction","pass");
+                }
+                break;
+            case "diff":
+                IAValors.set("lastAction","pass");
+                break;
+            
+        }
+    }
+
+
+
+    const TurnIa = () => {
+        if(IAValors.get("name") == "sonic"){
+            SonicActions();
+            SonicActions();
+        }
+
+        if(IAValors.get("name") == "mort"){
+            MortActions();
+        }
+        if(IAValors.get("name") == "rachael"){
+            RachaelActions();
+        }
+        if(IAValors.get("name") == "justin"){
+            JustinActions();
+        }
+       
+    }
+    const MintsForAll = () => {
+        console.log(minTokens);
+        if(minTokens === 0){
+            winner.set("username",String(IAValors.get("name")));
+            winner.set("visible",true);
+        }
         turno.set("firstTurn",false);
-        if(turno.get("nuevaRonda")){
-           
+
+        TurnIa();   
+
+        
+        if(IAValors.get("lastAction") == "pass"){
+          
             if (mypresence.first){
                 update({first:false});
                 const firstItem = self.connectionId;
                 const lista = shuffleList.toArray().sort((x,y)=>{ return x === firstItem ? -1 : y === firstItem ? 1 : 0; });
                 shuffleList.clear();
-
+                
                 lista.forEach((e)=>{
                     shuffleList.push(e);
                 });
                 turno.set("turn",Number(shuffleList.get(0)));
             }
-
+     
             leader.set("img","leader.png");
             leader.set("occupied",false);
             swap.set("img","swap.png");
@@ -456,15 +2649,48 @@ function SoloGame(){
                         lotto.set("occupied", false);
                     }
                     const f = eval(card.name);
-                    contador = contador+f()[0];
-                    countStars = countStars+f()[1];
+                    contador = contador+f(false)[0];
+                    countStars = countStars+f(false)[1];
                 }
             });
 
             update({stars:countStars});
             update({mint: mypresence.mint+1+contador});
+            let contadorIA = 0;
+            let countStarsIA = 0;
 
-            if(mypresence.stars >= 7 || shopCards.length === 0){
+            IAValors.get("cards").forEach((card:Card | undefined) => {
+                if(card == null){
+                    return null;
+                }
+                if(card.active){
+                    if(card.name === "Wholesaler"){
+                        if(wholesaler.get("occupied")){
+                            contadorIA = contadorIA + 1;
+                        }
+                        wholesaler.set("img", "wholesaler.png");
+                        wholesaler.set("occupied", false);
+                    }
+                    if(card.name === "Lotto"){
+                        if(lotto.get("occupied")){
+                            contadorIA = contadorIA + 2;
+                        }
+                        lotto.set("img", "lotto.png");
+                        lotto.set("occupied", false);
+                    }
+                    const f = eval(card.name);
+                    contadorIA = contadorIA+f(true)[0];
+                    countStarsIA = countStarsIA+f(true)[1];
+                }
+            });
+
+           
+            
+            IAValors.set("mint",IAValors.get("mint")+1+contadorIA);
+            IAValors.set("stars",countStarsIA);
+            IAValors.set("lastAction","");
+
+            if(IAValors.get("stars") >= 7 || mypresence.stars >= 7 || shopCards.length === 0){
                 turno.set("visible",false);
                 HandleWinner();
                 
@@ -474,6 +2700,12 @@ function SoloGame(){
                     }
                 });
             }
+
+
+            if(IAValors.get("first")){
+                IAValors.set("first",false);
+                TurnIa();
+            }       
         }       
     }
 
@@ -482,32 +2714,41 @@ function SoloGame(){
      * value of the variable valorAlto is equal to the value of the variable presence.
      */
     const HandleWinner = () => {
-        let valorAlto = [mypresence.stars,mypresence.username,mypresence.cards.length,mypresence.mint];
-        others.toArray().forEach(({presence})=>{
+        const valorAlto = [mypresence.stars,mypresence.username,mypresence.cards.length,mypresence.mint];
+        const IAValor = [IAValors.get("stars"),IAValors.get("name"),IAValors.get("cards").length,IAValors.get("mint")];
+        if (valorAlto[0] > IAValor[0]){
+        
+            winner.set("username",String(valorAlto[1]));
+            winner.set("visible",true);
 
-            if(presence == null){
-                return null;
-            }
-
-            if(valorAlto[0] < presence.stars){
-                valorAlto = [presence.stars,presence.username,presence.cards.length,presence.mint];
-            }
-            else if(valorAlto[0] === presence.stars){
-                if(valorAlto[2] < presence.cards.length){
-                valorAlto = [presence.stars,presence.username,presence.cards.length,presence.mint];
+        }else if(valorAlto[0] < IAValor[0]){
+            winner.set("username",String(IAValor[1]));
+            winner.set("visible",true);
+        }else if(valorAlto[0] === IAValor[0]){
+            if (valorAlto[3] > IAValor[3]){
+        
+                winner.set("username",String(valorAlto[1]));
+                winner.set("visible",true);
+    
+            }else if(valorAlto[3] < IAValor[3]){
+                winner.set("username",String(IAValor[1]));
+                winner.set("visible",true);
+            }else if(valorAlto[3] === IAValor[23]){
+                if (valorAlto[2] > IAValor[2]){
+        
+                    winner.set("username",String(valorAlto[1]));
+                    winner.set("visible",true);
+        
+                }else if(valorAlto[2] < IAValor[2]){
+                    winner.set("username",String(IAValor[1]));
+                    winner.set("visible",true);
+                }else if(valorAlto[2] === IAValor[2]){
+                    winner.set("username","TIE");
+                    winner.set("visible",true);
                 }
-                else if(valorAlto[2] === presence.cards.length){
-                    if(valorAlto[3] < presence.mint){
-                        valorAlto = [presence.stars,presence.username,presence.cards.length,presence.mint];
-                    }
-                    else if(valorAlto[3] === presence.cards.length){
-                        valorAlto = [presence.stars,"TIE",presence.cards.length,presence.mint];
-                    }
-                }
             }
-        })
-        winner.set("username",String(valorAlto[1]));
-        winner.set("visible",true);
+        }
+       
     }
 
     const ExitGame = () => {
@@ -518,22 +2759,21 @@ function SoloGame(){
      * It takes a list of numbers, shuffles them, and then sets the first number in the list as the
      * first turn.
      */
+
     const WhoFirst = () => {
 
-        const TotalIDs: number[] = [];
-
-        TotalIDs.push(Number(self.connectionId))
+        shuffleList.push(self.connectionId);
+        playersList.push(self.connectionId);
         
-        const listShuffle = TotalIDs.sort(()=> Math.random() -0.5);
-        listShuffle.forEach((e)=>{
-                shuffleList.push(e);
-                playersList.push(e);
-        });
+
+        initialiceIas();
 
         turno.set("firstTurn",true);
         turno.set("nuevaRonda",false);
         turno.set("turn",Number(shuffleList.get(0)));
-        turno.set("visible",true);
+        if(IAValors.get("name") == "Justin"){
+            turno.set("visible",true);
+        }
         setTimeout(()=>{ turno.set("visible",false);},2000);
     
     }
@@ -585,7 +2825,7 @@ function SoloGame(){
 
             <Modal className="Normal_modal" show={turno.get("visible")} onHide={() => turno.set("visible",false)} centered onExiting={() => MintsForAll()} >
                 <ModalBody>
-                    its {usernameTurn} turn
+                    its {IAValors.get("name")} turn
                 </ModalBody>
             </Modal>
 
@@ -598,36 +2838,6 @@ function SoloGame(){
                 </ModalFooter>
             </Modal>
 
-            <Modal className="Normal_modal" backdrop="static" size="lg" show={eleccion} onHide={() => setElegir(false)} centered >
-                <ModalHeader> 
-                    Co-Op Card
-                </ModalHeader>
-                <ModalBody>
-                    Choose a player for Co-op Card effect
-                    <div className="p-4">
-                        <ListGroup key={"shop"} horizontal className="h-25 justify-content-center" style={{paddingTop:'24px'}}>
-
-                            {others.map(({connectionId,presence})=> {
-                                if (presence == null) {
-                                    return null;
-                                }
-                                return(
-                                    <div key={"OtherPlayers"}>
-                                        <ListGroup.Item variant="primary"
-                                        onFocus={(e) => update({ focusedId: e.target.id })}
-                                        onBlur={() => update({ focusedId: null })}>
-                                            {presence.username}
-                                        </ListGroup.Item>
-                                        <div style={{paddingLeft:'44px'}}>
-                                            <Button onClick={() => CoopElegido(connectionId)}> Elegir </Button>
-                                        </div>
-                                    </div>
-                                )
-                            })}
-                        </ListGroup>
-                    </div>
-                </ModalBody>
-            </Modal>
         </div>
     )
 }
