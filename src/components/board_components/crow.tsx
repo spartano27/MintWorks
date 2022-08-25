@@ -12,7 +12,6 @@ function Crow() {
     const crow = useObject("crow");
     const self = useSelf();
     const others = useOthers();
-    const players = Number(String(name).split("-")[1]);
     const [mypresence,update] = useMyPresence<Presence>();
     const [visible,setVisible] = useState(false);
     const playersList = useList("listPLayer");

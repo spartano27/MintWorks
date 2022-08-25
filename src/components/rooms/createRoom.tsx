@@ -1,6 +1,6 @@
 import { actions } from "@liveblocks/redux";
 import React, {useEffect, useState } from "react";
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import { Button, Container, Form, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import {useNavigate } from "react-router-dom";
 import { addRooms, changeDifficult, changeRoom, RootState} from "../../store";
@@ -152,7 +152,7 @@ export function CreateRoom() {
                     <h2 className="text-start p-4" > Rules </h2>
                     <Form.Group style={{marginLeft:'20px'}} className="p-4">
                         <Form.Label className="p-2">Number of players</Form.Label>
-                        <Form.Control onChange={(e: { target: { value: string }}) => handlePlayers(e)} required as="select" placeholder="Enter Password">
+                        <Form.Control onChange={(e: { target: { value: string }}) => handlePlayers(e)} required as="select" placeholder="Enter Players">
                           <option className="d-none" value="">
                               Select Option
                           </option>

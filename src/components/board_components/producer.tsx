@@ -1,16 +1,12 @@
 import { useList, useMyPresence, useObject, useSelf } from "@liveblocks/react";
 import React, { useState } from "react";
-import { Button, Modal, ModalBody, ModalFooter } from "react-bootstrap";
-import ModalHeader from "react-bootstrap/esm/ModalHeader";
-import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
-import { RootState } from "../../store";
+import { Modal,ModalHeader,ModalBody, ModalFooter, Button} from "react-bootstrap";
 import handleChangeTurn from "../../turn";
 import { Presence } from "../../types";
 
 function Producer() {
     
-    const [styleCard,setStyleCard] = useState(true);
+    const [,setStyleCard] = useState(true);
     const keyClock = useObject<{key:number}>("keyClock");
     const producer = useObject("producer");
     const self = useSelf();

@@ -12,7 +12,6 @@ import Temp from './board_components/temp';
 import Recycler from './board_components/recycler';
 import Swap from './board_components/swap';
 import { useList } from '@liveblocks/react';
-import { ids } from 'webpack';
 
 /**
  * The Board function returns a Container component that contains three rows, each of which contains

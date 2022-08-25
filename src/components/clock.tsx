@@ -1,5 +1,5 @@
 import { useList, useMyPresence, useObject } from "@liveblocks/react";
-import React, { useState } from "react";
+import React from "react";
 import {CountdownCircleTimer} from 'react-countdown-circle-timer';
 import handleChangeTurn from "../turn";
 import { Presence } from "../types";

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useObject, useSelf, useMyPresence, useList } from "@liveblocks/react";
 import { useState } from "react";
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button, ListGroup } from "react-bootstrap";
+import { Modal, ModalHeader, ModalBody, Button, ListGroup } from "react-bootstrap";
 import handleChangeTurn from "../../turn";
 import { Card, Presence } from "../../types";
 
@@ -11,7 +11,6 @@ function Swap() {
     const keyClock = useObject<{key:number}>("keyClock");
     const swap = useObject("swap");
     const self = useSelf();
-    const players = Number(String(name).split("-")[1]);
     const [mypresence,update] = useMyPresence<Presence>();
     const [visible,setVisible] = useState(false);
     const [visible1,setVisible1] = useState(false);

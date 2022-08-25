@@ -1,12 +1,11 @@
 import React, {useEffect, useState} from "react";
 import Board from "./board";
 import Shop from "./shop";
-import {Json, useList, useMyPresence, useObject, useOthers, useSelf} from "@liveblocks/react";
+import {Json, useList, useMyPresence, useObject, useSelf} from "@liveblocks/react";
 import {useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {CountdownCircleTimer} from "react-countdown-circle-timer";
 import {Button, Col, Container, ListGroup, Modal, ModalBody, ModalFooter, Row} from "react-bootstrap";
-import ModalHeader from "react-bootstrap/esm/ModalHeader";
 import {Card, CardTypes, Presence} from "../types";
 import {useNavigate} from "react-router-dom";
 import {removeRoom, RootState} from "../store";
@@ -44,10 +43,17 @@ function Shuffle(array: Json[]){
 
 function SoloGame(){
 
-    const others = useOthers<Presence>();
     const self = useSelf<Presence>();
     const [mypresence,update] = useMyPresence<Presence>();
-    const [eleccion,setElegir] = useState(false);
+    const [visibleProducer,setVisibleProducer] = useState(false);
+    const [visibleBuilder,setVisibleBuilder] = useState(false);
+    const [visibleSupplier,setVisibleSupplier] = useState(false);
+    const [visibleLeader,setVisibleLeader] = useState(false);
+    const [visibleWholesaler,setVisibleWholesaler] = useState(false);
+    const [visibleLotto,setVisibleLotto] = useState(false);
+    const [visibleSwap,setVisibleSwap] = useState(false);
+    const [visibleCrow,setVisibleCrow] = useState(false);
+    const [visibleRecycler,setVisibleRecycler] = useState(false);
     const color = useSelector(colorP);
     const username = useSelector(user);
     const roomList = useSelector(rooms);
@@ -553,6 +559,7 @@ function SoloGame(){
                 IAValors.set("mint",IAValors.get("mint")-cardOwner.value+discount);
                 supplier.set("img", players < 4 ? `supplier1Used${supplier.get("occupied")}.png` : `supplierUsed${supplier.get("occupied")}.png`);
                 supplier.set("occupied", Number(supplier.get("occupied"))+1);
+                setVisibleSupplier(true);
                 
                 
             
@@ -608,6 +615,7 @@ function SoloGame(){
                 
                 builder.set("img", players < 4 ? `builder1Used${builder.get("occupied")}.png` : `builderUsed${builder.get("occupied")}.png`);
                 builder.set("occupied", Number(builder.get("occupied"))+1);
+                setVisibleBuilder(true);
                    
                 
             
@@ -633,6 +641,7 @@ function SoloGame(){
                             shopCards.delete(2);
                             IAValors.set("cards",totalCards);
                             IAValors.set("mint",IAValors.get("mint")-3);
+                            setVisibleLotto(true);
                         
                             
                         }
@@ -652,7 +661,7 @@ function SoloGame(){
                             shopCards.delete(1);
                             IAValors.set("cards",totalCards);
                             IAValors.set("mint",IAValors.get("mint")-3);
-                           
+                            setVisibleLotto(true);
                             
                         }
                         
@@ -672,7 +681,7 @@ function SoloGame(){
                             shopCards.delete(0);
                             IAValors.set("cards",totalCards);
                             IAValors.set("mint",IAValors.get("mint")-3);
-                           
+                            setVisibleLotto(true);
                             
                             
                         }
@@ -681,18 +690,16 @@ function SoloGame(){
         
     }
 
-    const handleDifficultIA = (card: { value: any; stars: any; },index: number) => {
-        console.log("huh?");
-        console.log(listaSortDifficult.get(0));
-
+    const handleDifficultIA = (card: { value: number; stars: number; },index: number) => {
         if(difficult){
-            console.log(difficult)
+         
             if(listaSortDifficult.get(0) == "crow"){
                 if(IAValors.get("mint") >= 1){
                     crow.set("img", "crowUsed.png");
                     crow.set("occupied", true);
                     IAValors.set("mint",IAValors.get("mint")+2);
                     update({mint:Number(mypresence.mint)+1});
+                    setVisibleCrow(true);
                 }else{
                     IAValors.set("lastAction","pass");
                 }
@@ -709,7 +716,7 @@ function SoloGame(){
                         IAValors.set("mint",IAValors.get("mint")+cost);
                         recycler.set("img", "recyclerUsed.png");
                         recycler.set("occupied", true);
-                
+                        setVisibleRecycler(true);
                 }else{
                     IAValors.set("lastAction","pass");
                 }
@@ -732,7 +739,7 @@ function SoloGame(){
                             shopCards.delete(2);
                             IAValors.set("cards",totalCards);
                             IAValors.set("mint",IAValors.get("mint")-2);
-                            
+                            setVisibleSwap(true);
                         }
                         
                     }
@@ -752,7 +759,7 @@ function SoloGame(){
                             shopCards.delete(1);
                             IAValors.set("cards",totalCards);
                             IAValors.set("mint",IAValors.get("mint")-2);
-                            
+                            setVisibleSwap(true);
                         }
                     }
         
@@ -771,7 +778,7 @@ function SoloGame(){
                             shopCards.delete(0);
                             IAValors.set("cards",totalCards);
                             IAValors.set("mint",IAValors.get("mint")-2);
-                                 
+                            setVisibleSwap(true);
                         }
                     }
                     
@@ -870,6 +877,7 @@ function SoloGame(){
                                         IAValors.set("mint",IAValors.get("mint")-1);
                                         IAValors.set("first",true);
                                         IAValors.set("lastAction","leader");
+                                        setVisibleLeader(true);
                                     }
                                 }
             
@@ -892,6 +900,7 @@ function SoloGame(){
                                     IAValors.set("first",true);
                                     IAValors.set("mint",IAValors.get("mint")-1);
                                     IAValors.set("lastAction","leader");
+                                    setVisibleLeader(true);
                                 }
                             }
                         }
@@ -901,12 +910,14 @@ function SoloGame(){
                         wholesaler.set("occupied", true);
                         IAValors.set("lastAction","wholesaler");
                         IAValors.set("mint",IAValors.get("mint")+1);
+                        setVisibleWholesaler(true);
                     }
                 }
                 else{
                     producer.set("img", players === 4 || players === 1 ? `producerUsed${producer.get("occupied")}.png` : `producer1Used${producer.get("occupied")}.png`);
                     producer.set("occupied", Number(producer.get("occupied"))+1);
                     IAValors.set("lastAction","producer");
+                    setVisibleProducer(true);
                     IAValors.set("mint",IAValors.get("mint")+1);
                 }
                 break;
@@ -975,6 +986,7 @@ function SoloGame(){
                                         IAValors.set("first",true);
                                         IAValors.set("mint",IAValors.get("mint")-1);
                                         IAValors.set("lastAction","leader");
+                                        setVisibleLeader(true);
                                     }
                                 }
             
@@ -997,6 +1009,7 @@ function SoloGame(){
                                     IAValors.set("first",true);
                                     IAValors.set("mint",IAValors.get("mint")-1);
                                     IAValors.set("lastAction","leader");
+                                    setVisibleLeader(true);
                                 }
                             }
                         }
@@ -1006,6 +1019,7 @@ function SoloGame(){
                         wholesaler.set("occupied", true);
                         IAValors.set("lastAction","wholesaler");
                         IAValors.set("mint",IAValors.get("mint")+1);
+                        setVisibleWholesaler(true);
                     }
                 
                
@@ -1073,6 +1087,7 @@ function SoloGame(){
                                     IAValors.set("first",true);
                                     IAValors.set("mint",IAValors.get("mint")-1);
                                     IAValors.set("lastAction","leader");
+                                    setVisibleLeader(true);
                                 }
                             }
         
@@ -1095,6 +1110,7 @@ function SoloGame(){
                                 IAValors.set("first",true);
                                 IAValors.set("mint",IAValors.get("mint")-1);
                                 IAValors.set("lastAction","leader");
+                                setVisibleLeader(true);
                             }
                         }
                     }
@@ -1155,6 +1171,7 @@ function SoloGame(){
                             IAValors.set("first",true);
                             IAValors.set("mint",IAValors.get("mint")-1);
                             IAValors.set("lastAction","leader");
+                            setVisibleLeader(true);
                         }
                     }
 
@@ -1178,6 +1195,7 @@ function SoloGame(){
                         IAValors.set("first",true);
                         IAValors.set("mint",IAValors.get("mint")-1);
                         IAValors.set("lastAction","leader");
+                        setVisibleLeader(true);
                     }
                 }
                 break;
@@ -1202,6 +1220,7 @@ function SoloGame(){
                     IAValors.set("first",true);
                     IAValors.set("mint",IAValors.get("mint")-1);
                     IAValors.set("lastAction","leader");
+                    setVisibleLeader(true);
                 }
                 break;
 
@@ -1310,6 +1329,7 @@ function SoloGame(){
                                         IAValors.set("mint",IAValors.get("mint")-1);
                                         IAValors.set("first",true);
                                         IAValors.set("lastAction","leader");
+                                        setVisibleLeader(true);
                                     }
                                 }
             
@@ -1332,6 +1352,7 @@ function SoloGame(){
                                     IAValors.set("first",true);
                                     IAValors.set("mint",IAValors.get("mint")-1);
                                     IAValors.set("lastAction","leader");
+                                    setVisibleLeader(true);
                                 }
                             }
                         }
@@ -1341,6 +1362,7 @@ function SoloGame(){
                         wholesaler.set("occupied", true);
                         IAValors.set("lastAction","wholesaler");
                         IAValors.set("mint",IAValors.get("mint")+1);
+                        setVisibleWholesaler(true);
                     }
                 }
                 else{
@@ -1348,6 +1370,7 @@ function SoloGame(){
                     producer.set("occupied", Number(producer.get("occupied"))+1);
                     IAValors.set("lastAction","producer");
                     IAValors.set("mint",IAValors.get("mint")+1);
+                    setVisibleProducer(true);
                 }
                 break;
 
@@ -1412,6 +1435,7 @@ function SoloGame(){
                                         IAValors.set("first",true);
                                         IAValors.set("mint",IAValors.get("mint")-1);
                                         IAValors.set("lastAction","leader");
+                                        setVisibleLeader(true);
                                     }
                                 }
             
@@ -1434,6 +1458,7 @@ function SoloGame(){
                                     IAValors.set("first",true);
                                     IAValors.set("mint",IAValors.get("mint")-1);
                                     IAValors.set("lastAction","leader");
+                                    setVisibleLeader(true);
                                 }
                             }
                         }
@@ -1443,6 +1468,7 @@ function SoloGame(){
                         wholesaler.set("occupied", true);
                         IAValors.set("lastAction","wholesaler");
                         IAValors.set("mint",IAValors.get("mint")+1);
+                        setVisibleWholesaler(true);
                     }
                 
                
@@ -1507,6 +1533,7 @@ function SoloGame(){
                                     IAValors.set("first",true);
                                     IAValors.set("mint",IAValors.get("mint")-1);
                                     IAValors.set("lastAction","leader");
+                                    setVisibleLeader(true);
                                 }
                             }
         
@@ -1529,6 +1556,7 @@ function SoloGame(){
                                 IAValors.set("first",true);
                                 IAValors.set("mint",IAValors.get("mint")-1);
                                 IAValors.set("lastAction","leader");
+                                setVisibleLeader(true);
                             }
                         }
                     }
@@ -1586,6 +1614,7 @@ function SoloGame(){
                             IAValors.set("first",true);
                             IAValors.set("mint",IAValors.get("mint")-1);
                             IAValors.set("lastAction","leader");
+                            setVisibleLeader(true);
                         }
                     }
 
@@ -1609,6 +1638,7 @@ function SoloGame(){
                         IAValors.set("first",true);
                         IAValors.set("mint",IAValors.get("mint")-1);
                         IAValors.set("lastAction","leader");
+                        setVisibleLeader(true);
                     }
                 }
                 break;
@@ -1633,6 +1663,7 @@ function SoloGame(){
                     IAValors.set("first",true);
                     IAValors.set("mint",IAValors.get("mint")-1);
                     IAValors.set("lastAction","leader");
+                    setVisibleLeader(true);
                 }
                 break;
 
@@ -1744,6 +1775,7 @@ function SoloGame(){
                                         IAValors.set("mint",IAValors.get("mint")-1);
                                         IAValors.set("first",true);
                                         IAValors.set("lastAction","leader");
+                                        setVisibleLeader(true);
                                     }
                                 }
             
@@ -1766,6 +1798,7 @@ function SoloGame(){
                                     IAValors.set("first",true);
                                     IAValors.set("mint",IAValors.get("mint")-1);
                                     IAValors.set("lastAction","leader");
+                                    setVisibleLeader(true);
                                 }
                             }
                         }
@@ -1775,6 +1808,7 @@ function SoloGame(){
                         wholesaler.set("occupied", true);
                         IAValors.set("lastAction","wholesaler");
                         IAValors.set("mint",IAValors.get("mint")+1);
+                        setVisibleWholesaler(true);
                     }
                 }
                 else{
@@ -1782,6 +1816,7 @@ function SoloGame(){
                     producer.set("occupied", Number(producer.get("occupied"))+1);
                     IAValors.set("lastAction","producer");
                     IAValors.set("mint",IAValors.get("mint")+1);
+                    setVisibleProducer(true);
                 }
                 break;
 
@@ -1850,6 +1885,7 @@ function SoloGame(){
                                         IAValors.set("first",true);
                                         IAValors.set("mint",IAValors.get("mint")-1);
                                         IAValors.set("lastAction","leader");
+                                        setVisibleLeader(true);
                                     }
                                 }
             
@@ -1872,6 +1908,7 @@ function SoloGame(){
                                     IAValors.set("first",true);
                                     IAValors.set("mint",IAValors.get("mint")-1);
                                     IAValors.set("lastAction","leader");
+                                    setVisibleLeader(true);
                                 }
                             }
                         }
@@ -1881,6 +1918,7 @@ function SoloGame(){
                         wholesaler.set("occupied", true);
                         IAValors.set("lastAction","wholesaler");
                         IAValors.set("mint",IAValors.get("mint")+1);
+                        setVisibleWholesaler(true);
                     }
                 
                
@@ -1949,6 +1987,7 @@ function SoloGame(){
                                     IAValors.set("first",true);
                                     IAValors.set("mint",IAValors.get("mint")-1);
                                     IAValors.set("lastAction","leader");
+                                    setVisibleLeader(true);
                                 }
                             }
         
@@ -1971,6 +2010,7 @@ function SoloGame(){
                                 IAValors.set("first",true);
                                 IAValors.set("mint",IAValors.get("mint")-1);
                                 IAValors.set("lastAction","leader");
+                                setVisibleLeader(true);
                             }
                         }
                     }
@@ -2032,6 +2072,7 @@ function SoloGame(){
                             IAValors.set("first",true);
                             IAValors.set("mint",IAValors.get("mint")-1);
                             IAValors.set("lastAction","leader");
+                            setVisibleLeader(true);
                         }
                     }
 
@@ -2055,6 +2096,7 @@ function SoloGame(){
                         IAValors.set("first",true);
                         IAValors.set("mint",IAValors.get("mint")-1);
                         IAValors.set("lastAction","leader");
+                        setVisibleLeader(true);
                     }
                 }
                 break;
@@ -2079,6 +2121,7 @@ function SoloGame(){
                     IAValors.set("first",true);
                     IAValors.set("mint",IAValors.get("mint")-1);
                     IAValors.set("lastAction","leader");
+                    setVisibleLeader(true);
                 }
                 break;
 
@@ -2194,6 +2237,7 @@ function SoloGame(){
                                         IAValors.set("mint",IAValors.get("mint")-1);
                                         IAValors.set("first",true);
                                         IAValors.set("lastAction","leader");
+                                        setVisibleLeader(true);
                                     }
                                 }
             
@@ -2216,6 +2260,7 @@ function SoloGame(){
                                     IAValors.set("first",true);
                                     IAValors.set("mint",IAValors.get("mint")-1);
                                     IAValors.set("lastAction","leader");
+                                    setVisibleLeader(true);
                                 }
                             }
                         }
@@ -2225,6 +2270,7 @@ function SoloGame(){
                         wholesaler.set("occupied", true);
                         IAValors.set("lastAction","wholesaler");
                         IAValors.set("mint",IAValors.get("mint")+1);
+                        setVisibleWholesaler(true);
                     }
                 }
                 else{
@@ -2232,6 +2278,7 @@ function SoloGame(){
                     producer.set("occupied", Number(producer.get("occupied"))+3);
                     IAValors.set("lastAction","producer");
                     IAValors.set("mint",IAValors.get("mint")+1);
+                    setVisibleProducer(true);
                 }
                 break;
 
@@ -2303,6 +2350,7 @@ function SoloGame(){
                                         IAValors.set("first",true);
                                         IAValors.set("mint",IAValors.get("mint")-1);
                                         IAValors.set("lastAction","leader");
+                                        setVisibleLeader(true);
                                     }
                                 }
             
@@ -2325,6 +2373,7 @@ function SoloGame(){
                                     IAValors.set("first",true);
                                     IAValors.set("mint",IAValors.get("mint")-1);
                                     IAValors.set("lastAction","leader");
+                                    setVisibleLeader(true);
                                 }
                             }
                         }
@@ -2334,6 +2383,7 @@ function SoloGame(){
                         wholesaler.set("occupied", true);
                         IAValors.set("lastAction","wholesaler");
                         IAValors.set("mint",IAValors.get("mint")+1);
+                        setVisibleWholesaler(true);
                     }
                 
                
@@ -2405,6 +2455,7 @@ function SoloGame(){
                                     IAValors.set("first",true);
                                     IAValors.set("mint",IAValors.get("mint")-1);
                                     IAValors.set("lastAction","leader");
+                                    setVisibleLeader(true);
                                 }
                             }
         
@@ -2427,6 +2478,7 @@ function SoloGame(){
                                 IAValors.set("first",true);
                                 IAValors.set("mint",IAValors.get("mint")-1);
                                 IAValors.set("lastAction","leader");
+                                setVisibleLeader(true);
                             }
                         }
                     }
@@ -2489,6 +2541,7 @@ function SoloGame(){
                             IAValors.set("first",true);
                             IAValors.set("mint",IAValors.get("mint")-1);
                             IAValors.set("lastAction","leader");
+                            setVisibleLeader(true);
                         }
                     }
 
@@ -2512,6 +2565,7 @@ function SoloGame(){
                         IAValors.set("first",true);
                         IAValors.set("mint",IAValors.get("mint")-1);
                         IAValors.set("lastAction","leader");
+                        setVisibleLeader(true);
                     }
                 }
                 break;
@@ -2536,6 +2590,7 @@ function SoloGame(){
                     IAValors.set("first",true);
                     IAValors.set("mint",IAValors.get("mint")-1);
                     IAValors.set("lastAction","leader");
+                    setVisibleLeader(true);
                 }
                 break;
 
@@ -2826,6 +2881,81 @@ function SoloGame(){
             <Modal className="Normal_modal" show={turno.get("visible")} onHide={() => turno.set("visible",false)} centered onExiting={() => MintsForAll()} >
                 <ModalBody>
                     its {IAValors.get("name")} turn
+                </ModalBody>
+            </Modal>
+
+            <Modal className="Normal_modal" show={visibleProducer} onHide={() => setVisibleProducer(false)} centered  >
+                <ModalBody>
+                    {IAValors.get("name")} have used the producer card to get 2 mints.
+                </ModalBody>
+            </Modal>
+
+            <Modal className="Normal_modal" show={visibleLeader} onHide={() => setVisibleLeader(false)} centered  >
+                <ModalBody>
+                    {IAValors.get("name")} have used the leadership card to get the starting player token.
+                </ModalBody>
+            </Modal>
+
+            <Modal className="Normal_modal" show={visibleSupplier} onHide={() => setVisibleSupplier(false)} centered  >
+                <ModalBody>
+                    {IAValors.get("name")} have used the Supplier card to get:
+                    {IAValors.get("cards").reverse().map((card,index)=> {
+                        if(index === IAValors.get("cards").length-1){
+                            if(card == null){
+                                return null;
+                            }
+                            return(
+                                <div key={index}>
+                                
+                                    <ListGroup.Item variant="primary">
+                                        <img alt="CardLotto" key={`shop-${card.id}`} src = {require(`../images/cards_images/${card.name.toUpperCase()}.PNG`)} style={{padding:'0px'}}/>
+                                    </ListGroup.Item>
+                            
+                                </div>
+                            
+                            )
+                        }
+                        else{
+                            return null;
+                        }
+                        
+                    })}
+                </ModalBody>
+            </Modal>
+
+            <Modal className="Normal_modal" show={visibleBuilder} onHide={() => setVisibleBuilder(false)} centered  >
+                <ModalBody>
+                    {IAValors.get("name")} have used the builder card to build ome of them cards.
+                </ModalBody>
+            </Modal>
+
+            <Modal className="Normal_modal" show={visibleWholesaler} onHide={() => setVisibleWholesaler(false)} centered  >
+                <ModalBody>
+                    {IAValors.get("name")} have used the producer card to get 2 mints.
+                </ModalBody>
+            </Modal>
+
+            <Modal className="Normal_modal" show={visibleLotto} onHide={() => setVisibleLotto(false)} centered  >
+                <ModalBody>
+                    {IAValors.get("name")} have used the lotto card to get a random card.
+                </ModalBody>
+            </Modal>
+
+            <Modal className="Normal_modal" show={visibleCrow} onHide={() => setVisibleCrow(false)} centered  >
+                <ModalBody>
+                    {IAValors.get("name")} have used the crow card to get three mints.
+                </ModalBody>
+            </Modal>
+
+            <Modal className="Normal_modal" show={visibleRecycler} onHide={() => setVisibleRecycler(false)} centered  >
+                <ModalBody>
+                    {IAValors.get("name")} have used the recycler to get mints equals to the cost and stars of a card.
+                </ModalBody>
+            </Modal>
+
+            <Modal className="Normal_modal" show={visibleSwap} onHide={() => setVisibleSwap(false)} centered  >
+                <ModalBody>
+                    {IAValors.get("name")} have used the swap to change one of them card to another from the deck
                 </ModalBody>
             </Modal>
 

@@ -1,5 +1,4 @@
 import { actions } from "@liveblocks/redux";
-import e from "express";
 import React, { useEffect, useState } from "react";
 import { Button, Card, Col, Container,Modal,ModalBody,ModalFooter,ModalTitle, Form, Alert, ListGroupItem, ListGroup } from "react-bootstrap";
 import ModalHeader from "react-bootstrap/esm/ModalHeader";
@@ -118,11 +117,11 @@ export function JoinRoom() {
 
     const [currentPage,setcurrentPage] = useState(1);
     const [itemsPerPage,setitemsPerPage] = useState(3);
-    const [pageNumberLimit,setPageNumberLimit] = useState(5);
+    const [pageNumberLimit,] = useState(5);
     const [maxPageNumberLimit,setMaxPageNumberLimit] = useState(5);
     const [minPageNumberLimit,setMinPageNumberLimit] = useState(0);
 
-    const handleClickPage = (event: { target: { id: any; }; }) =>{
+    const handleClickPage = (event: { target: { id: number; }; }) =>{
         setcurrentPage(Number(event.target.id));
         console.log(currentPage);
     }
@@ -203,7 +202,7 @@ export function JoinRoom() {
             <Col  className="justify-content-center">
                 <Form className="p-4 justify-content-center">
                     <Form.Group>
-                        <Form.Control className="mx-auto" style={{width:'50%'}}  type="text" placeholder="Search a room by name" onChange={(e) :any => inputHandler(e)} /> 
+                        <Form.Control className="mx-auto" style={{width:'50%'}}  type="text" placeholder="Search a room by name" onChange={(e) => inputHandler(e)} /> 
                     </Form.Group>
                 </Form>
                 {currentItems(inputText).map(function(item,index){

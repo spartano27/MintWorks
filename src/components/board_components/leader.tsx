@@ -1,7 +1,7 @@
 import { useList, useMyPresence, useObject, useSelf } from "@liveblocks/react";
 import React, { useState } from "react";
-import { Button, Modal, ModalBody, ModalFooter } from "react-bootstrap";
-import ModalHeader from "react-bootstrap/esm/ModalHeader";
+import { Button, ModalHeader, Modal, ModalBody, ModalFooter } from "react-bootstrap";
+
 import handleChangeTurn from "../../turn";
 import { Presence } from "../../types";
 

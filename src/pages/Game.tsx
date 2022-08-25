@@ -1,10 +1,8 @@
 import { LiveList, LiveObject } from '@liveblocks/client';
 import { RoomProvider } from '@liveblocks/react';
 import React from 'react';  
-import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import Game from '../components/game';  
-import { RootState } from '../store';
 import { Card, LocationTypes } from '../types';
 
 /**

@@ -5,9 +5,8 @@ import {Json, useList, useMyPresence, useObject, useOthers, useSelf} from "@live
 import {useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {CountdownCircleTimer} from "react-countdown-circle-timer";
-import {Button, Col, Container, ListGroup, Modal, ModalBody, ModalFooter, Row} from "react-bootstrap";
+import {Button, Col, Container, ModalHeader, ListGroup, Modal, ModalBody, ModalFooter, Row} from "react-bootstrap";
 import {Cursor} from "./cursor";
-import ModalHeader from "react-bootstrap/esm/ModalHeader";
 import {Card, CardTypes, Presence} from "../types";
 import {useNavigate} from "react-router-dom";
 import {removeRoom, RootState} from "../store";
@@ -78,7 +77,7 @@ function Game(){
 
     useEffect(() => {
     
-    window.onbeforeunload = function(e) {
+    window.onbeforeunload = function() {
         return "Are you sure?";
     };
      

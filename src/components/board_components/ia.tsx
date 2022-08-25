@@ -1,8 +1,7 @@
 import { useList, useObject } from "@liveblocks/react";
 import React from "react";
-import { Row, ListGroup, Button, Col } from "react-bootstrap";
+import { Row, ListGroup} from "react-bootstrap";
 import { Card } from "../../types";
-import Clock from "../clock";
 import Justin from '../ia/justin';
 import Mort from '../ia/mort';
 import Rachael from '../ia/rachael';

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import {Button, Form, Modal, Row, ModalFooter,ModalBody, Alert, ModalHeader } from "react-bootstrap";
+import {Button, Form, Modal, Row, ModalFooter,ModalBody, ModalHeader } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import {useOthers, useObject, useMyPresence, useList} from "@liveblocks/react";
 import {Cursor} from "../cursor";
 import {useDispatch, useSelector} from "react-redux";
-import {Logo, PresenceRoom, Room as RoomType} from "../../types";
+import {Logo, PresenceRoom, Room} from "../../types";
 import { changeColor, changeRoom, modifyRoom, RootState } from "../../store";
 import { actions } from "@liveblocks/redux";
 
@@ -25,7 +25,7 @@ function Room(){
     const others = useOthers<PresenceRoom>();
     const visible = useObject("visible");
     const [mypresence,update] = useMyPresence<PresenceRoom>();
-    const [lista,setLista] = useState(roomList);
+    const [,setLista] = useState(roomList);
     const [disable,setDisable] = useState(false);
 
     useEffect(()=>{
@@ -64,7 +64,7 @@ function Room(){
 
     useEffect(() => {
     
-    window.onbeforeunload = function(e) {
+    window.onbeforeunload = function() {
         return "Are you sure?";
     };
      
@@ -147,7 +147,7 @@ function Room(){
                     
                             id = "Ready?"
                             label = "Are you ready?"
-                    onClick={(e) => handleOnChange(mypresence.check)}
+                    onClick={() => handleOnChange(mypresence.check)}
                     style={{outline:'1px solid black',backgroundColor: `rgb(${
                       COLORS_PRESENCE[mypresence.color]
                     }`}}
@@ -174,7 +174,7 @@ function Room(){
                             key={`switch-${connectionId}`}
                             onFocus={(e) => update({ focusedId: e.target.id })}
                             onBlur={() => update({ focusedId: null })}
-                            onChange = {(e) => handleOnChange(presence.check)}
+                            onChange = {() => handleOnChange(presence.check)}
                             disabled
                             style={{outline:'1px solid black',backgroundColor: `rgb(${
                               COLORS_PRESENCE[presence.color]

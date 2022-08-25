@@ -1,10 +1,6 @@
 import { useList, useMyPresence, useObject, useSelf } from "@liveblocks/react";
 import React, { useState } from "react";
-import { Modal, ModalBody, Button, ListGroup } from "react-bootstrap";
-import ModalHeader from "react-bootstrap/esm/ModalHeader";
-import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
-import { RootState } from "../../store";
+import { Modal, ModalBody,ModalHeader, Button, ListGroup } from "react-bootstrap";
 import handleChangeTurn from "../../turn";
 import { CardTypes, Presence } from "../../types";
 /* The above code is a React component that is used to build a card. */
