@@ -35,6 +35,14 @@ function Neighborhood(valor: { username: undefined | string; id: number; mints: 
         }
     }
 
+    const handleClickPass = () => {
+        if(turno.get("turn") === self.connectionId ){
+            handleChangeTurn(actualCards,shopCards,playersList,shuffleList,turno,keyClock);
+        }else{
+            return;
+        }
+    }
+
     return(
 
         <div>
@@ -76,8 +84,8 @@ function Neighborhood(valor: { username: undefined | string; id: number; mints: 
             </ListGroup>
         </div>
         <Button type="button" className="mx-auto d-block" variant="secondary" 
-        style={{width:'50%', height:'50px',visibility: turno.get("turn") === valor.id ? 'visible' : 'visible'}}
-                    onClick={()=> handleChangeTurn(actualCards,shopCards,playersList,shuffleList,turno,keyClock)}>
+        style={{width:'50%', height:'50px',visibility: turno.get("turn") === valor.id ? 'visible' : 'hidden'}}
+                    onClick={()=> handleClickPass()}>
                     Pass 
             </Button>   
         </div>

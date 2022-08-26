@@ -3,8 +3,7 @@ import { fireEvent, render } from "@testing-library/react"
 import '@testing-library/jest-dom/extend-expect'
 import Lobby from '../pages/Lobby';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-
-
+import Nightmare from 'nightmare';
 test('render content',()=>{
     
    const enviroment =
@@ -17,5 +16,20 @@ test('render content',()=>{
  
        
     const lobby = render(enviroment);
-    
+
 })
+
+
+const nightmare = new Nightmare({ show: true })
+
+test('navigate for lobby',()=>{
+    
+    let page = nightmare.goto("http://localhost:3000/Lobby").click("Search a Game").then(link => {
+        expect(link).toEqual("http://localhost:3000/JoinRoom")
+    });
+    
+  
+        
+    
+     
+ })

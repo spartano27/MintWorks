@@ -12,7 +12,7 @@ const user = (state:RootState) => state.username;
 const thisRoom = (state:RootState) => state.room;
 const rooms = (state:RootState) => state.roomList;
 /* A function that is used to create a room. */
-function Room(){
+function RoomP(){
 
     const {name} = useParams();
     const dispatch = useDispatch();
@@ -224,5 +224,5 @@ function Room(){
     );            
 }
 
-export default Room;
+export default RoomP;
 
