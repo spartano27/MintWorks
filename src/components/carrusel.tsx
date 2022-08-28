@@ -11,14 +11,20 @@ function Carrusel(){
     
     const carruselItem = [];
     const lista = [{
-        srcValue: "mint1.jpg",
+        srcValue: "EXPLICACIÓNCARTAS1.png",
         altValue: "First slide"
       },{
-        srcValue: "mint1.jpg",
+        srcValue: "EXPLICACIÓNCARTAS2.png",
         altValue: "Second slide"
       },{
-        srcValue: "mint1.jpg",
+        srcValue: "EXPLICACIÓNCARTAS3.png",
         altValue: "Third slide"
+      },{
+        srcValue: "EXPLICACIÓNCARTAS4.png",
+        altValue: "Forth slide"
+      },{
+        srcValue: "EXPLICACIÓNCARTAS4.png",
+        altValue: "Fifth slide"
       }];
 
     for (const value of lista) {
@@ -28,7 +34,8 @@ function Carrusel(){
                 <img
                 className="d-block mx-auto"
                 src={require(`../images/${value.srcValue}`)}
-                alt={value.altValue}/>
+                alt={value.altValue}
+                style={{width:'300px'}}/>
             </Carousel.Item>
         );
     }
