@@ -211,7 +211,7 @@ function Swap() {
             <Modal className="Normal_modal"  show={visible3} onHide={() => setVisible3(false)} centered >
                 <ModalHeader> 
                     You dont have enough mints.
-                    <Button onClick={() => setVisible1(false)}> Ok </Button>
+                    <Button onClick={() => setVisible3(false)}> Ok </Button>
                 </ModalHeader>
             </Modal>
 

@@ -1,13 +1,14 @@
 import { useObject, useSelf, useMyPresence, useList } from "@liveblocks/react";
 import React, { useState } from "react";
 import { Modal,ModalHeader,ModalBody, Button, ListGroup } from "react-bootstrap";
+import { useParams } from "react-router-dom";
 import handleChangeTurn from "../../turn";
 import { Card, Presence } from "../../types";
 
 /* The above code is a React component that is used to buy a card from the supplier. */
 
 function Supplier(){
-
+    const {name} = useParams();
     const keyClock = useObject<{key:number}>("keyClock");
     const [,setValorId] = useState("0");
     const supplier = useObject("supplier");
@@ -153,7 +154,7 @@ function Supplier(){
 
             }  
 
-            supplier.set("img", players < 4 ? `supplierUsed${supplier.get("occupied")}.png` : `supplier1Used${supplier.get("occupied")}.png`);
+            supplier.set("img", players < 4 ? `supplier1Used${supplier.get("occupied")}.png` : `supplierUsed${supplier.get("occupied")}.png`);
             supplier.set("occupied", Number(supplier.get("occupied"))+1);
             setVisible(false);
             handleChangeTurn(actualCards,shopCards,playersList,shuffleList,turno,keyClock);   

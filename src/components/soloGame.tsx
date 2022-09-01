@@ -914,7 +914,7 @@ function SoloGame(){
                     }
                 }
                 else{
-                    producer.set("img", players === 4 || players === 1 ? `producerUsed${producer.get("occupied")}.png` : `producer1Used${producer.get("occupied")}.png`);
+                    producer.set("img", `producerUsed${producer.get("occupied")}.png`);
                     producer.set("occupied", Number(producer.get("occupied"))+1);
                     IAValors.set("lastAction","producer");
                     setVisibleProducer(true);
@@ -1366,7 +1366,7 @@ function SoloGame(){
                     }
                 }
                 else{
-                    producer.set("img", players === 4 || players === 1 ? `producerUsed${producer.get("occupied")}.png` : `producer1Used${producer.get("occupied")}.png`);
+                    producer.set("img",`producerUsed${producer.get("occupied")}.png`);
                     producer.set("occupied", Number(producer.get("occupied"))+1);
                     IAValors.set("lastAction","producer");
                     IAValors.set("mint",IAValors.get("mint")+1);
@@ -1812,7 +1812,7 @@ function SoloGame(){
                     }
                 }
                 else{
-                    producer.set("img", players === 4 || players === 1 ? `producerUsed${producer.get("occupied")}.png` : `producer1Used${producer.get("occupied")}.png`);
+                    producer.set("img", `producerUsed${producer.get("occupied")}.png`);
                     producer.set("occupied", Number(producer.get("occupied"))+1);
                     IAValors.set("lastAction","producer");
                     IAValors.set("mint",IAValors.get("mint")+1);
@@ -2173,7 +2173,7 @@ function SoloGame(){
                         if(IAValors.get("mint") >= 2 && Number(builder.get("occupied")) <= 2 && activo.length != 0){
                             handleBuildIA(activo[0]);
                             builder.set("img", players < 4 ? `builder1Used${builder.get("occupied")}.png` : `builderUsed${builder.get("occupied")}.png`);
-                            builder.set("occupied", Number(builder.get("occupied"))+1);
+                            builder.set("occupied", 2);
                             IAValors.set("lastAction","builder");
                         }else{
                             if(Number(supplier.get("occupied")) <= 2 && activo.length === 0){
@@ -2214,7 +2214,7 @@ function SoloGame(){
                                 if(IAValors.get("mint") >= valorMasAlto.value){
                                     handleCompraIA(valorMasAlto);
                                     supplier.set("img", players < 4 ? `supplier1Used${supplier.get("occupied")}.png` : `supplierUsed${supplier.get("occupied")}.png`);
-                                    supplier.set("occupied", Number(supplier.get("occupied"))+1);
+                                    supplier.set("occupied", 2);
                                     IAValors.set("lastAction","supplier");
 
                                 }else{
@@ -2274,7 +2274,7 @@ function SoloGame(){
                     }
                 }
                 else{
-                    producer.set("img", players === 4 || players === 1 ? `producerUsed${producer.get("occupied")}.png` : `producer1Used${producer.get("occupied")}.png`);
+                    producer.set("img",`producerUsed${producer.get("occupied")}.png`);
                     producer.set("occupied", Number(producer.get("occupied"))+3);
                     IAValors.set("lastAction","producer");
                     IAValors.set("mint",IAValors.get("mint")+1);
@@ -2288,7 +2288,7 @@ function SoloGame(){
                         if(IAValors.get("mint") >= 2 && Number(builder.get("occupied")) <= 2 && activo.length != 0){
                             handleBuildIA(activo[0]);
                             builder.set("img", players < 4 ? `builder1Used${builder.get("occupied")}.png` : `builderUsed${builder.get("occupied")}.png`);
-                            builder.set("occupied", Number(builder.get("occupied"))+1);
+                            builder.set("occupied", 2);
                             IAValors.set("lastAction","builder");
                         }else{
                             if(Number(supplier.get("occupied")) <= 2 && activo.length === 0){
@@ -2329,7 +2329,7 @@ function SoloGame(){
                                 if(IAValors.get("mint") >= valorMasAlto.value){
                                     handleCompraIA(valorMasAlto);
                                     supplier.set("img", players < 4 ? `supplier1Used${supplier.get("occupied")}.png` : `supplierUsed${supplier.get("occupied")}.png`);
-                                    supplier.set("occupied", Number(supplier.get("occupied"))+1);
+                                    supplier.set("occupied", 2);
                                     IAValors.set("lastAction","supplier");
                                 }else{
                                     if(leader.get("occupied") || IAValors.get("mint") == 0){
@@ -2393,7 +2393,7 @@ function SoloGame(){
                     if(IAValors.get("mint") >= 2 && Number(builder.get("occupied")) <= 2 && activo.length != 0){
                         handleBuildIA(activo[0]);
                         builder.set("img", players < 4 ? `builder1Used${builder.get("occupied")}.png` : `builderUsed${builder.get("occupied")}.png`);
-                        builder.set("occupied", Number(builder.get("occupied"))+1);
+                        builder.set("occupied", 2);
                         IAValors.set("lastAction","builder");
                     }else{
                         if(Number(supplier.get("occupied")) <= 2 && activo.length === 0){
@@ -2434,7 +2434,7 @@ function SoloGame(){
                                 if(IAValors.get("mint") >= valorMasAlto.value){
                                     handleCompraIA(valorMasAlto);
                                     supplier.set("img", players < 4 ? `supplier1Used${supplier.get("occupied")}.png` : `supplierUsed${supplier.get("occupied")}.png`);
-                                    supplier.set("occupied", Number(supplier.get("occupied"))+1);
+                                    supplier.set("occupied", 2);
                                     IAValors.set("lastAction","supplier");
                             }else{
                                 if(leader.get("occupied") || IAValors.get("mint") == 0){
@@ -2525,7 +2525,7 @@ function SoloGame(){
                                 if(IAValors.get("mint") >= valorMasAlto.value){
                                     handleCompraIA(valorMasAlto);
                                     supplier.set("img", players < 4 ? `supplier1Used${supplier.get("occupied")}.png` : `supplierUsed${supplier.get("occupied")}.png`);
-                                    supplier.set("occupied", Number(supplier.get("occupied"))+1);
+                                    supplier.set("occupied", 2);
                                     IAValors.set("lastAction","supplier");
                     }else{
                         if(leader.get("occupied") || IAValors.get("mint") == 0){
@@ -2676,11 +2676,11 @@ function SoloGame(){
             temp.set("occupied",false);
             crow.set("img","crow.png");
             crow.set("occupied",false);
-            producer.set("img",players === 4 || players === 1 ? "producer.png" : "producer1.png");
+            producer.set("img","producer.png");
             producer.set("occupied",1);
-            builder.set("img", players < 4 ? "builder1.png" : "builder.png");
+            builder.set("img", "builder1.png");
             builder.set("occupied",1);
-            supplier.set("img",players < 4 ? "supplier1.png" : "supplier.png");
+            supplier.set("img","supplier1.png");
             supplier.set("occupied",1);
             let contador = 0;
             let countStars = 0;

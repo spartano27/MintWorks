@@ -1,12 +1,13 @@
 import { useList, useMyPresence, useObject, useSelf } from "@liveblocks/react";
 import React, { useState } from "react";
 import { Modal, ModalBody,ModalHeader, Button, ListGroup } from "react-bootstrap";
+import { useParams } from "react-router-dom";
 import handleChangeTurn from "../../turn";
 import { CardTypes, Presence } from "../../types";
 /* The above code is a React component that is used to build a card. */
 
 function Builder() {
-
+    const {name} = useParams();
     const keyClock = useObject<{key:number}>("keyClock");
     const builder = useObject("builder");
     const self = useSelf();

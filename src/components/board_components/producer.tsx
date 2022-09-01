@@ -1,11 +1,12 @@
 import { useList, useMyPresence, useObject, useSelf } from "@liveblocks/react";
 import React, { useState } from "react";
 import { Modal,ModalHeader,ModalBody, ModalFooter, Button} from "react-bootstrap";
+import { useParams } from "react-router-dom";
 import handleChangeTurn from "../../turn";
 import { Presence } from "../../types";
 
 function Producer() {
-    
+    const {name} = useParams();
     const [,setStyleCard] = useState(true);
     const keyClock = useObject<{key:number}>("keyClock");
     const producer = useObject("producer");
@@ -73,7 +74,7 @@ function Producer() {
      */
 
     const handleClick = () => {
-        
+        console.log(players);
         producer.set("img", players === 4 || players === 1 ? `producerUsed${producer.get("occupied")}.png` : `producer1Used${producer.get("occupied")}.png`);
         producer.set("occupied", Number(producer.get("occupied"))+1);
         update({mint:Number(mypresence.mint)+1});
@@ -91,7 +92,7 @@ function Producer() {
     return(
 
         <div>
-        <img alt="Producer" style = {(Number(producer.get("occupied")) > 2) || ((players === 1 || players === 4) && Number(producer.get("occupied")) > 3) ? {width:210} : {width:210,borderColor:'#eaa856',borderWidth:'5px',borderStyle:'solid'}} src = {require(`../../images/${producer.get("img")}`)} onDragStart={(e) => DragHandler(e)} onClick={()=> handleClickProducer() } />
+        <img alt="Producer" style = {(players ===2 || players === 3 && Number(producer.get("occupied")) > 2) || ((players === 1 || players === 4) && Number(producer.get("occupied")) > 3) ? {width:210} : {width:210,borderColor:'#eaa856',borderWidth:'5px',borderStyle:'solid'}} src = {require(`../../images/${producer.get("img")}`)} onDragStart={(e) => DragHandler(e)} onClick={()=> handleClickProducer() } />
             <Modal className="Normal_modal" show={visible} onHide={() => setVisible(false)} centered >
                 <ModalHeader> 
                     Use Producer card?
